@@ -1,0 +1,13 @@
+--------------------------------------------------
+gr-filtdes : Filter design tool for gnuradio
+--------------------------------------------------
+Contains the updated version of gr_filter_design.
+
+--------------------------------------------------
+Build Instructions
+--------------------------------------------------
+mkdir <build dir>
+cd <build dir>
+cmake -DCMAKE_INSTALL_PREFIX:PATH=<install dir> <source dir>
+make
+sudo make install
