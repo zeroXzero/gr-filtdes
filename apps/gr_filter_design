@@ -181,8 +181,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.phasecurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
         self.groupcurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
 
-        self.grid= Qwt.QwtPlotGrid()
-        self.grid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
+        self.freqgrid= Qwt.QwtPlotGrid()
+        self.phasegrid= Qwt.QwtPlotGrid()
+        self.groupgrid= Qwt.QwtPlotGrid()
+        self.freqgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
+        self.phasegrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
+        self.groupgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
 
         # Create zoom functionality for the plots
         self.timeZoomer = Qwt.QwtPlotZoomer(self.gui.timePlot.xBottom,
@@ -879,11 +883,15 @@ class gr_plot_filter(QtGui.QMainWindow):
     def set_grid(self):
         if (self.gui.checkGrid.checkState() == 0 ):
             self.gridenable=False
-            self.grid.detach()
+            self.freqgrid.detach()
+            self.phasegrid.detach()
+            self.groupgrid.detach()
             self.update_freq_curves()
         else:
             self.gridenable=True
-            self.grid.attach(self.gui.freqPlot)
+            self.freqgrid.attach(self.gui.freqPlot)
+            self.phasegrid.attach(self.gui.phasePlot)
+            self.groupgrid.attach(self.gui.groupPlot)
             self.update_freq_curves()
 
     def set_magresponse(self):
