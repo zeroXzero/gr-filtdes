@@ -35,6 +35,7 @@ GR_PYTHON_INSTALL(
 	optfir.py
 	pyqt_filter_new.py
 	bandgraphicsview.py
+	banditems.py
     DESTINATION ${GR_PYTHON_DIR}/filtdes
 )
 
