@@ -153,10 +153,22 @@ class bnfsLines(QtGui.QGraphicsObject):
     def boundingRect(self):
         return QtCore.QRectF(0,0,300,300)
 
+class pzsItems(QtGui.QGraphicsObject):
+    def __init__(self):
+        QtGui.QGraphicsObject.__init__(self)
+
+    def paint(self, painter, option, widget):
+        painter.setPen(QtGui.QPen(QtCore.Qt.darkGray, 1, QtCore.Qt.SolidLine))
+        painter.drawEllipse(80,50,150,150)
+
+    def boundingRect(self):
+        return QtCore.QRectF(0,0,300,300)
+
 lpfItems=[]
 hpfItems=[]
 bpfItems=[]
 bnfItems=[]
+pzItems=[]
 
 #lpfitems list
 lpfItems.append(filtermovlineItem(200,175,400,175,0,-60))
@@ -181,3 +193,6 @@ bnfItems.append(filtermovlineItem(155,175,255,175,0,-60))
 bnfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
            QtGui.QGraphicsItem.ItemSendsGeometryChanges)
 bnfItems.append(bnfsLines())
+
+#pzitems list
+pzItems.append(pzsItems())

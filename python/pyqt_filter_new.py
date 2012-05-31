@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_new.ui'
 #
-# Created: Thu May 31 22:01:35 2012
+# Created: Thu May 31 23:10:53 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -424,6 +424,9 @@ class Ui_MainWindow(object):
         self.poleZero = QtGui.QWidget()
         self.poleZero.setAutoFillBackground(False)
         self.poleZero.setObjectName(_fromUtf8("poleZero"))
+        self.pzView = QtGui.QGraphicsView(self.poleZero)
+        self.pzView.setGeometry(QtCore.QRect(10, 10, 591, 251))
+        self.pzView.setObjectName(_fromUtf8("pzView"))
         self.filterspecView.addTab(self.poleZero, _fromUtf8(""))
         self.filterCoeff = QtGui.QWidget()
         self.filterCoeff.setObjectName(_fromUtf8("filterCoeff"))

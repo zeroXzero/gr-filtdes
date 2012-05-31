@@ -894,6 +894,16 @@
         <attribute name="title">
          <string>Pole-Zero Plot</string>
         </attribute>
+        <widget class="QGraphicsView" name="pzView">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>591</width>
+           <height>251</height>
+          </rect>
+         </property>
+        </widget>
        </widget>
        <widget class="QWidget" name="filterCoeff">
         <attribute name="title">
