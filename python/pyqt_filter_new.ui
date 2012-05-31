@@ -825,16 +825,6 @@
         <attribute name="title">
          <string>Overlay </string>
         </attribute>
-        <widget class="QwtPlot" name="overlayPlot">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>10</y>
-           <width>591</width>
-           <height>291</height>
-          </rect>
-         </property>
-        </widget>
        </widget>
       </widget>
       <widget class="QTabWidget" name="filterspecView">

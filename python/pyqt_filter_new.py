@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_new.ui'
 #
-# Created: Thu May 31 09:32:58 2012
+# Created: Thu May 31 17:03:16 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -392,9 +392,6 @@ class Ui_MainWindow(object):
         self.tabGroup.addTab(self.groupTab, _fromUtf8(""))
         self.overlayTab = QtGui.QWidget()
         self.overlayTab.setObjectName(_fromUtf8("overlayTab"))
-        self.overlayPlot = Qwt5.QwtPlot(self.overlayTab)
-        self.overlayPlot.setGeometry(QtCore.QRect(10, 10, 591, 291))
-        self.overlayPlot.setObjectName(_fromUtf8("overlayPlot"))
         self.tabGroup.addTab(self.overlayTab, _fromUtf8(""))
         self.filterspecView = QtGui.QTabWidget(self.splitter)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
