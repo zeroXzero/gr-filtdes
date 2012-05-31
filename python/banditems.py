@@ -39,7 +39,7 @@ class filtermovlineItem(QtGui.QGraphicsObject):
                 newpos.setY(self.lower)
             if (newpos.y() <= self.upper):
                 newpos.setY(self.upper)
-            self.attenChanged.emit(-newpos.y())
+            self.attenChanged.emit(-newpos.y()*0.25)
             return QtCore.QPointF(self.pos().x(), newpos.y())
         return QtGui.QGraphicsItem.itemChange(self, change, value)
 
@@ -159,25 +159,25 @@ bpfItems=[]
 bnfItems=[]
 
 #lpfitems list
-lpfItems.append(filtermovlineItem(200,175,400,175,0,-50))
+lpfItems.append(filtermovlineItem(200,175,400,175,0,-60))
 lpfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
               QtGui.QGraphicsItem.ItemSendsGeometryChanges)
 lpfItems.append(lpfsLines())
 
 #hpfitems list
-hpfItems.append(filtermovlineItem(6,175,150,175,0,-50))
+hpfItems.append(filtermovlineItem(6,175,150,175,0,-60))
 hpfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
              QtGui.QGraphicsItem.ItemSendsGeometryChanges)
 hpfItems.append(hpfsLines())
 
 #bpfitems list
-bpfItems.append(filtermovlineItem(6,175,110,175,0,-50,True,300,175,400,175))
+bpfItems.append(filtermovlineItem(6,175,110,175,0,-60,True,300,175,400,175))
 bpfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
             QtGui.QGraphicsItem.ItemSendsGeometryChanges)
 bpfItems.append(bpfsLines())
 
 #bnfitems list
-bnfItems.append(filtermovlineItem(155,175,255,175,0,-50))
+bnfItems.append(filtermovlineItem(155,175,255,175,0,-60))
 bnfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
            QtGui.QGraphicsItem.ItemSendsGeometryChanges)
 bnfItems.append(bnfsLines())

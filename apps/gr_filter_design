@@ -173,6 +173,13 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         self.groupcurve = Qwt.QwtPlotCurve("Group Delay")
         self.groupcurve.attach(self.gui.groupPlot)
+	
+        #Antialiasing
+        self.rcurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
+        self.icurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
+        self.freqcurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
+        self.phasecurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
+        self.groupcurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
 
         self.grid= Qwt.QwtPlotGrid()
         self.grid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
@@ -207,11 +214,11 @@ class gr_plot_filter(QtGui.QMainWindow):
         blueBrush = Qt.QBrush(Qt.QColor(blue))
         red = QtGui.qRgb(0xFF, 0x00, 0x00)
         redBrush = Qt.QBrush(Qt.QColor(red))
-        self.freqcurve.setPen(Qt.QPen(blueBrush, 2))
-        self.rcurve.setPen(Qt.QPen(blueBrush, 2))
-        self.icurve.setPen(Qt.QPen(redBrush, 2))
-        self.phasecurve.setPen(Qt.QPen(blueBrush, 2))
-        self.groupcurve.setPen(Qt.QPen(blueBrush, 2))
+        self.freqcurve.setPen(Qt.QPen(blueBrush, 1))
+        self.rcurve.setPen(Qt.QPen(blueBrush, 1))
+        self.icurve.setPen(Qt.QPen(redBrush, 1))
+        self.phasecurve.setPen(Qt.QPen(blueBrush, 1))
+        self.groupcurve.setPen(Qt.QPen(blueBrush, 1))
 
 		#assigning items
         self.lpfitems=lpfItems
