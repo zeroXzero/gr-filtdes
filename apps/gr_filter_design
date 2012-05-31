@@ -33,7 +33,7 @@ except ImportError:
     raise SystemExit, 1
 
 try:
-    from filtdes.banditems import filtermovlineItem
+    from filtdes.banditems import filtermovlineItem, lpfsLines, hpfsLines, bpfsLines 
 except ImportError:
     print "Could not import from banditems. Please check whether banditems.py is in the library path"
     raise SystemExit, 1
@@ -219,29 +219,27 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.bpfitems=[]
 
 		#lpf items
-        self.lpfitems.append(filtermovlineItem())
+        self.lpfitems.append(filtermovlineItem(200,175,400,175,0,-50))
         self.lpfitems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
 				            QtGui.QGraphicsItem.ItemSendsGeometryChanges)
-        self.lpfitems.append(QtGui.QGraphicsLineItem(0,50,0,200))
-        self.lpfitems.append(QtGui.QGraphicsLineItem(0,200,300,200))
-        self.lpfitems.append(QtGui.QGraphicsLineItem(0,105,100,105))
-        self.lpfitems.append(QtGui.QGraphicsLineItem(100,105,100,200))
-        self.lpfitems.append(QtGui.QGraphicsLineItem(150,180,300,180))
-        self.lpfitems.append(QtGui.QGraphicsLineItem(150,180,150,200))
+        self.lpfitems.append(lpfsLines())
 
         #hpf items
-        self.hpfitems.append(filtermovlineItem())
+        self.hpfitems.append(filtermovlineItem(6,175,150,175,0,-50))
         self.hpfitems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
 			               QtGui.QGraphicsItem.ItemSendsGeometryChanges)
-        self.hpfitems.append(QtGui.QGraphicsLineItem(0,50,0,200))
-        self.hpfitems.append(QtGui.QGraphicsLineItem(0,200,300,200))
-        self.hpfitems.append(QtGui.QGraphicsLineItem(0,180,100,180))
-        self.hpfitems.append(QtGui.QGraphicsLineItem(100,180,100,200))
-        self.hpfitems.append(QtGui.QGraphicsLineItem(150,105,300,105))
-        self.hpfitems.append(QtGui.QGraphicsLineItem(150,105,150,200))
+        self.hpfitems.append(hpfsLines())
+
+        #bpf items
+        self.bpfitems.append(filtermovlineItem(6,175,110,175,0,-50,True,300,175,400,175))
+        self.bpfitems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
+			              QtGui.QGraphicsItem.ItemSendsGeometryChanges)
+        self.bpfitems.append(bpfsLines())
 
         #Connect signals
-        self.lpfitems[0].attenChanged.connect(self.set_lpfatten)
+        self.lpfitems[0].attenChanged.connect(self.set_fatten)
+        self.hpfitems[0].attenChanged.connect(self.set_fatten)
+        self.bpfitems[0].attenChanged.connect(self.set_fatten)
 
         #populate the scene
         self.scene=QtGui.QGraphicsScene()
@@ -299,6 +297,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.populate_bandview(self.lpfitems)
         elif(ftype == "Band Pass"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firbpfPage)
+            self.remove_bandview()
+            self.populate_bandview(self.bpfitems)
         elif(ftype == "Complex Band Pass"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firbpfPage)
         elif(ftype == "Band Notch"):
@@ -909,13 +909,16 @@ class gr_plot_filter(QtGui.QMainWindow):
         for item in self.scene.items():
             self.scene.removeItem(item)
 
-    def set_lpfatten(self,atten):
+    def set_fatten(self,atten):
         ftype = str(self.gui.filterTypeComboBox.currentText().toAscii())
         if (ftype == "Low Pass"):
             self.gui.lpfStopBandAttenEdit.setText(Qt.QString(str(atten)))
         
         if ftype == "High Pass":
             self.gui.hpfStopBandAttenEdit.setText(Qt.QString(str(atten)))
+
+        if ftype == "Band Pass":
+            self.gui.bpfStopBandAttenEdit.setText(Qt.QString(str(atten)))
 
         self.design()
 
