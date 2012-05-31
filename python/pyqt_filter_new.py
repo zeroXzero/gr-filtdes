@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_new.ui'
 #
-# Created: Fri May 25 14:13:49 2012
+# Created: Thu May 31 09:32:58 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -32,6 +32,7 @@ class Ui_MainWindow(object):
         self.responseBox.setObjectName(_fromUtf8("responseBox"))
         self.checkOverlaymode = QtGui.QCheckBox(self.responseBox)
         self.checkOverlaymode.setGeometry(QtCore.QRect(10, 20, 151, 19))
+        self.checkOverlaymode.setChecked(True)
         self.checkOverlaymode.setObjectName(_fromUtf8("checkOverlaymode"))
         self.checkMagres = QtGui.QCheckBox(self.responseBox)
         self.checkMagres.setGeometry(QtCore.QRect(10, 40, 151, 19))
@@ -39,9 +40,11 @@ class Ui_MainWindow(object):
         self.checkMagres.setObjectName(_fromUtf8("checkMagres"))
         self.checkPhase = QtGui.QCheckBox(self.responseBox)
         self.checkPhase.setGeometry(QtCore.QRect(10, 60, 151, 19))
+        self.checkPhase.setChecked(True)
         self.checkPhase.setObjectName(_fromUtf8("checkPhase"))
         self.checkGdelay = QtGui.QCheckBox(self.responseBox)
         self.checkGdelay.setGeometry(QtCore.QRect(10, 80, 111, 19))
+        self.checkGdelay.setChecked(True)
         self.checkGdelay.setObjectName(_fromUtf8("checkGdelay"))
         self.checkPdelay = QtGui.QCheckBox(self.responseBox)
         self.checkPdelay.setGeometry(QtCore.QRect(10, 100, 111, 19))
@@ -352,7 +355,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.tabGroup.sizePolicy().hasHeightForWidth())
         self.tabGroup.setSizePolicy(sizePolicy)
-        self.tabGroup.setTabsClosable(True)
+        self.tabGroup.setTabsClosable(False)
+        self.tabGroup.setMovable(False)
         self.tabGroup.setObjectName(_fromUtf8("tabGroup"))
         self.freqTab = QtGui.QWidget()
         self.freqTab.setObjectName(_fromUtf8("freqTab"))
@@ -386,6 +390,12 @@ class Ui_MainWindow(object):
         self.groupPlot.setObjectName(_fromUtf8("groupPlot"))
         self.horizontalLayout_4.addWidget(self.groupPlot)
         self.tabGroup.addTab(self.groupTab, _fromUtf8(""))
+        self.overlayTab = QtGui.QWidget()
+        self.overlayTab.setObjectName(_fromUtf8("overlayTab"))
+        self.overlayPlot = Qwt5.QwtPlot(self.overlayTab)
+        self.overlayPlot.setGeometry(QtCore.QRect(10, 10, 591, 291))
+        self.overlayPlot.setObjectName(_fromUtf8("overlayPlot"))
+        self.tabGroup.addTab(self.overlayTab, _fromUtf8(""))
         self.filterspecView = QtGui.QTabWidget(self.splitter)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -395,7 +405,7 @@ class Ui_MainWindow(object):
         self.filterspecView.setMinimumSize(QtCore.QSize(0, 100))
         self.filterspecView.setBaseSize(QtCore.QSize(0, 100))
         self.filterspecView.setDocumentMode(False)
-        self.filterspecView.setTabsClosable(True)
+        self.filterspecView.setTabsClosable(False)
         self.filterspecView.setObjectName(_fromUtf8("filterspecView"))
         self.bandDiagram = QtGui.QWidget()
         self.bandDiagram.setObjectName(_fromUtf8("bandDiagram"))
@@ -529,7 +539,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.filterTypeWidget.setCurrentIndex(0)
-        self.tabGroup.setCurrentIndex(0)
+        self.tabGroup.setCurrentIndex(4)
         self.filterspecView.setCurrentIndex(0)
         QtCore.QObject.connect(self.action_exit, QtCore.SIGNAL(_fromUtf8("activated()")), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -630,6 +640,7 @@ class Ui_MainWindow(object):
         self.tabGroup.setTabText(self.tabGroup.indexOf(self.timeTab), QtGui.QApplication.translate("MainWindow", "Time Domain", None, QtGui.QApplication.UnicodeUTF8))
         self.tabGroup.setTabText(self.tabGroup.indexOf(self.phaseTab), QtGui.QApplication.translate("MainWindow", "Phase", None, QtGui.QApplication.UnicodeUTF8))
         self.tabGroup.setTabText(self.tabGroup.indexOf(self.groupTab), QtGui.QApplication.translate("MainWindow", "Group Delay", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabGroup.setTabText(self.tabGroup.indexOf(self.overlayTab), QtGui.QApplication.translate("MainWindow", "Overlay ", None, QtGui.QApplication.UnicodeUTF8))
         self.filterspecView.setTabText(self.filterspecView.indexOf(self.bandDiagram), QtGui.QApplication.translate("MainWindow", "Ideal Band", None, QtGui.QApplication.UnicodeUTF8))
         self.filterspecView.setTabText(self.filterspecView.indexOf(self.poleZero), QtGui.QApplication.translate("MainWindow", "Pole-Zero Plot", None, QtGui.QApplication.UnicodeUTF8))
         self.filterspecView.setTabText(self.filterspecView.indexOf(self.filterCoeff), QtGui.QApplication.translate("MainWindow", "Filter Coefficients", None, QtGui.QApplication.UnicodeUTF8))

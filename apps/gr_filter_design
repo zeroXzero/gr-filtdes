@@ -134,6 +134,17 @@ class gr_plot_filter(QtGui.QMainWindow):
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_magresponse)
         
+        self.connect(self.gui.checkOverlaymode,
+					 Qt.SIGNAL("stateChanged(int)"),
+					 self.set_overlaymode)
+
+        self.connect(self.gui.checkGdelay,
+					 Qt.SIGNAL("stateChanged(int)"),
+					 self.set_gdelay)
+
+        self.connect(self.gui.checkPhase,
+					 Qt.SIGNAL("stateChanged(int)"),
+					 self.set_phase)
 
         self.overlay=False
         self.gridenable=False
@@ -903,6 +914,27 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.tabGroup.addTab(self.gui.freqTab, _fromUtf8("Magnitude Response"))
             self.update_freq_curves()
     
+    def set_overlaymode(self):
+        if (self.gui.checkOverlaymode.checkState() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.overlayTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.overlayTab, _fromUtf8("Overlay"))
+            self.update_freq_curves()
+
+    def set_gdelay(self):
+        if (self.gui.checkGdelay.checkState() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.groupTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.groupTab, _fromUtf8("Group Delay"))
+            self.update_freq_curves()
+    
+    def set_phase(self):
+        if (self.gui.checkPhase.checkState() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.phaseTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.phaseTab, _fromUtf8("Phase"))
+            self.update_freq_curves()
+
     def populate_bandview(self,fitems):
         for item in fitems:
             self.scene.addItem(item)

@@ -53,6 +53,9 @@
         <property name="text">
          <string>Overlay Mode</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QCheckBox" name="checkMagres">
         <property name="geometry">
@@ -82,6 +85,9 @@
         <property name="text">
          <string>Phase Response</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QCheckBox" name="checkGdelay">
         <property name="geometry">
@@ -94,6 +100,9 @@
         </property>
         <property name="text">
          <string>Group Delay</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QCheckBox" name="checkPdelay">
@@ -203,6 +212,7 @@
       </widget>
       <zorder>groupSpecs</zorder>
       <zorder>responseBox</zorder>
+      <zorder>splitter</zorder>
      </widget>
     </item>
     <item row="0" column="0">
@@ -763,10 +773,13 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>4</number>
        </property>
        <property name="tabsClosable">
-        <bool>true</bool>
+        <bool>false</bool>
+       </property>
+       <property name="movable">
+        <bool>false</bool>
        </property>
        <widget class="QWidget" name="freqTab">
         <attribute name="title">
@@ -808,6 +821,21 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="overlayTab">
+        <attribute name="title">
+         <string>Overlay </string>
+        </attribute>
+        <widget class="QwtPlot" name="overlayPlot">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>591</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QTabWidget" name="filterspecView">
        <property name="sizePolicy">
@@ -835,7 +863,7 @@
         <bool>false</bool>
        </property>
        <property name="tabsClosable">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <widget class="QWidget" name="bandDiagram">
         <attribute name="title">
