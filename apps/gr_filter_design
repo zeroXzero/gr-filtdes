@@ -33,43 +33,15 @@ except ImportError:
     raise SystemExit, 1
 
 try:
+    from filtdes.banditems import filtermovlineItem
+except ImportError:
+    print "Could not import from banditems. Please check whether banditems.py is in the library path"
+    raise SystemExit, 1
+
+try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
     _fromUtf8 = lambda s: s
-
-#custom class to emit signal for grpahicslineitem
-class SignalEmitter(QtCore.QObject):
-    #signal emitted when the attenuation bar is changed
-    attenChanged = QtCore.pyqtSignal(float)
-    def __init__(self,parent=None):
-      super(SignalEmitter, self).__init__(parent)
-
-    def emitSignal(self, attenval):
-      self.attenChanged.emit(attenval)
-
-#global signal emitter
-_sigemitter = SignalEmitter()
-
-#Redefining itemchange to allow control line movements
-class filterlineItem(QtGui.QGraphicsLineItem):
-	
-    def __init__(self, x1, y1, x2,y2, parent = None, scene = None):
-		QtGui.QGraphicsLineItem.__init__(self,x1,y1,x2,y2,parent,scene)
-		self.lower=0
-		self.upper=-50
-        
-    def itemChange(self, change, value):
-        if (change == QtGui.QGraphicsItem.ItemPositionChange):
-            newpos=value.toPointF()
-            rect=self.scene().sceneRect()
-            if (newpos.y() >= self.lower):
-                newpos.setY(self.lower)
-            if (newpos.y() <= self.upper):
-                newpos.setY(self.upper)
-            _sigemitter.emitSignal(-newpos.y())
-            return QtCore.QPointF(self.pos().x(), newpos.y())
-        return QtGui.QGraphicsItem.itemChange(self, change, value)
-
 
 
 # Gnuradio Filter design tool main window
@@ -247,11 +219,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.bpfitems=[]
 
 		#lpf items
-        self.lpfitems.append(filterlineItem(0,100,100,100))
-        self.lpfitems.append(filterlineItem(150,175,300,175))
+        self.lpfitems.append(filtermovlineItem())
         self.lpfitems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
-				            QtGui.QGraphicsItem.ItemSendsGeometryChanges)
-        self.lpfitems[1].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
 				            QtGui.QGraphicsItem.ItemSendsGeometryChanges)
         self.lpfitems.append(QtGui.QGraphicsLineItem(0,50,0,200))
         self.lpfitems.append(QtGui.QGraphicsLineItem(0,200,300,200))
@@ -261,11 +230,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.lpfitems.append(QtGui.QGraphicsLineItem(150,180,150,200))
 
         #hpf items
-        self.hpfitems.append(filterlineItem(150,100,300,100))
-        self.hpfitems.append(filterlineItem(0,175,100,175))
+        self.hpfitems.append(filtermovlineItem())
         self.hpfitems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
-			               QtGui.QGraphicsItem.ItemSendsGeometryChanges)
-        self.hpfitems[1].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
 			               QtGui.QGraphicsItem.ItemSendsGeometryChanges)
         self.hpfitems.append(QtGui.QGraphicsLineItem(0,50,0,200))
         self.hpfitems.append(QtGui.QGraphicsLineItem(0,200,300,200))
@@ -275,7 +241,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.hpfitems.append(QtGui.QGraphicsLineItem(150,105,150,200))
 
         #Connect signals
-        _sigemitter.attenChanged.connect(self.set_lpfatten)
+        self.lpfitems[0].attenChanged.connect(self.set_lpfatten)
 
         #populate the scene
         self.scene=QtGui.QGraphicsScene()
