@@ -40,6 +40,13 @@ except ImportError:
     raise SystemExit, 1
 
 try:
+#from filtdes.banditems import filtermovlineItem, lpfsLines, hpfsLines, bpfsLines 
+    from filtdes.polezero_plot import * 
+except ImportError:
+    print "Could not import from polezero_plot. Please check whether polezero_plot.py is in the library path"
+    raise SystemExit, 1
+
+try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
     _fromUtf8 = lambda s: s
@@ -229,7 +236,6 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.hpfitems = hpfItems
         self.bpfitems = bpfItems
         self.bnfitems = bnfItems
-        self.pzitems  = pzItems
 
 
         #Connect signals
@@ -245,7 +251,14 @@ class gr_plot_filter(QtGui.QMainWindow):
         
         self.pzscene=QtGui.QGraphicsScene()
         self.pzscene.setSceneRect(0,0,250,250)
-        self.gui.pzView.setScene(self.pzscene)
+
+        self.cpicker=CanvasPicker(self.gui.pzPlot)
+        self.cpicker.curveChanged.connect(self.set_curvetaps)
+#self.scalePicker = ScalePicker(self.gui.pzPlot)
+#Qt.QObject.connect(self.scalePicker,
+#Qt.SIGNAL("clicked"),
+#self.gui.pzPlot.insertCurve)
+        
 		
         #Edit boxes for band-diagrams (Not required as far as now)
         """
@@ -266,7 +279,6 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.lpfitems.append(self.lpfstopproxy)
         """
         self.populate_bandview(self.lpfitems)
-        self.populate_pzview(self.pzitems)
 
         # Set up validators for edit boxes
         self.intVal = Qt.QIntValidator(None)
@@ -445,6 +457,11 @@ class gr_plot_filter(QtGui.QMainWindow):
 
             if(r):
                 self.draw_plots(taps, params)
+        
+        zeros=self.get_zeros()
+        poles=self.get_poles()
+        self.gui.pzPlot.insertZeros(zeros)
+        self.gui.pzPlot.insertPoles(poles)
 
 
     # Filter design functions using a window
@@ -970,9 +987,20 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.bpfStopBandAttenEdit.setText(Qt.QString(str(atten)))
         self.design()
 
+    def set_curvetaps(self,(zr,pl)):
+        hz = poly1d(zr,r=1)
+        #print hz.c
+        self.taps=hz.c
+        self.draw_plots(self.taps,self.params)
+
     def get_zeros(self):
         hz = poly1d(self.taps,r=0)
+        #print self.taps,hz.c,hz.r
         return hz.r
+    
+    def get_poles(self):
+        hp = zeros(len(self.taps)-1,complex)
+        return hp
 
     def action_save_dialog(self):
         filename = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")

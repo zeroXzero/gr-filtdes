@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_new.ui'
 #
-# Created: Thu May 31 23:10:53 2012
+# Created: Wed Jun 13 13:10:21 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -409,8 +409,8 @@ class Ui_MainWindow(object):
         self.filterspecView.setObjectName(_fromUtf8("filterspecView"))
         self.bandDiagram = QtGui.QWidget()
         self.bandDiagram.setObjectName(_fromUtf8("bandDiagram"))
-        self.gridLayout_2 = QtGui.QGridLayout(self.bandDiagram)
-        self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
+        self.horizontalLayout_5 = QtGui.QHBoxLayout(self.bandDiagram)
+        self.horizontalLayout_5.setObjectName(_fromUtf8("horizontalLayout_5"))
         self.bandView = BandGraphicsView(self.bandDiagram)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -419,14 +419,21 @@ class Ui_MainWindow(object):
         self.bandView.setSizePolicy(sizePolicy)
         self.bandView.setMinimumSize(QtCore.QSize(400, 250))
         self.bandView.setObjectName(_fromUtf8("bandView"))
-        self.gridLayout_2.addWidget(self.bandView, 0, 0, 1, 1)
+        self.horizontalLayout_5.addWidget(self.bandView)
         self.filterspecView.addTab(self.bandDiagram, _fromUtf8(""))
         self.poleZero = QtGui.QWidget()
         self.poleZero.setAutoFillBackground(False)
         self.poleZero.setObjectName(_fromUtf8("poleZero"))
-        self.pzView = QtGui.QGraphicsView(self.poleZero)
-        self.pzView.setGeometry(QtCore.QRect(10, 10, 591, 251))
-        self.pzView.setObjectName(_fromUtf8("pzView"))
+        self.horizontalLayout_6 = QtGui.QHBoxLayout(self.poleZero)
+        self.horizontalLayout_6.setObjectName(_fromUtf8("horizontalLayout_6"))
+        self.pzPlot = PzPlot(self.poleZero)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pzPlot.sizePolicy().hasHeightForWidth())
+        self.pzPlot.setSizePolicy(sizePolicy)
+        self.pzPlot.setObjectName(_fromUtf8("pzPlot"))
+        self.horizontalLayout_6.addWidget(self.pzPlot)
         self.filterspecView.addTab(self.poleZero, _fromUtf8(""))
         self.filterCoeff = QtGui.QWidget()
         self.filterCoeff.setObjectName(_fromUtf8("filterCoeff"))
@@ -678,3 +685,4 @@ class Ui_MainWindow(object):
 
 from PyQt4 import Qwt5
 from bandgraphicsview import BandGraphicsView
+from polezero_plot import PzPlot

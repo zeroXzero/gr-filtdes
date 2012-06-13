@@ -868,8 +868,8 @@
         <attribute name="title">
          <string>Ideal Band</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
           <widget class="BandGraphicsView" name="bandView">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -894,16 +894,18 @@
         <attribute name="title">
          <string>Pole-Zero Plot</string>
         </attribute>
-        <widget class="QGraphicsView" name="pzView">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>10</y>
-           <width>591</width>
-           <height>251</height>
-          </rect>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="PzPlot" name="pzPlot">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
        <widget class="QWidget" name="filterCoeff">
         <attribute name="title">
@@ -1163,6 +1165,11 @@
    <class>BandGraphicsView</class>
    <extends>QGraphicsView</extends>
    <header>bandgraphicsview</header>
+  </customwidget>
+  <customwidget>
+   <class>PzPlot</class>
+   <extends>QListView</extends>
+   <header>polezero_plot</header>
   </customwidget>
  </customwidgets>
  <tabstops>
