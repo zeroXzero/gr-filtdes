@@ -36,6 +36,7 @@ GR_PYTHON_INSTALL(
 	pyqt_filter_new.py
 	bandgraphicsview.py
 	banditems.py
+	polezero_plot.py
     DESTINATION ${GR_PYTHON_DIR}/filtdes
 )
 
