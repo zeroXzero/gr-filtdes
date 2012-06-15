@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_new.ui'
 #
-# Created: Wed Jun 13 13:10:21 2012
+# Created: Fri Jun 15 11:06:06 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -58,6 +58,10 @@ class Ui_MainWindow(object):
         self.checkGrid = QtGui.QCheckBox(self.responseBox)
         self.checkGrid.setGeometry(QtCore.QRect(10, 160, 85, 19))
         self.checkGrid.setObjectName(_fromUtf8("checkGrid"))
+        self.checkFcoeff = QtGui.QCheckBox(self.responseBox)
+        self.checkFcoeff.setGeometry(QtCore.QRect(10, 180, 131, 19))
+        self.checkFcoeff.setChecked(True)
+        self.checkFcoeff.setObjectName(_fromUtf8("checkFcoeff"))
         self.groupSpecs = QtGui.QGroupBox(self.quickFrame)
         self.groupSpecs.setGeometry(QtCore.QRect(10, 280, 161, 91))
         self.groupSpecs.setObjectName(_fromUtf8("groupSpecs"))
@@ -67,9 +71,6 @@ class Ui_MainWindow(object):
         self.checkPzplot = QtGui.QCheckBox(self.groupSpecs)
         self.checkPzplot.setGeometry(QtCore.QRect(10, 40, 131, 19))
         self.checkPzplot.setObjectName(_fromUtf8("checkPzplot"))
-        self.checkFcoeff = QtGui.QCheckBox(self.groupSpecs)
-        self.checkFcoeff.setGeometry(QtCore.QRect(10, 60, 131, 19))
-        self.checkFcoeff.setObjectName(_fromUtf8("checkFcoeff"))
         self.gridLayout.addWidget(self.quickFrame, 0, 2, 1, 1)
         self.filterFrame = QtGui.QFrame(self.centralwidget)
         self.filterFrame.setMinimumSize(QtCore.QSize(300, 0))
@@ -396,6 +397,12 @@ class Ui_MainWindow(object):
         self.overlayPlot.setGeometry(QtCore.QRect(10, 10, 591, 291))
         self.overlayPlot.setObjectName(_fromUtf8("overlayPlot"))
         self.tabGroup.addTab(self.overlayTab, _fromUtf8(""))
+        self.fcTab = QtGui.QWidget()
+        self.fcTab.setObjectName(_fromUtf8("fcTab"))
+        self.filterCoeff = QtGui.QTextBrowser(self.fcTab)
+        self.filterCoeff.setGeometry(QtCore.QRect(15, 11, 581, 291))
+        self.filterCoeff.setObjectName(_fromUtf8("filterCoeff"))
+        self.tabGroup.addTab(self.fcTab, _fromUtf8(""))
         self.filterspecView = QtGui.QTabWidget(self.splitter)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -435,9 +442,6 @@ class Ui_MainWindow(object):
         self.pzPlot.setObjectName(_fromUtf8("pzPlot"))
         self.horizontalLayout_6.addWidget(self.pzPlot)
         self.filterspecView.addTab(self.poleZero, _fromUtf8(""))
-        self.filterCoeff = QtGui.QWidget()
-        self.filterCoeff.setObjectName(_fromUtf8("filterCoeff"))
-        self.filterspecView.addTab(self.filterCoeff, _fromUtf8(""))
         self.gridLayout.addWidget(self.splitter, 0, 1, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
@@ -595,10 +599,10 @@ class Ui_MainWindow(object):
         self.checkImpulse.setText(QtGui.QApplication.translate("MainWindow", "Impulse Response", None, QtGui.QApplication.UnicodeUTF8))
         self.checkStep.setText(QtGui.QApplication.translate("MainWindow", "Step Response", None, QtGui.QApplication.UnicodeUTF8))
         self.checkGrid.setText(QtGui.QApplication.translate("MainWindow", "Grid", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkFcoeff.setText(QtGui.QApplication.translate("MainWindow", "Filter Coefficients", None, QtGui.QApplication.UnicodeUTF8))
         self.groupSpecs.setTitle(QtGui.QApplication.translate("MainWindow", "Filter Specs", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBand.setText(QtGui.QApplication.translate("MainWindow", "Ideal Band", None, QtGui.QApplication.UnicodeUTF8))
         self.checkPzplot.setText(QtGui.QApplication.translate("MainWindow", "Pole-Zero Plot", None, QtGui.QApplication.UnicodeUTF8))
-        self.checkFcoeff.setText(QtGui.QApplication.translate("MainWindow", "Filter Coefficients", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBox.setItemText(0, QtGui.QApplication.translate("MainWindow", "FIR", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBox.setItemText(1, QtGui.QApplication.translate("MainWindow", "IIR", None, QtGui.QApplication.UnicodeUTF8))
         self.filterTypeComboBox.setItemText(0, QtGui.QApplication.translate("MainWindow", "Low Pass", None, QtGui.QApplication.UnicodeUTF8))
@@ -651,9 +655,9 @@ class Ui_MainWindow(object):
         self.tabGroup.setTabText(self.tabGroup.indexOf(self.phaseTab), QtGui.QApplication.translate("MainWindow", "Phase", None, QtGui.QApplication.UnicodeUTF8))
         self.tabGroup.setTabText(self.tabGroup.indexOf(self.groupTab), QtGui.QApplication.translate("MainWindow", "Group Delay", None, QtGui.QApplication.UnicodeUTF8))
         self.tabGroup.setTabText(self.tabGroup.indexOf(self.overlayTab), QtGui.QApplication.translate("MainWindow", "Overlay ", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabGroup.setTabText(self.tabGroup.indexOf(self.fcTab), QtGui.QApplication.translate("MainWindow", "Filter Coefficients", None, QtGui.QApplication.UnicodeUTF8))
         self.filterspecView.setTabText(self.filterspecView.indexOf(self.bandDiagram), QtGui.QApplication.translate("MainWindow", "Ideal Band", None, QtGui.QApplication.UnicodeUTF8))
         self.filterspecView.setTabText(self.filterspecView.indexOf(self.poleZero), QtGui.QApplication.translate("MainWindow", "Pole-Zero Plot", None, QtGui.QApplication.UnicodeUTF8))
-        self.filterspecView.setTabText(self.filterspecView.indexOf(self.filterCoeff), QtGui.QApplication.translate("MainWindow", "Filter Coefficients", None, QtGui.QApplication.UnicodeUTF8))
         self.menu_File.setTitle(QtGui.QApplication.translate("MainWindow", "&File", None, QtGui.QApplication.UnicodeUTF8))
         self.menu_Analysis.setTitle(QtGui.QApplication.translate("MainWindow", "Analysis", None, QtGui.QApplication.UnicodeUTF8))
         self.menuMode.setTitle(QtGui.QApplication.translate("MainWindow", "Mode", None, QtGui.QApplication.UnicodeUTF8))

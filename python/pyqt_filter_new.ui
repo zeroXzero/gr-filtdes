@@ -157,6 +157,22 @@
          <string>Grid</string>
         </property>
        </widget>
+       <widget class="QCheckBox" name="checkFcoeff">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>180</y>
+          <width>131</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Filter Coefficients</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
       </widget>
       <widget class="QGroupBox" name="groupSpecs">
        <property name="geometry">
@@ -194,19 +210,6 @@
         </property>
         <property name="text">
          <string>Pole-Zero Plot</string>
-        </property>
-       </widget>
-       <widget class="QCheckBox" name="checkFcoeff">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>60</y>
-          <width>131</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Filter Coefficients</string>
         </property>
        </widget>
       </widget>
@@ -835,6 +838,21 @@
          </property>
         </widget>
        </widget>
+       <widget class="QWidget" name="fcTab">
+        <attribute name="title">
+         <string>Filter Coefficients</string>
+        </attribute>
+        <widget class="QTextBrowser" name="filterCoeff">
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>11</y>
+           <width>581</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QTabWidget" name="filterspecView">
        <property name="sizePolicy">
@@ -906,11 +924,6 @@
           </widget>
          </item>
         </layout>
-       </widget>
-       <widget class="QWidget" name="filterCoeff">
-        <attribute name="title">
-         <string>Filter Coefficients</string>
-        </attribute>
        </widget>
       </widget>
      </widget>

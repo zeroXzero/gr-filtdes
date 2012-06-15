@@ -21,16 +21,6 @@ class PzPlot(Qwt.QwtPlot):
         self.setAxisScale(Qwt.QwtPlot.xBottom, -3, 3)
         self.setAxisScale(Qwt.QwtPlot.yLeft, -2, 2)
         
-        mark = Qwt.QwtPlotMarker()
-        mark.attach(self)
-
-        mark.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
-                                      Qt.QBrush(Qt.Qt.NoBrush),
-                                      Qt.QPen(Qt.Qt.white, 0, Qt.Qt.DotLine),
-                                      Qt.QSize(100, 100)))
-        mark.setValue(0,0)
-
-        self.replot()
 
 
     def setCanvasColor(self, color):

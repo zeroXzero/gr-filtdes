@@ -126,6 +126,10 @@ class gr_plot_filter(QtGui.QMainWindow):
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_phase)
 
+        self.connect(self.gui.checkFcoeff,
+					 Qt.SIGNAL("stateChanged(int)"),
+					 self.set_fcoeff)
+
         self.overlay=False
         self.gridenable=False
 
@@ -462,6 +466,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         poles=self.get_poles()
         self.gui.pzPlot.insertZeros(zeros)
         self.gui.pzPlot.insertPoles(poles)
+        self.update_fcoeff()
 
 
     # Filter design functions using a window
@@ -947,27 +952,23 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.tabGroup.addTab(self.gui.phaseTab, _fromUtf8("Phase"))
             self.update_freq_curves()
 
+    def set_fcoeff(self):
+        if (self.gui.checkFcoeff.checkState() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.fcTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.fcTab, _fromUtf8("Filter Coefficients"))
+            self.update_fcoeff()
+
     def populate_bandview(self,fitems):
         for item in fitems:
             if (item.isWidgetType()):
                 self.scene.addWidget(item)
             else:
                 self.scene.addItem(item)
-
-    def populate_pzview(self,fitems):
-        for item in fitems:
-            if (item.isWidgetType()):
-                self.pzscene.addWidget(item)
-            else:
-                self.pzscene.addItem(item)
 	
     def remove_bandview(self):
         for item in self.scene.items():
             self.scene.removeItem(item)
-
-    def remove_pzview(self):
-        for item in self.pzscene.items():
-            self.pzscene.removeItem(item)
 
     def set_fatten(self,atten):
         ftype = str(self.gui.filterTypeComboBox.currentText().toAscii())
@@ -1001,6 +1002,12 @@ class gr_plot_filter(QtGui.QMainWindow):
     def get_poles(self):
         hp = zeros(len(self.taps)-1,complex)
         return hp
+	
+    def update_fcoeff(self):
+        fcoeff=""
+        for t in self.taps:
+		    fcoeff=fcoeff+str(t)+"\n"
+        self.gui.filterCoeff.setText(Qt.QString(fcoeff))
 
     def action_save_dialog(self):
         filename = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")
