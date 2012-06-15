@@ -198,7 +198,7 @@ class CanvasPicker(Qt.QObject):
             self.__selectedCurve = found
             self.__selectedPoint = point
             self.__showCursor(True)
-            print self.__selectedCurve.data().x(point)
+#print self.__selectedCurve.data().x(point)
 
 
     def __moveBy(self, dx, dy):

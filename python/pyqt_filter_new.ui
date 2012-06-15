@@ -892,6 +892,12 @@
         <bool>false</bool>
        </property>
        <widget class="QWidget" name="bandDiagram">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <attribute name="title">
          <string>Ideal Band</string>
         </attribute>
@@ -899,15 +905,15 @@
          <item>
           <widget class="BandGraphicsView" name="bandView">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
+             <verstretch>1</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>400</width>
-             <height>250</height>
+             <width>525</width>
+             <height>249</height>
             </size>
            </property>
           </widget>

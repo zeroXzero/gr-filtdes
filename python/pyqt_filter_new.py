@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_new.ui'
 #
-# Created: Fri Jun 15 12:07:23 2012
+# Created: Fri Jun 15 12:54:13 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -418,16 +418,21 @@ class Ui_MainWindow(object):
         self.filterspecView.setTabsClosable(False)
         self.filterspecView.setObjectName(_fromUtf8("filterspecView"))
         self.bandDiagram = QtGui.QWidget()
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.bandDiagram.sizePolicy().hasHeightForWidth())
+        self.bandDiagram.setSizePolicy(sizePolicy)
         self.bandDiagram.setObjectName(_fromUtf8("bandDiagram"))
         self.horizontalLayout_5 = QtGui.QHBoxLayout(self.bandDiagram)
         self.horizontalLayout_5.setObjectName(_fromUtf8("horizontalLayout_5"))
         self.bandView = BandGraphicsView(self.bandDiagram)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.bandView.sizePolicy().hasHeightForWidth())
         self.bandView.setSizePolicy(sizePolicy)
-        self.bandView.setMinimumSize(QtCore.QSize(400, 250))
+        self.bandView.setMinimumSize(QtCore.QSize(525, 249))
         self.bandView.setObjectName(_fromUtf8("bandView"))
         self.horizontalLayout_5.addWidget(self.bandView)
         self.filterspecView.addTab(self.bandDiagram, _fromUtf8(""))

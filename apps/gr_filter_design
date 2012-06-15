@@ -290,18 +290,11 @@ class gr_plot_filter(QtGui.QMainWindow):
         #populate the scene
         self.scene=QtGui.QGraphicsScene()
         self.scene.setSceneRect(0,0,250,250)
+#self.gui.bandView.setGeometry(Qt.QRect(0, 0, 300, 300))
         self.gui.bandView.setScene(self.scene)
-        
-        self.pzscene=QtGui.QGraphicsScene()
-        self.pzscene.setSceneRect(0,0,250,250)
 
         self.cpicker=CanvasPicker(self.gui.pzPlot)
         self.cpicker.curveChanged.connect(self.set_curvetaps)
-#self.scalePicker = ScalePicker(self.gui.pzPlot)
-#Qt.QObject.connect(self.scalePicker,
-#Qt.SIGNAL("clicked"),
-#self.gui.pzPlot.insertCurve)
-        
 		
         #Edit boxes for band-diagrams (Not required as far as now)
         """
@@ -1116,8 +1109,11 @@ class gr_plot_filter(QtGui.QMainWindow):
         return hz.r
     
     def get_poles(self):
-        hp = zeros(len(self.taps)-1,complex)
-        return hp
+        if len(self.taps):
+            hp = zeros(len(self.taps)-1,complex)
+            return hp
+        else:
+            return []
 	
     def update_fcoeff(self):
         fcoeff=""
