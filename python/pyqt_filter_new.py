@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_new.ui'
 #
-# Created: Fri Jun 15 11:43:29 2012
+# Created: Fri Jun 15 12:07:23 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -454,8 +454,6 @@ class Ui_MainWindow(object):
         self.menu_File.setObjectName(_fromUtf8("menu_File"))
         self.menu_Analysis = QtGui.QMenu(self.menubar)
         self.menu_Analysis.setObjectName(_fromUtf8("menu_Analysis"))
-        self.menuMode = QtGui.QMenu(self.menu_Analysis)
-        self.menuMode.setObjectName(_fromUtf8("menuMode"))
         self.menuWidgets = QtGui.QMenu(self.menubar)
         self.menuWidgets.setObjectName(_fromUtf8("menuWidgets"))
         MainWindow.setMenuBar(self.menubar)
@@ -474,9 +472,11 @@ class Ui_MainWindow(object):
         self.actionMagnitude_Response.setObjectName(_fromUtf8("actionMagnitude_Response"))
         self.actionPhase_Respone = QtGui.QAction(MainWindow)
         self.actionPhase_Respone.setCheckable(True)
+        self.actionPhase_Respone.setChecked(True)
         self.actionPhase_Respone.setObjectName(_fromUtf8("actionPhase_Respone"))
         self.actionGroup_Delay = QtGui.QAction(MainWindow)
         self.actionGroup_Delay.setCheckable(True)
+        self.actionGroup_Delay.setChecked(True)
         self.actionGroup_Delay.setObjectName(_fromUtf8("actionGroup_Delay"))
         self.actionPhase_Delay = QtGui.QAction(MainWindow)
         self.actionPhase_Delay.setCheckable(True)
@@ -493,9 +493,11 @@ class Ui_MainWindow(object):
         self.actionGrid.setObjectName(_fromUtf8("actionGrid"))
         self.actionPole_Zero_Plot_2 = QtGui.QAction(MainWindow)
         self.actionPole_Zero_Plot_2.setCheckable(True)
+        self.actionPole_Zero_Plot_2.setChecked(True)
         self.actionPole_Zero_Plot_2.setObjectName(_fromUtf8("actionPole_Zero_Plot_2"))
         self.actionIdeal_Band = QtGui.QAction(MainWindow)
         self.actionIdeal_Band.setCheckable(True)
+        self.actionIdeal_Band.setChecked(True)
         self.actionIdeal_Band.setObjectName(_fromUtf8("actionIdeal_Band"))
         self.actionGrid_2 = QtGui.QAction(MainWindow)
         self.actionGrid_2.setCheckable(True)
@@ -522,16 +524,18 @@ class Ui_MainWindow(object):
         self.actionQuick_access.setChecked(True)
         self.actionQuick_access.setObjectName(_fromUtf8("actionQuick_access"))
         self.actionFilter_Coefficients = QtGui.QAction(MainWindow)
+        self.actionFilter_Coefficients.setCheckable(True)
+        self.actionFilter_Coefficients.setChecked(True)
         self.actionFilter_Coefficients.setObjectName(_fromUtf8("actionFilter_Coefficients"))
         self.actionDesign_widget = QtGui.QAction(MainWindow)
         self.actionDesign_widget.setCheckable(True)
         self.actionDesign_widget.setChecked(True)
         self.actionDesign_widget.setObjectName(_fromUtf8("actionDesign_widget"))
+        self.actionOverlay_2 = QtGui.QAction(MainWindow)
+        self.actionOverlay_2.setObjectName(_fromUtf8("actionOverlay_2"))
         self.menu_File.addAction(self.action_open)
         self.menu_File.addAction(self.action_save)
         self.menu_File.addAction(self.action_exit)
-        self.menuMode.addAction(self.actionTabbed)
-        self.menuMode.addAction(self.actionOverlay)
         self.menu_Analysis.addSeparator()
         self.menu_Analysis.addAction(self.actionMagnitude_Response)
         self.menu_Analysis.addAction(self.actionPhase_Respone)
@@ -539,13 +543,12 @@ class Ui_MainWindow(object):
         self.menu_Analysis.addAction(self.actionPhase_Delay)
         self.menu_Analysis.addAction(self.actionImpulse_Response)
         self.menu_Analysis.addAction(self.actionStep_Response)
+        self.menu_Analysis.addAction(self.actionOverlay_2)
         self.menu_Analysis.addAction(self.actionGrid_2)
+        self.menu_Analysis.addAction(self.actionFilter_Coefficients)
         self.menu_Analysis.addSeparator()
         self.menu_Analysis.addAction(self.actionIdeal_Band)
         self.menu_Analysis.addAction(self.actionPole_Zero_Plot_2)
-        self.menu_Analysis.addAction(self.actionFilter_Coefficients)
-        self.menu_Analysis.addSeparator()
-        self.menu_Analysis.addAction(self.menuMode.menuAction())
         self.menuWidgets.addAction(self.actionResponse_widget)
         self.menuWidgets.addAction(self.actionSpec_widget)
         self.menuWidgets.addAction(self.actionQuick_access)
@@ -663,7 +666,6 @@ class Ui_MainWindow(object):
         self.filterspecView.setTabText(self.filterspecView.indexOf(self.poleZero), QtGui.QApplication.translate("MainWindow", "Pole-Zero Plot", None, QtGui.QApplication.UnicodeUTF8))
         self.menu_File.setTitle(QtGui.QApplication.translate("MainWindow", "&File", None, QtGui.QApplication.UnicodeUTF8))
         self.menu_Analysis.setTitle(QtGui.QApplication.translate("MainWindow", "Analysis", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuMode.setTitle(QtGui.QApplication.translate("MainWindow", "Mode", None, QtGui.QApplication.UnicodeUTF8))
         self.menuWidgets.setTitle(QtGui.QApplication.translate("MainWindow", "Widgets", None, QtGui.QApplication.UnicodeUTF8))
         self.action_exit.setText(QtGui.QApplication.translate("MainWindow", "E&xit", None, QtGui.QApplication.UnicodeUTF8))
         self.action_save.setText(QtGui.QApplication.translate("MainWindow", "&Save", None, QtGui.QApplication.UnicodeUTF8))
@@ -689,6 +691,7 @@ class Ui_MainWindow(object):
         self.actionQuick_access.setText(QtGui.QApplication.translate("MainWindow", "Quick access", None, QtGui.QApplication.UnicodeUTF8))
         self.actionFilter_Coefficients.setText(QtGui.QApplication.translate("MainWindow", "Filter Coefficients", None, QtGui.QApplication.UnicodeUTF8))
         self.actionDesign_widget.setText(QtGui.QApplication.translate("MainWindow", "Design widget", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionOverlay_2.setText(QtGui.QApplication.translate("MainWindow", "Overlay", None, QtGui.QApplication.UnicodeUTF8))
 
 from PyQt4 import Qwt5
 from bandgraphicsview import BandGraphicsView

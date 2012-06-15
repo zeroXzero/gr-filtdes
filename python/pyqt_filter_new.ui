@@ -960,13 +960,6 @@
     <property name="title">
      <string>Analysis</string>
     </property>
-    <widget class="QMenu" name="menuMode">
-     <property name="title">
-      <string>Mode</string>
-     </property>
-     <addaction name="actionTabbed"/>
-     <addaction name="actionOverlay"/>
-    </widget>
     <addaction name="separator"/>
     <addaction name="actionMagnitude_Response"/>
     <addaction name="actionPhase_Respone"/>
@@ -974,13 +967,12 @@
     <addaction name="actionPhase_Delay"/>
     <addaction name="actionImpulse_Response"/>
     <addaction name="actionStep_Response"/>
+    <addaction name="actionOverlay_2"/>
     <addaction name="actionGrid_2"/>
+    <addaction name="actionFilter_Coefficients"/>
     <addaction name="separator"/>
     <addaction name="actionIdeal_Band"/>
     <addaction name="actionPole_Zero_Plot_2"/>
-    <addaction name="actionFilter_Coefficients"/>
-    <addaction name="separator"/>
-    <addaction name="menuMode"/>
    </widget>
    <widget class="QMenu" name="menuWidgets">
     <property name="title">
@@ -1032,12 +1024,18 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Phase Respone</string>
    </property>
   </action>
   <action name="actionGroup_Delay">
    <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
     <bool>true</bool>
    </property>
    <property name="text">
@@ -1082,12 +1080,18 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Pole Zero Plot</string>
    </property>
   </action>
   <action name="actionIdeal_Band">
    <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
     <bool>true</bool>
    </property>
    <property name="text">
@@ -1160,6 +1164,12 @@
    </property>
   </action>
   <action name="actionFilter_Coefficients">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Filter Coefficients</string>
    </property>
@@ -1173,6 +1183,11 @@
    </property>
    <property name="text">
     <string>Design widget</string>
+   </property>
+  </action>
+  <action name="actionOverlay_2">
+   <property name="text">
+    <string>Overlay</string>
    </property>
   </action>
  </widget>

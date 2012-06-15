@@ -102,7 +102,38 @@ class gr_plot_filter(QtGui.QMainWindow):
 					 Qt.SIGNAL("activated()"),
 					 self.action_design_widget)
 
+        self.connect(self.gui.actionMagnitude_Response,
+					 Qt.SIGNAL("activated()"),
+					 self.set_actmagresponse)
+
+        self.connect(self.gui.actionGrid_2,
+					 Qt.SIGNAL("activated()"),
+					 self.set_actgrid)
+
+        self.connect(self.gui.actionPhase_Respone,
+					 Qt.SIGNAL("activated()"),
+					 self.set_actphase)
 		
+        self.connect(self.gui.actionGroup_Delay,
+					 Qt.SIGNAL("activated()"),
+					 self.set_actgdelay)
+
+        self.connect(self.gui.actionFilter_Coefficients,
+					 Qt.SIGNAL("activated()"),
+					 self.set_actfcoeff)
+
+        self.connect(self.gui.actionIdeal_Band,
+					 Qt.SIGNAL("activated()"),
+					 self.set_actband)
+
+        self.connect(self.gui.actionPole_Zero_Plot_2,
+					 Qt.SIGNAL("activated()"),
+					 self.set_actpzplot)
+
+        self.connect(self.gui.actionOverlay_2,
+					 Qt.SIGNAL("activated()"),
+					 self.set_actoverlaymode)
+
         self.connect(self.gui.checkGrid,
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_grid)
@@ -922,6 +953,21 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.phasegrid.attach(self.gui.phasePlot)
             self.groupgrid.attach(self.gui.groupPlot)
             self.update_freq_curves()
+    
+    def set_actgrid(self):
+        if (self.gui.actionGrid_2.isChecked() == 0 ):
+            self.gridenable=False
+            self.freqgrid.detach()
+            self.phasegrid.detach()
+            self.groupgrid.detach()
+            self.update_freq_curves()
+        else:
+            self.gridenable=True
+            self.freqgrid.attach(self.gui.freqPlot)
+            self.phasegrid.attach(self.gui.phasePlot)
+            self.groupgrid.attach(self.gui.groupPlot)
+            self.update_freq_curves()
+
 
     def set_magresponse(self):
         if (self.gui.checkMagres.checkState() == 0 ):
@@ -932,8 +978,27 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.tabGroup.addTab(self.gui.freqTab, _fromUtf8("Magnitude Response"))
             self.update_freq_curves()
     
+    def set_actmagresponse(self):
+        if (self.gui.actionMagnitude_Response.isChecked() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.freqTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.freqTab, _fromUtf8("Magnitude Response"))
+            self.update_freq_curves()
+	
     def set_overlaymode(self):
         if (self.gui.checkOverlaymode.checkState() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.overlayTab))
+            self.freqcurve.attach(self.gui.freqPlot)
+            self.phasecurve.attach(self.gui.phasePlot)
+            self.update_freq_curves()
+        else:
+            self.gui.tabGroup.addTab(self.gui.overlayTab, _fromUtf8("Overlay"))
+            self.freqcurve.attach(self.gui.overlayPlot)
+            self.phasecurve.attach(self.gui.overlayPlot)
+            self.gui.overlayPlot.replot()
+
+    def set_actoverlaymode(self):
+        if (self.gui.actionOverlay_2.isChecked() == 0 ):
             self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.overlayTab))
             self.freqcurve.attach(self.gui.freqPlot)
             self.phasecurve.attach(self.gui.phasePlot)
@@ -951,8 +1016,22 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.tabGroup.addTab(self.gui.groupTab, _fromUtf8("Group Delay"))
             self.update_freq_curves()
     
+    def set_actgdelay(self):
+        if (self.gui.actionGroup_Delay.isChecked() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.groupTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.groupTab, _fromUtf8("Group Delay"))
+            self.update_freq_curves()
+
     def set_phase(self):
         if (self.gui.checkPhase.checkState() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.phaseTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.phaseTab, _fromUtf8("Phase"))
+            self.update_freq_curves()
+
+    def set_actphase(self):
+        if (self.gui.actionPhase_Respone.isChecked() == 0 ):
             self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.phaseTab))
         else:
             self.gui.tabGroup.addTab(self.gui.phaseTab, _fromUtf8("Phase"))
@@ -965,14 +1044,33 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.tabGroup.addTab(self.gui.fcTab, _fromUtf8("Filter Coefficients"))
             self.update_fcoeff()
 
+    def set_actfcoeff(self):
+        if (self.gui.actionFilter_Coefficients.isChecked() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.fcTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.fcTab, _fromUtf8("Filter Coefficients"))
+            self.update_fcoeff()
+
     def set_band(self):
         if (self.gui.checkBand.checkState() == 0 ):
             self.gui.filterspecView.removeTab(self.gui.filterspecView.indexOf(self.gui.bandDiagram))
         else:
             self.gui.filterspecView.addTab(self.gui.bandDiagram, _fromUtf8("Ideal Band"))
 
+    def set_actband(self):
+        if (self.gui.actionIdeal_Band.isChecked() == 0 ):
+            self.gui.filterspecView.removeTab(self.gui.filterspecView.indexOf(self.gui.bandDiagram))
+        else:
+            self.gui.filterspecView.addTab(self.gui.bandDiagram, _fromUtf8("Ideal Band"))
+
     def set_pzplot(self):
         if (self.gui.checkPzplot.checkState() == 0 ):
+            self.gui.filterspecView.removeTab(self.gui.filterspecView.indexOf(self.gui.poleZero))
+        else:
+            self.gui.filterspecView.addTab(self.gui.poleZero, _fromUtf8("Pole-Zero Plot"))
+
+    def set_actpzplot(self):
+        if (self.gui.actionPole_Zero_Plot_2.isChecked() == 0 ):
             self.gui.filterspecView.removeTab(self.gui.filterspecView.indexOf(self.gui.poleZero))
         else:
             self.gui.filterspecView.addTab(self.gui.poleZero, _fromUtf8("Pole-Zero Plot"))
