@@ -102,9 +102,6 @@ class gr_plot_filter(QtGui.QMainWindow):
 					 Qt.SIGNAL("activated()"),
 					 self.action_design_widget)
 
-        self.connect(self.gui.checkOverlaymode,
-					 Qt.SIGNAL("stateChanged(int)"),
-					 self.set_overlay_mode)
 		
         self.connect(self.gui.checkGrid,
 					 Qt.SIGNAL("stateChanged(int)"),
@@ -129,6 +126,14 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.checkFcoeff,
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_fcoeff)
+
+        self.connect(self.gui.checkBand,
+					 Qt.SIGNAL("stateChanged(int)"),
+					 self.set_band)
+        
+        self.connect(self.gui.checkPzplot,
+					 Qt.SIGNAL("stateChanged(int)"),
+					 self.set_pzplot)
 
         self.overlay=False
         self.gridenable=False
@@ -240,6 +245,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.hpfitems = hpfItems
         self.bpfitems = bpfItems
         self.bnfitems = bnfItems
+        
+        #remove overlay tab
+        self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.overlayTab))
 
 
         #Connect signals
@@ -900,13 +908,6 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             self.gui.filterFrame.hide()
 
-    def set_overlay_mode(self):
-        if (self.gui.checkOverlaymode.checkState() == 0 ):
-            self.overlay=False
-            self.phasecurve.attach(self.gui.phasePlot)
-        else:
-            self.overlay=True
-            self.phasecurve.attach(self.gui.freqPlot)
 
     def set_grid(self):
         if (self.gui.checkGrid.checkState() == 0 ):
@@ -934,9 +935,14 @@ class gr_plot_filter(QtGui.QMainWindow):
     def set_overlaymode(self):
         if (self.gui.checkOverlaymode.checkState() == 0 ):
             self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.overlayTab))
+            self.freqcurve.attach(self.gui.freqPlot)
+            self.phasecurve.attach(self.gui.phasePlot)
+            self.update_freq_curves()
         else:
             self.gui.tabGroup.addTab(self.gui.overlayTab, _fromUtf8("Overlay"))
-            self.update_freq_curves()
+            self.freqcurve.attach(self.gui.overlayPlot)
+            self.phasecurve.attach(self.gui.overlayPlot)
+            self.gui.overlayPlot.replot()
 
     def set_gdelay(self):
         if (self.gui.checkGdelay.checkState() == 0 ):
@@ -958,6 +964,18 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             self.gui.tabGroup.addTab(self.gui.fcTab, _fromUtf8("Filter Coefficients"))
             self.update_fcoeff()
+
+    def set_band(self):
+        if (self.gui.checkBand.checkState() == 0 ):
+            self.gui.filterspecView.removeTab(self.gui.filterspecView.indexOf(self.gui.bandDiagram))
+        else:
+            self.gui.filterspecView.addTab(self.gui.bandDiagram, _fromUtf8("Ideal Band"))
+
+    def set_pzplot(self):
+        if (self.gui.checkPzplot.checkState() == 0 ):
+            self.gui.filterspecView.removeTab(self.gui.filterspecView.indexOf(self.gui.poleZero))
+        else:
+            self.gui.filterspecView.addTab(self.gui.poleZero, _fromUtf8("Pole-Zero Plot"))
 
     def populate_bandview(self,fitems):
         for item in fitems:

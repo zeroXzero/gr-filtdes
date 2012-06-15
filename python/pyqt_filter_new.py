@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_new.ui'
 #
-# Created: Fri Jun 15 11:06:06 2012
+# Created: Fri Jun 15 11:43:29 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -32,7 +32,7 @@ class Ui_MainWindow(object):
         self.responseBox.setObjectName(_fromUtf8("responseBox"))
         self.checkOverlaymode = QtGui.QCheckBox(self.responseBox)
         self.checkOverlaymode.setGeometry(QtCore.QRect(10, 20, 151, 19))
-        self.checkOverlaymode.setChecked(True)
+        self.checkOverlaymode.setChecked(False)
         self.checkOverlaymode.setObjectName(_fromUtf8("checkOverlaymode"))
         self.checkMagres = QtGui.QCheckBox(self.responseBox)
         self.checkMagres.setGeometry(QtCore.QRect(10, 40, 151, 19))
@@ -67,9 +67,11 @@ class Ui_MainWindow(object):
         self.groupSpecs.setObjectName(_fromUtf8("groupSpecs"))
         self.checkBand = QtGui.QCheckBox(self.groupSpecs)
         self.checkBand.setGeometry(QtCore.QRect(10, 20, 85, 19))
+        self.checkBand.setChecked(True)
         self.checkBand.setObjectName(_fromUtf8("checkBand"))
         self.checkPzplot = QtGui.QCheckBox(self.groupSpecs)
         self.checkPzplot.setGeometry(QtCore.QRect(10, 40, 131, 19))
+        self.checkPzplot.setChecked(True)
         self.checkPzplot.setObjectName(_fromUtf8("checkPzplot"))
         self.gridLayout.addWidget(self.quickFrame, 0, 2, 1, 1)
         self.filterFrame = QtGui.QFrame(self.centralwidget)
@@ -392,6 +394,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.addWidget(self.groupPlot)
         self.tabGroup.addTab(self.groupTab, _fromUtf8(""))
         self.overlayTab = QtGui.QWidget()
+        self.overlayTab.setEnabled(True)
         self.overlayTab.setObjectName(_fromUtf8("overlayTab"))
         self.overlayPlot = Qwt5.QwtPlot(self.overlayTab)
         self.overlayPlot.setGeometry(QtCore.QRect(10, 10, 591, 291))

@@ -54,7 +54,7 @@
          <string>Overlay Mode</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
        <widget class="QCheckBox" name="checkMagres">
@@ -198,6 +198,9 @@
         <property name="text">
          <string>Ideal Band</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QCheckBox" name="checkPzplot">
         <property name="geometry">
@@ -210,6 +213,9 @@
         </property>
         <property name="text">
          <string>Pole-Zero Plot</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </widget>
@@ -824,6 +830,9 @@
         </layout>
        </widget>
        <widget class="QWidget" name="overlayTab">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <attribute name="title">
          <string>Overlay </string>
         </attribute>
