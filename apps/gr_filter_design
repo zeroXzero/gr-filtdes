@@ -214,6 +214,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.groupDelay = []
         self.phaseDelay = []
         self.gridview=0
+        self.params=[]
         self.nfftpts = int(10000)
         self.gui.nfftEdit.setText(Qt.QString("%1").arg(self.nfftpts))
 
@@ -293,12 +294,14 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.impresgrid= Qwt.QwtPlotGrid()
         self.stepresgrid= Qwt.QwtPlotGrid()
         self.pdelaygrid= Qwt.QwtPlotGrid()
+        self.ftapsgrid= Qwt.QwtPlotGrid()
         self.freqgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
         self.phasegrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
         self.groupgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
         self.impresgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
         self.stepresgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
         self.pdelaygrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
+        self.ftapsgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
 
         # Create zoom functionality for the plots
         self.timeZoomer = Qwt.QwtPlotZoomer(self.gui.timePlot.xBottom,
@@ -1269,43 +1272,46 @@ class gr_plot_filter(QtGui.QMainWindow):
     def set_grid(self):
         if (self.gui.checkGrid.checkState() == 0 ):
             self.gridenable=False
-            self.freqgrid.detach()
-            self.phasegrid.detach()
-            self.groupgrid.detach()
-            self.pdelaygrid.detach()
-            self.impresgrid.detach()
-            self.stepresgrid.detach()
-            self.draw_plots(self.taps, self.params)
+            self.detach_allgrid()
+            self.replot_all()
         else:
             self.gridenable=True
-            self.freqgrid.attach(self.gui.freqPlot)
-            self.phasegrid.attach(self.gui.phasePlot)
-            self.groupgrid.attach(self.gui.groupPlot)
-            self.impresgrid.attach(self.gui.impresPlot)
-            self.stepresgrid.attach(self.gui.stepresPlot)
-            self.pdelaygrid.attach(self.gui.pdelayPlot)
-            self.draw_plots(self.taps, self.params)
+            if self.gridview:
+                self.freqgrid.attach(self.gui.mfreqPlot)
+                self.ftapsgrid.attach(self.gui.mtimePlot)
+                self.gui.mfreqPlot.replot()
+                self.gui.mtimePlot.replot()
+            else:
+                self.freqgrid.attach(self.gui.freqPlot)
+                self.phasegrid.attach(self.gui.phasePlot)
+                self.groupgrid.attach(self.gui.groupPlot)
+                self.impresgrid.attach(self.gui.impresPlot)
+                self.stepresgrid.attach(self.gui.stepresPlot)
+                self.pdelaygrid.attach(self.gui.pdelayPlot)
+                self.ftapsgrid.attach(self.gui.timePlot)
+                self.replot_all()
     
     def set_actgrid(self):
         if (self.gui.actionGrid_2.isChecked() == 0 ):
             self.gridenable=False
-            self.freqgrid.detach()
-            self.phasegrid.detach()
-            self.groupgrid.detach()
-            self.pdelaygrid.detach()
-            self.impresgrid.detach()
-            self.stepresgrid.detach()
-            self.draw_plots(self.taps, self.params)
+            self.detach_allgrid()
+            self.replot_all()
         else:
             self.gridenable=True
-            self.freqgrid.attach(self.gui.freqPlot)
-            self.phasegrid.attach(self.gui.phasePlot)
-            self.groupgrid.attach(self.gui.groupPlot)
-            self.impresgrid.attach(self.gui.impresPlot)
-            self.stepresgrid.attach(self.gui.stepresPlot)
-            self.pdelaygrid.attach(self.gui.pdelayPlot)
-            self.draw_plots(self.taps, self.params)
-
+            if self.gridview:
+                self.freqgrid.attach(self.gui.mfreqPlot)
+                self.ftapsgrid.attach(self.gui.mtimePlot)
+                self.gui.mfreqPlot.replot()
+                self.gui.mtimePlot.replot()
+            else:
+                self.freqgrid.attach(self.gui.freqPlot)
+                self.phasegrid.attach(self.gui.phasePlot)
+                self.groupgrid.attach(self.gui.groupPlot)
+                self.impresgrid.attach(self.gui.impresPlot)
+                self.stepresgrid.attach(self.gui.stepresPlot)
+                self.pdelaygrid.attach(self.gui.pdelayPlot)
+                self.ftapsgrid.attach(self.gui.timePlot)
+                self.replot_all()
 
     def set_magresponse(self):
         if (self.gui.checkMagres.checkState() == 0 ):
@@ -1326,9 +1332,11 @@ class gr_plot_filter(QtGui.QMainWindow):
     def set_switchview(self):
         if (self.gui.actionGridview.isChecked() == 0 ):
             self.gridview=0
+            self.set_actgrid()
             self.gui.stackedWindows.setCurrentIndex(0)
             self.freqcurve.attach(self.gui.freqPlot)
             self.phasecurve.attach(self.gui.phasePlot)
+            self.pdelaycurve.attach(self.gui.pdelayPlot)
             self.groupcurve.attach(self.gui.groupPlot)
             self.rcurve.attach(self.gui.timePlot)
             self.icurve.attach(self.gui.timePlot)
@@ -1339,6 +1347,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.draw_plots(self.taps,self.params)
         else:
             self.gridview=1
+            self.set_actgrid()
             self.gui.stackedWindows.setCurrentIndex(1)
             self.freqcurve.attach(self.gui.mfreqPlot)
             self.rcurve.attach(self.gui.mtimePlot)
@@ -1354,42 +1363,66 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.mfgroupBox.show()
             self.gui.mtgroupBox.show()
 
+    def replot_all(self):
+        self.gui.timePlot.replot()
+        self.gui.mtimePlot.replot()
+        self.gui.freqPlot.replot()
+        self.gui.mfreqPlot.replot()
+        self.gui.phasePlot.replot()
+        self.gui.groupPlot.replot()
+        self.gui.impresPlot.replot()
+        self.gui.stepresPlot.replot()
+        self.gui.pdelayPlot.replot()
+
+    def detach_allgrid(self):
+        self.freqgrid.detach()
+        self.phasegrid.detach()
+        self.groupgrid.detach()
+        self.pdelaygrid.detach()
+        self.impresgrid.detach()
+        self.stepresgrid.detach()
+        self.ftapsgrid.detach()
+	
     def set_mfmagresponse(self):
         if self.mfoverlay:
             if not(self.ifinlist(self.freqcurve,self.gui.mfreqPlot.itemList())):
+                self.detach_allgrid()
                 self.freqcurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
             self.update_freq_curves()
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
+            self.set_actgrid()
             self.freqcurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
             self.freqcurve.setYAxis(Qwt.QwtPlot.yLeft)
             self.freqcurve.attach(self.gui.mfreqPlot)
-            self.set_actgrid()
             self.update_freq_curves()
 
     def set_mfphaseresponse(self):
         if self.mfoverlay:
             if not(self.ifinlist(self.phasecurve,self.gui.mfreqPlot.itemList())):
+                self.detach_allgrid()
                 self.phasecurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
                 self.update_phase_curves()
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
+            self.set_actgrid()
             self.phasecurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
             self.phasecurve.setYAxis(Qwt.QwtPlot.yLeft)
             self.phasecurve.attach(self.gui.mfreqPlot)
-            self.set_actgrid()
             self.update_phase_curves()
 
     def set_mfgroupdelay(self):
         if self.mfoverlay:
             if not(self.ifinlist(self.groupcurve,self.gui.mfreqPlot.itemList())):
+                self.detach_allgrid()
                 self.groupcurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
                 self.update_group_curves()
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
+            self.set_actgrid()
             self.groupcurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
             self.groupcurve.setYAxis(Qwt.QwtPlot.yLeft)
             self.groupcurve.attach(self.gui.mfreqPlot)
@@ -1398,11 +1431,13 @@ class gr_plot_filter(QtGui.QMainWindow):
     def set_mfphasedelay(self):
         if self.mfoverlay:
             if not(self.ifinlist(self.pdelaycurve,self.gui.mfreqPlot.itemList())):
+                self.detach_allgrid()
                 self.pdelaycurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
                 self.update_pdelay_curves()
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
+            self.set_actgrid()
             self.pdelaycurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
             self.pdelaycurve.setYAxis(Qwt.QwtPlot.yLeft)
             self.pdelaycurve.attach(self.gui.mfreqPlot)
@@ -1431,7 +1466,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             items[1].setYAxis(Qwt.QwtPlot.yRight)
             if plot is self.gui.mfreqPlot:
-                items[1].setPen(QtGui.QPen(QtCore.Qt.red, 1, QtCore.Qt.SolidLine)) 
+                items[1].setPen(QtGui.QPen(QtCore.Qt.red, 1, QtCore.Qt.SolidLine))
+        self.set_actgrid()
             
             
     def update_fft(self, taps, params):
@@ -1454,6 +1490,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.update_time_curves()
         else:
             self.gui.mtimePlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
+            self.set_actgrid()
             self.rcurve.setYAxis(Qwt.QwtPlot.yLeft)
             self.icurve.setYAxis(Qwt.QwtPlot.yLeft)
             self.rcurve.attach(self.gui.mtimePlot)
@@ -1469,6 +1506,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.update_step_curves()
         else:
             self.gui.mtimePlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
+            self.set_actgrid()
             self.steprescurve.setYAxis(Qwt.QwtPlot.yLeft)
             self.steprescurve.attach(self.gui.mtimePlot)
             self.steprescurve_i.attach(self.gui.mtimePlot)
@@ -1483,6 +1521,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.update_imp_curves()
         else:
             self.gui.mtimePlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
+            self.set_actgrid()
             self.imprescurve.setYAxis(Qwt.QwtPlot.yLeft)
             self.imprescurve.attach(self.gui.mtimePlot)
             self.imprescurve_i.attach(self.gui.mtimePlot)
@@ -1601,6 +1640,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         if self.gridview:
             self.update_fft(self.taps, self.params)
             self.set_mfmagresponse()
+            self.set_mttaps()
         else:
             self.draw_plots(self.taps,self.params)
         #update the pzplot in other view
