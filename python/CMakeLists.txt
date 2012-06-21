@@ -34,6 +34,7 @@ GR_PYTHON_INSTALL(
 	pyqt_filter.py
 	optfir.py
 	pyqt_filter_new.py
+	pyqt_filter_stacked.py
 	bandgraphicsview.py
 	banditems.py
 	polezero_plot.py

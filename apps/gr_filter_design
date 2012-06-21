@@ -27,7 +27,7 @@ except ImportError:
     raise SystemExit, 1
 
 try:
-    from filtdes.pyqt_filter_new import Ui_MainWindow
+    from filtdes.pyqt_filter_stacked import Ui_MainWindow
 except ImportError:
     print "Could not import from pyqt_filter. Please build with \"pyuic4 pyqt_filter.ui -o pyqt_filter.py\""
     raise SystemExit, 1
@@ -86,19 +86,19 @@ class gr_plot_filter(QtGui.QMainWindow):
                      Qt.SIGNAL("textEdited(QString)"),
                      self.nfft_edit_changed)
 
-        self.connect(self.gui.actionQuick_access,
+        self.connect(self.gui.actionQuick_Access,
 					 Qt.SIGNAL("activated()"),
 					 self.action_quick_access)
         
-        self.connect(self.gui.actionSpec_widget,
+        self.connect(self.gui.actionSpec_Widget,
 					 Qt.SIGNAL("activated()"),
 					 self.action_spec_widget)
 
-        self.connect(self.gui.actionResponse_widget,
+        self.connect(self.gui.actionResponse_Widget,
 					 Qt.SIGNAL("activated()"),
 					 self.action_response_widget)
 
-        self.connect(self.gui.actionDesign_widget,
+        self.connect(self.gui.actionDesign_Widget,
 					 Qt.SIGNAL("activated()"),
 					 self.action_design_widget)
 
@@ -133,6 +133,34 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.actionOverlay_2,
 					 Qt.SIGNAL("activated()"),
 					 self.set_actoverlaymode)
+        
+        self.connect(self.gui.actionGridview,
+					 Qt.SIGNAL("activated()"),
+					 self.set_switchview)
+
+        self.connect(self.gui.actionPlot_select,
+					 Qt.SIGNAL("activated()"),
+					 self.set_plotselect)
+        
+        self.connect(self.gui.mfmagPush,
+                     Qt.SIGNAL("released()"),
+                     self.set_mfmagresponse)
+
+        self.connect(self.gui.mfphasePush,
+                     Qt.SIGNAL("released()"),
+                     self.set_mfphaseresponse)
+
+        self.connect(self.gui.mfgpdlyPush,
+                     Qt.SIGNAL("released()"),
+                     self.set_mfgroupdelay)
+
+        self.connect(self.gui.mfphdlyPush,
+                     Qt.SIGNAL("released()"),
+                     self.set_mfphasedelay)
+
+        self.connect(self.gui.mfoverlayPush,
+                     Qt.SIGNAL("clicked()"),
+                     self.set_mfoverlay)
 
         self.connect(self.gui.checkGrid,
 					 Qt.SIGNAL("stateChanged(int)"),
@@ -166,8 +194,8 @@ class gr_plot_filter(QtGui.QMainWindow):
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_pzplot)
 
-        self.overlay=False
         self.gridenable=False
+        self.mfoverlay=False
 
         self.gui.designButton.setShortcut(QtCore.Qt.Key_Return)
 
@@ -175,6 +203,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.fftdB = []
         self.fftDeg = []
         self.groupDelay = []
+        self.gridview=0
         self.nfftpts = int(10000)
         self.gui.nfftEdit.setText(Qt.QString("%1").arg(self.nfftpts))
 
@@ -242,11 +271,30 @@ class gr_plot_filter(QtGui.QMainWindow):
                                             Qwt.QwtPicker.AlwaysOn,
                                             self.gui.timePlot.canvas())
 
+        self.mtimeZoomer = Qwt.QwtPlotZoomer(self.gui.mtimePlot.xBottom,
+                                            self.gui.mtimePlot.yLeft,
+                                            Qwt.QwtPicker.PointSelection,
+                                            Qwt.QwtPicker.AlwaysOn,
+                                            self.gui.mtimePlot.canvas())
+
         self.freqZoomer = Qwt.QwtPlotZoomer(self.gui.freqPlot.xBottom,
                                             self.gui.freqPlot.yLeft,
                                             Qwt.QwtPicker.PointSelection,
                                             Qwt.QwtPicker.AlwaysOn,
                                             self.gui.freqPlot.canvas())
+        
+        self.mfreqZoomer = Qwt.QwtPlotZoomer(self.gui.mfreqPlot.xBottom,
+                                             self.gui.mfreqPlot.yLeft,
+                                             Qwt.QwtPicker.PointSelection,
+                                             Qwt.QwtPicker.AlwaysOn,
+                                             self.gui.mfreqPlot.canvas())
+
+        
+        self.mfreqZoomer2 = Qwt.QwtPlotZoomer(self.gui.mfreqPlot.xBottom,
+                                              self.gui.mfreqPlot.yRight,
+                                              Qwt.QwtPicker.PointSelection,
+                                              Qwt.QwtPicker.AlwaysOff,
+                                              self.gui.mfreqPlot.canvas())
 
         self.phaseZoomer = Qwt.QwtPlotZoomer(self.gui.phasePlot.xBottom,
                                              self.gui.phasePlot.yLeft,
@@ -292,10 +340,13 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.scene.setSceneRect(0,0,250,250)
 #self.gui.bandView.setGeometry(Qt.QRect(0, 0, 300, 300))
         self.gui.bandView.setScene(self.scene)
+        self.gui.mbandView.setScene(self.scene)
 
         self.cpicker=CanvasPicker(self.gui.pzPlot)
         self.cpicker.curveChanged.connect(self.set_curvetaps)
 		
+        self.cpicker2=CanvasPicker(self.gui.mpzPlot)
+        self.cpicker2.curveChanged.connect(self.set_mcurvetaps)
         #Edit boxes for band-diagrams (Not required as far as now)
         """
         self.lpfpassEdit=QtGui.QLineEdit()
@@ -498,6 +549,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         poles=self.get_poles()
         self.gui.pzPlot.insertZeros(zeros)
         self.gui.pzPlot.insertPoles(poles)
+        self.gui.mpzPlot.insertZeros(zeros)
+        self.gui.mpzPlot.insertPoles(poles)
         self.update_fcoeff()
 
 
@@ -838,10 +891,16 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.timePlot.setAxisScale(self.gui.timePlot.yLeft,
                                            ymin, ymax)
 
+            self.gui.mtimePlot.setAxisScale(self.gui.mtimePlot.xBottom,
+                                           0, ntaps)
+            self.gui.mtimePlot.setAxisScale(self.gui.mtimePlot.yLeft,
+                                           ymin, ymax)
             # Set the zoomer base to unzoom to the new axis
             self.timeZoomer.setZoomBase()
+            self.mtimeZoomer.setZoomBase()
 
             self.gui.timePlot.replot()
+            self.gui.mtimePlot.replot()
 
     def update_freq_curves(self):
         npts = len(self.fftdB)
@@ -858,10 +917,26 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.freqPlot.setAxisScale(self.gui.freqPlot.yLeft,
                                            ymin, ymax)
 
+            if self.mfoverlay:
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.xBottom,
+                                                xmin, xmax)
+                self.gui.mfreqPlot.setAxisScale(self.freqcurve.yAxis(),
+                                                ymin, ymax)
+                self.mfreqZoomer2.setEnabled(True)
+                self.mfreqZoomer2.setZoomBase()
+            else:
+                self.mfreqZoomer2.setEnabled(False)
+                self.gui.mfreqPlot.enableAxis(Qwt.QwtPlot.yRight,False)
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.xBottom,
+                                                xmin, xmax)
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.yLeft,
+                                                ymin, ymax)
             # Set the zoomer base to unzoom to the new axis
             self.freqZoomer.setZoomBase()
+            self.mfreqZoomer.setZoomBase()
 
             self.gui.freqPlot.replot()
+            self.gui.mfreqPlot.replot()
 
 
     def update_phase_curves(self):
@@ -878,11 +953,29 @@ class gr_plot_filter(QtGui.QMainWindow):
                                             xmin, xmax)
             self.gui.phasePlot.setAxisScale(self.gui.phasePlot.yLeft,
                                             ymin, ymax)
+        
+            if self.mfoverlay:
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.xBottom,
+                                                xmin, xmax)
+                self.gui.mfreqPlot.setAxisScale(self.phasecurve.yAxis(),
+                                                ymin, ymax)
+                self.mfreqZoomer2.setEnabled(True)
+                self.mfreqZoomer2.setZoomBase()
+            else:
+                self.mfreqZoomer2.setEnabled(False)
+                self.gui.mfreqPlot.enableAxis(Qwt.QwtPlot.yRight,False)
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.xBottom,
+                                                xmin, xmax)
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.yLeft,
+                                                ymin, ymax)
+ 
 
             # Set the zoomer base to unzoom to the new axis
             self.phaseZoomer.setZoomBase()
+            self.mfreqZoomer.setZoomBase()
 
             self.gui.phasePlot.replot()
+            self.gui.mfreqPlot.replot()
 
     def update_group_curves(self):
         npts = len(self.groupDelay)
@@ -899,10 +992,27 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.groupPlot.setAxisScale(self.gui.groupPlot.yLeft,
                                             ymin, ymax)
 
+            if self.mfoverlay:
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.xBottom,
+                                                xmin, xmax)
+                self.gui.mfreqPlot.setAxisScale(self.groupcurve.yAxis(),
+                                                ymin, ymax)
+                self.mfreqZoomer2.setEnabled(True)
+                self.mfreqZoomer2.setZoomBase()
+            else:
+                self.mfreqZoomer2.setEnabled(False)
+                self.gui.mfreqPlot.enableAxis(Qwt.QwtPlot.yRight,False)
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.xBottom,
+                                                xmin, xmax)
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.yLeft,
+                                                ymin, ymax)
+ 
             # Set the zoomer base to unzoom to the new axis
             self.groupZoomer.setZoomBase()
+            self.mfreqZoomer.setZoomBase()
 
             self.gui.groupPlot.replot()
+            self.gui.mfreqPlot.replot()
 
 
     def action_quick_access(self):
@@ -942,10 +1052,14 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.update_freq_curves()
         else:
             self.gridenable=True
-            self.freqgrid.attach(self.gui.freqPlot)
-            self.phasegrid.attach(self.gui.phasePlot)
-            self.groupgrid.attach(self.gui.groupPlot)
-            self.update_freq_curves()
+            if self.gridview:
+                self.freqgrid.attach(self.gui.freqPlot)
+                self.phasegrid.attach(self.gui.phasePlot)
+                self.groupgrid.attach(self.gui.groupPlot)
+                self.update_freq_curves()
+            else:
+                self.freqgrid.attach(self.gui.mfreqPlot)
+                self.update_freq_curves()
     
     def set_actgrid(self):
         if (self.gui.actionGrid_2.isChecked() == 0 ):
@@ -1001,6 +1115,105 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.freqcurve.attach(self.gui.overlayPlot)
             self.phasecurve.attach(self.gui.overlayPlot)
             self.gui.overlayPlot.replot()
+
+    def set_switchview(self):
+        if (self.gui.actionGridview.isChecked() == 0 ):
+            self.gridview=0
+            self.gui.stackedWindows.setCurrentIndex(0)
+            self.freqcurve.attach(self.gui.freqPlot)
+            self.phasecurve.attach(self.gui.phasePlot)
+            self.groupcurve.attach(self.gui.groupPlot)
+            self.draw_plots(self.taps,self.params)
+        else:
+            self.gridview=1
+            self.gui.stackedWindows.setCurrentIndex(1)
+            self.freqcurve.attach(self.gui.mfreqPlot)
+            self.update_freq_curves()
+	
+    def set_plotselect(self):
+        if (self.gui.actionPlot_select.isChecked() == 0 ):
+            self.gui.mfgroupBox.hide()
+            self.gui.mtgroupBox.hide()
+        else:
+            self.gui.mfgroupBox.show()
+            self.gui.mtgroupBox.show()
+
+    def set_mfmagresponse(self):
+        if self.mfoverlay:
+            if not(self.ifinlist(self.freqcurve,self.gui.mfreqPlot.itemList())):
+                self.freqcurve.attach(self.gui.mfreqPlot)
+                self.detach_firstattached()
+                self.update_freq_curves()
+        else:
+            self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
+            self.freqcurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
+            self.freqcurve.setYAxis(Qwt.QwtPlot.yLeft)
+            self.freqcurve.attach(self.gui.mfreqPlot)
+            self.set_actgrid()
+            self.update_freq_curves()
+
+    def set_mfphaseresponse(self):
+        if self.mfoverlay:
+            if not(self.ifinlist(self.phasecurve,self.gui.mfreqPlot.itemList())):
+                self.phasecurve.attach(self.gui.mfreqPlot)
+                self.detach_firstattached()
+                self.update_phase_curves()
+        else:
+            self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
+            self.phasecurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
+            self.phasecurve.setYAxis(Qwt.QwtPlot.yLeft)
+            self.phasecurve.attach(self.gui.mfreqPlot)
+            self.set_actgrid()
+            self.update_phase_curves()
+
+    def set_mfgroupdelay(self):
+        if self.mfoverlay:
+            if not(self.ifinlist(self.groupcurve,self.gui.mfreqPlot.itemList())):
+                self.groupcurve.attach(self.gui.mfreqPlot)
+                self.detach_firstattached()
+                self.update_group_curves()
+        else:
+            self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
+            self.groupcurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
+            self.groupcurve.setYAxis(Qwt.QwtPlot.yLeft)
+            self.groupcurve.attach(self.gui.mfreqPlot)
+            self.update_group_curves()
+    
+    def set_mfphasedelay(self):
+        pass
+
+    def ifinlist(self,a,dlist):
+        for d in dlist:
+            if self.compare_instances(a,d):
+                return True
+        return False
+
+    def compare_instances(self,a,b):
+        if a is b:
+            return True
+        else:
+            return False
+
+    def detach_firstattached(self):
+        items=self.gui.mfreqPlot.itemList()
+        self.gui.mfreqPlot.enableAxis(Qwt.QwtPlot.yRight)
+        if len(items) > 2:
+            yaxis=items[0].yAxis()
+            items[2].setPen(items[0].pen())
+            items[2].setYAxis(yaxis)
+            items[0].detach()
+        else:
+            items[1].setYAxis(Qwt.QwtPlot.yRight)
+            items[1].setPen(QtGui.QPen(QtCore.Qt.red, 1, QtCore.Qt.SolidLine)) 
+            
+            
+    def update_fft(self, taps, params):
+        self.params = params
+        self.taps = scipy.array(taps)
+        self.get_fft(self.params["fs"], self.taps, self.nfftpts)
+
+    def set_mfoverlay(self):
+        self.mfoverlay = not(self.mfoverlay)
 
     def set_gdelay(self):
         if (self.gui.checkGdelay.checkState() == 0 ):
@@ -1102,6 +1315,26 @@ class gr_plot_filter(QtGui.QMainWindow):
         #print hz.c
         self.taps=hz.c
         self.draw_plots(self.taps,self.params)
+        #update the pzplot in other view
+        zeros=self.get_zeros()
+        poles=self.get_poles()
+        self.gui.mpzPlot.insertZeros(zeros)
+        self.gui.mpzPlot.insertPoles(poles)
+
+    def set_mcurvetaps(self,(zr,pl)):
+        hz = poly1d(zr,r=1)
+        #print hz.c
+        self.taps=hz.c
+        if self.gridview:
+            self.update_fft(self.taps, self.params)
+            self.set_mfmagresponse()
+        else:
+            self.draw_plots(self.taps,self.params)
+        #update the pzplot in other view
+        zeros=self.get_zeros()
+        poles=self.get_poles()
+        self.gui.pzPlot.insertZeros(zeros)
+        self.gui.pzPlot.insertPoles(poles)
 
     def get_zeros(self):
         hz = poly1d(self.taps,r=0)
@@ -1120,6 +1353,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         for t in self.taps:
 		    fcoeff=fcoeff+str(t)+"\n"
         self.gui.filterCoeff.setText(Qt.QString(fcoeff))
+        self.gui.mfilterCoeff.setText(Qt.QString(fcoeff))
 
     def action_save_dialog(self):
         filename = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")
