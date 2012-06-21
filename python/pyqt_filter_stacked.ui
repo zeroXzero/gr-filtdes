@@ -598,7 +598,7 @@
             </sizepolicy>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>8</number>
            </property>
            <property name="tabsClosable">
             <bool>false</bool>
@@ -618,7 +618,7 @@
            </widget>
            <widget class="QWidget" name="timeTab">
             <attribute name="title">
-             <string>Time Domain</string>
+             <string>Filter Taps</string>
             </attribute>
             <layout class="QHBoxLayout" name="horizontalLayout_10">
              <item>
@@ -671,6 +671,43 @@
             <layout class="QHBoxLayout" name="horizontalLayout_7">
              <item>
               <widget class="QTextBrowser" name="filterCoeff"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="impresTab">
+            <attribute name="title">
+             <string>Impulse Response</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="QwtPlot" name="impresPlot">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="stepresTab">
+            <attribute name="title">
+             <string>Step Response</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <item>
+              <widget class="QwtPlot" name="stepresPlot"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="pdelayTab">
+            <attribute name="title">
+             <string>Phase Delay</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_17">
+             <item>
+              <widget class="QwtPlot" name="pdelayPlot"/>
              </item>
             </layout>
            </widget>
@@ -791,7 +828,7 @@
              </rect>
             </property>
             <property name="text">
-             <string>Overlay Mode</string>
+             <string>Overlay </string>
             </property>
             <property name="checked">
              <bool>false</bool>
@@ -1190,9 +1227,9 @@
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_5">
                  <item>
-                  <widget class="QToolButton" name="mfoverlayPush_9">
+                  <widget class="QToolButton" name="mttapsPush">
                    <property name="toolTip">
-                    <string>Overlay</string>
+                    <string>Filter Taps</string>
                    </property>
                    <property name="text">
                     <string>...</string>
@@ -1208,14 +1245,14 @@
                     </size>
                    </property>
                    <property name="checkable">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QToolButton" name="mfoverlayPush_10">
+                  <widget class="QToolButton" name="mtstepPush">
                    <property name="toolTip">
-                    <string>Overlay</string>
+                    <string>Step Response</string>
                    </property>
                    <property name="text">
                     <string>...</string>
@@ -1231,14 +1268,14 @@
                     </size>
                    </property>
                    <property name="checkable">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QToolButton" name="mfoverlayPush_11">
+                  <widget class="QToolButton" name="mtimpPush">
                    <property name="toolTip">
-                    <string>Overlay</string>
+                    <string>Impulse Response</string>
                    </property>
                    <property name="text">
                     <string>...</string>
@@ -1254,12 +1291,12 @@
                     </size>
                    </property>
                    <property name="checkable">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QToolButton" name="mfoverlayPush_12">
+                  <widget class="QToolButton" name="mtoverlay">
                    <property name="toolTip">
                     <string>Overlay</string>
                    </property>
@@ -1551,7 +1588,7 @@
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Grid</string>

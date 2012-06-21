@@ -9,7 +9,7 @@ from filtdes import optfir
 
 try:
     import scipy
-    from scipy import fftpack, poly1d
+    from scipy import fftpack, poly1d, signal
 except ImportError:
     print "Please install SciPy to run this script (http://www.scipy.org/)"
     raise SystemExit, 1
@@ -203,6 +203,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.fftdB = []
         self.fftDeg = []
         self.groupDelay = []
+        self.phaseDelay = []
         self.gridview=0
         self.nfftpts = int(10000)
         self.gui.nfftEdit.setText(Qt.QString("%1").arg(self.nfftpts))
@@ -249,20 +250,38 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         self.groupcurve = Qwt.QwtPlotCurve("Group Delay")
         self.groupcurve.attach(self.gui.groupPlot)
+
+        self.imprescurve = Qwt.QwtPlotCurve("Impulse Response")
+        self.imprescurve.attach(self.gui.impresPlot)
+
+        self.steprescurve = Qwt.QwtPlotCurve("Step Response")
+        self.steprescurve.attach(self.gui.stepresPlot)
 	
+        self.pdelaycurve = Qwt.QwtPlotCurve("Phase Delay")
+        self.pdelaycurve.attach(self.gui.pdelayPlot)
+
         #Antialiasing
         self.rcurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
         self.icurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
         self.freqcurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
         self.phasecurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
         self.groupcurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
+        self.imprescurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
+        self.steprescurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
+        self.pdelaycurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
 
         self.freqgrid= Qwt.QwtPlotGrid()
         self.phasegrid= Qwt.QwtPlotGrid()
         self.groupgrid= Qwt.QwtPlotGrid()
+        self.impresgrid= Qwt.QwtPlotGrid()
+        self.stepresgrid= Qwt.QwtPlotGrid()
+        self.pdelaygrid= Qwt.QwtPlotGrid()
         self.freqgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
         self.phasegrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
         self.groupgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
+        self.impresgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
+        self.stepresgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
+        self.pdelaygrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
 
         # Create zoom functionality for the plots
         self.timeZoomer = Qwt.QwtPlotZoomer(self.gui.timePlot.xBottom,
@@ -308,16 +327,59 @@ class gr_plot_filter(QtGui.QMainWindow):
                                              Qwt.QwtPicker.AlwaysOn,
                                              self.gui.groupPlot.canvas())
 
+        self.impresZoomer = Qwt.QwtPlotZoomer(self.gui.groupPlot.xBottom,
+                                             self.gui.groupPlot.yLeft,
+                                             Qwt.QwtPicker.PointSelection,
+                                             Qwt.QwtPicker.AlwaysOn,
+                                             self.gui.impresPlot.canvas())
+
+        self.stepresZoomer = Qwt.QwtPlotZoomer(self.gui.groupPlot.xBottom,
+                                             self.gui.groupPlot.yLeft,
+                                             Qwt.QwtPicker.PointSelection,
+                                             Qwt.QwtPicker.AlwaysOn,
+                                             self.gui.stepresPlot.canvas())
+
+        self.pdelayZoomer = Qwt.QwtPlotZoomer(self.gui.groupPlot.xBottom,
+                                             self.gui.groupPlot.yLeft,
+                                             Qwt.QwtPicker.PointSelection,
+                                             Qwt.QwtPicker.AlwaysOn,
+                                             self.gui.pdelayPlot.canvas())
+
         # Set up pen for colors and line width
         blue = QtGui.qRgb(0x00, 0x00, 0xFF)
         blueBrush = Qt.QBrush(Qt.QColor(blue))
         red = QtGui.qRgb(0xFF, 0x00, 0x00)
         redBrush = Qt.QBrush(Qt.QColor(red))
         self.freqcurve.setPen(Qt.QPen(blueBrush, 1))
-        self.rcurve.setPen(Qt.QPen(blueBrush, 1))
-        self.icurve.setPen(Qt.QPen(redBrush, 1))
+#self.rcurve.setPen(Qt.QPen(blueBrush, 1))
+#self.icurve.setPen(Qt.QPen(redBrush, 1))
+        self.rcurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
+        self.rcurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
+                                      Qt.QBrush(Qt.Qt.gray),
+                                      Qt.QPen(Qt.Qt.blue),
+                                      Qt.QSize(8, 8)))
+
+        self.icurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
+        self.icurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
+                                      Qt.QBrush(Qt.Qt.gray),
+                                      Qt.QPen(Qt.Qt.red),
+                                      Qt.QSize(8, 8)))
+
+        self.imprescurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
+        self.imprescurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
+                                      Qt.QBrush(Qt.Qt.gray),
+                                      Qt.QPen(Qt.Qt.blue),
+                                      Qt.QSize(8, 8)))
+
+        self.steprescurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
+        self.steprescurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
+                                      Qt.QBrush(Qt.Qt.gray),
+                                      Qt.QPen(Qt.Qt.blue),
+                                      Qt.QSize(8, 8)))
+
         self.phasecurve.setPen(Qt.QPen(blueBrush, 1))
         self.groupcurve.setPen(Qt.QPen(blueBrush, 1))
+        self.pdelaycurve.setPen(Qt.QPen(blueBrush, 1))
 
 		#assigning items
         self.lpfitems = lpfItems
@@ -543,7 +605,11 @@ class gr_plot_filter(QtGui.QMainWindow):
                 taps,params,r = designer[ftype](fs, gain, wintype)
 
             if(r):
-                self.draw_plots(taps, params)
+                if self.gridview:
+                    self.update_fft(taps, params)
+                    self.set_mfmagresponse()
+                else:
+                    self.draw_plots(taps,params)
         
         zeros=self.get_zeros()
         poles=self.get_poles()
@@ -873,6 +939,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.fftdB = 20.0*scipy.log10(abs(fftpts))
         self.fftDeg = scipy.unwrap(scipy.angle(fftpts))
         self.groupDelay = -scipy.diff(self.fftDeg)
+        self.phaseDelay = -self.fftDeg[1:]/self.freq[1:]
 
     def update_time_curves(self):
         ntaps = len(self.taps)
@@ -883,9 +950,18 @@ class gr_plot_filter(QtGui.QMainWindow):
             else:
                 self.rcurve.setData(scipy.arange(ntaps), self.taps)
 
+            impres=self.impulse_response(self.taps)
+            stepres=self.step_response(self.taps)
+            self.imprescurve.setData(scipy.arange(ntaps), impres)
+            self.steprescurve.setData(scipy.arange(ntaps), stepres)
+
             # Reset the x-axis to the new time scale
             ymax = 1.5 * max(self.taps)
             ymin = 1.5 * min(self.taps)
+            iymax = 1.5 * max(impres)
+            iymin = 1.5 * min(impres)
+            symax = 1.5 * max(stepres)
+            symin = 1.5 * min(stepres)
             self.gui.timePlot.setAxisScale(self.gui.timePlot.xBottom,
                                            0, ntaps)
             self.gui.timePlot.setAxisScale(self.gui.timePlot.yLeft,
@@ -895,12 +971,27 @@ class gr_plot_filter(QtGui.QMainWindow):
                                            0, ntaps)
             self.gui.mtimePlot.setAxisScale(self.gui.mtimePlot.yLeft,
                                            ymin, ymax)
+            
+            self.gui.impresPlot.setAxisScale(self.gui.impresPlot.xBottom,
+                                           0, ntaps)
+            self.gui.impresPlot.setAxisScale(self.gui.impresPlot.yLeft,
+                                           iymin, iymax)
+
+            self.gui.stepresPlot.setAxisScale(self.gui.stepresPlot.xBottom,
+                                           0, ntaps)
+            self.gui.stepresPlot.setAxisScale(self.gui.stepresPlot.yLeft,
+                                           symin, symax)
+
             # Set the zoomer base to unzoom to the new axis
             self.timeZoomer.setZoomBase()
             self.mtimeZoomer.setZoomBase()
+            self.impresZoomer.setZoomBase()
+            self.stepresZoomer.setZoomBase()
 
             self.gui.timePlot.replot()
             self.gui.mtimePlot.replot()
+            self.gui.impresPlot.replot()
+            self.gui.stepresPlot.replot()
 
     def update_freq_curves(self):
         npts = len(self.fftdB)
@@ -977,6 +1068,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.phasePlot.replot()
             self.gui.mfreqPlot.replot()
 
+
     def update_group_curves(self):
         npts = len(self.groupDelay)
         if(npts > 0):
@@ -1014,6 +1106,42 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.groupPlot.replot()
             self.gui.mfreqPlot.replot()
 
+    def update_pdelay_curves(self):
+        npts = len(self.phaseDelay)
+        if(npts > 0):
+            self.pdelaycurve.setData(self.freq, self.phaseDelay)
+
+            # Reset the x-axis to the new time scale
+            ymax = 1.3 * max(self.phaseDelay[0:npts])
+            ymin = 1.1 * min(self.phaseDelay[0:npts])
+            xmax = self.freq[npts/2]
+            xmin = self.freq[0]
+            self.gui.pdelayPlot.setAxisScale(self.gui.pdelayPlot.xBottom,
+                                            xmin, xmax)
+            self.gui.pdelayPlot.setAxisScale(self.gui.pdelayPlot.yLeft,
+                                            ymin, ymax)
+
+            if self.mfoverlay:
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.xBottom,
+                                                xmin, xmax)
+                self.gui.mfreqPlot.setAxisScale(self.pdelaycurve.yAxis(),
+                                                ymin, ymax)
+                self.mfreqZoomer2.setEnabled(True)
+                self.mfreqZoomer2.setZoomBase()
+            else:
+                self.mfreqZoomer2.setEnabled(False)
+                self.gui.mfreqPlot.enableAxis(Qwt.QwtPlot.yRight,False)
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.xBottom,
+                                                xmin, xmax)
+                self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.yLeft,
+                                                ymin, ymax)
+ 
+            # Set the zoomer base to unzoom to the new axis
+            self.groupZoomer.setZoomBase()
+            self.mfreqZoomer.setZoomBase()
+
+            self.gui.pdelayPlot.replot()
+            self.gui.mfreqPlot.replot()
 
     def action_quick_access(self):
         #Hides quick access widget if unselected
@@ -1049,17 +1177,19 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.freqgrid.detach()
             self.phasegrid.detach()
             self.groupgrid.detach()
-            self.update_freq_curves()
+            self.pdelaygrid.detach()
+            self.impresgrid.detach()
+            self.stepresgrid.detach()
+            self.draw_plots(self.taps, self.params)
         else:
             self.gridenable=True
-            if self.gridview:
-                self.freqgrid.attach(self.gui.freqPlot)
-                self.phasegrid.attach(self.gui.phasePlot)
-                self.groupgrid.attach(self.gui.groupPlot)
-                self.update_freq_curves()
-            else:
-                self.freqgrid.attach(self.gui.mfreqPlot)
-                self.update_freq_curves()
+            self.freqgrid.attach(self.gui.freqPlot)
+            self.phasegrid.attach(self.gui.phasePlot)
+            self.groupgrid.attach(self.gui.groupPlot)
+            self.impresgrid.attach(self.gui.impresPlot)
+            self.stepresgrid.attach(self.gui.stepresPlot)
+            self.pdelaygrid.attach(self.gui.pdelayPlot)
+            self.draw_plots(self.taps, self.params)
     
     def set_actgrid(self):
         if (self.gui.actionGrid_2.isChecked() == 0 ):
@@ -1067,13 +1197,19 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.freqgrid.detach()
             self.phasegrid.detach()
             self.groupgrid.detach()
-            self.update_freq_curves()
+            self.pdelaygrid.detach()
+            self.impresgrid.detach()
+            self.stepresgrid.detach()
+            self.draw_plots(self.taps, self.params)
         else:
             self.gridenable=True
             self.freqgrid.attach(self.gui.freqPlot)
             self.phasegrid.attach(self.gui.phasePlot)
             self.groupgrid.attach(self.gui.groupPlot)
-            self.update_freq_curves()
+            self.impresgrid.attach(self.gui.impresPlot)
+            self.stepresgrid.attach(self.gui.stepresPlot)
+            self.pdelaygrid.attach(self.gui.pdelayPlot)
+            self.draw_plots(self.taps, self.params)
 
 
     def set_magresponse(self):
@@ -1180,7 +1316,17 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.update_group_curves()
     
     def set_mfphasedelay(self):
-        pass
+        if self.mfoverlay:
+            if not(self.ifinlist(self.pdelaycurve,self.gui.mfreqPlot.itemList())):
+                self.pdelaycurve.attach(self.gui.mfreqPlot)
+                self.detach_firstattached()
+                self.update_pdelay_curves()
+        else:
+            self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
+            self.pdelaycurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
+            self.pdelaycurve.setYAxis(Qwt.QwtPlot.yLeft)
+            self.pdelaycurve.attach(self.gui.mfreqPlot)
+            self.update_pdelay_curves()
 
     def ifinlist(self,a,dlist):
         for d in dlist:
@@ -1347,7 +1493,24 @@ class gr_plot_filter(QtGui.QMainWindow):
             return hp
         else:
             return []
-	
+
+    def impulse_response(self,b,a=1):
+        l = len(b)
+        impulse = scipy.repeat(0.,l)
+        impulse[0] =1.
+        x = scipy.arange(0,l)
+        response = signal.lfilter(b,a,impulse)
+        return response
+
+    def step_response(self,b,a=1):
+        l = len(b)
+        impulse = scipy.repeat(0.,l)
+        impulse[0] =1.
+        x = scipy.arange(0,l)
+        response = signal.lfilter(b,a,impulse)
+        step = scipy.cumsum(response)
+        return step
+
     def update_fcoeff(self):
         fcoeff=""
         for t in self.taps:
@@ -1481,6 +1644,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.update_freq_curves()
         self.update_phase_curves()
         self.update_group_curves()
+        self.update_pdelay_curves()
 
         self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
 
