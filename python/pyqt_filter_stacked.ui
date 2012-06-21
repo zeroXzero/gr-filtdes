@@ -876,6 +876,9 @@
             <property name="text">
              <string>Impulse Response</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
            <widget class="QCheckBox" name="checkStep">
             <property name="geometry">
@@ -888,6 +891,9 @@
             </property>
             <property name="text">
              <string>Step Response</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
            <widget class="QCheckBox" name="checkGrid">
@@ -1476,6 +1482,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Phase Delay</string>
    </property>
@@ -1484,12 +1493,18 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Impulse Response</string>
    </property>
   </action>
   <action name="actionStep_Response">
    <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
     <bool>true</bool>
    </property>
    <property name="text">

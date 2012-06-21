@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_stacked.ui'
 #
-# Created: Thu Jun 21 22:30:36 2012
+# Created: Fri Jun 22 00:46:26 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -467,9 +467,11 @@ class Ui_MainWindow(object):
         self.checkPdelay.setObjectName(_fromUtf8("checkPdelay"))
         self.checkImpulse = QtGui.QCheckBox(self.responseBox)
         self.checkImpulse.setGeometry(QtCore.QRect(10, 120, 141, 19))
+        self.checkImpulse.setChecked(True)
         self.checkImpulse.setObjectName(_fromUtf8("checkImpulse"))
         self.checkStep = QtGui.QCheckBox(self.responseBox)
         self.checkStep.setGeometry(QtCore.QRect(10, 140, 131, 19))
+        self.checkStep.setChecked(True)
         self.checkStep.setObjectName(_fromUtf8("checkStep"))
         self.checkGrid = QtGui.QCheckBox(self.responseBox)
         self.checkGrid.setGeometry(QtCore.QRect(10, 160, 85, 19))
@@ -709,12 +711,15 @@ class Ui_MainWindow(object):
         self.actionGroup_Delay.setObjectName(_fromUtf8("actionGroup_Delay"))
         self.actionPhase_Delay = QtGui.QAction(MainWindow)
         self.actionPhase_Delay.setCheckable(True)
+        self.actionPhase_Delay.setChecked(True)
         self.actionPhase_Delay.setObjectName(_fromUtf8("actionPhase_Delay"))
         self.actionImpulse_Response = QtGui.QAction(MainWindow)
         self.actionImpulse_Response.setCheckable(True)
+        self.actionImpulse_Response.setChecked(True)
         self.actionImpulse_Response.setObjectName(_fromUtf8("actionImpulse_Response"))
         self.actionStep_Response = QtGui.QAction(MainWindow)
         self.actionStep_Response.setCheckable(True)
+        self.actionStep_Response.setChecked(True)
         self.actionStep_Response.setObjectName(_fromUtf8("actionStep_Response"))
         self.actionPole_Zero_Plot = QtGui.QAction(MainWindow)
         self.actionPole_Zero_Plot.setObjectName(_fromUtf8("actionPole_Zero_Plot"))

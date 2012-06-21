@@ -138,6 +138,18 @@ class gr_plot_filter(QtGui.QMainWindow):
 					 Qt.SIGNAL("activated()"),
 					 self.set_plotselect)
         
+        self.connect(self.gui.actionPhase_Delay,
+					 Qt.SIGNAL("activated()"),
+					 self.set_actpdelay)
+
+        self.connect(self.gui.actionImpulse_Response,
+					 Qt.SIGNAL("activated()"),
+					 self.set_actimpres)
+
+        self.connect(self.gui.actionStep_Response,
+					 Qt.SIGNAL("activated()"),
+					 self.set_actstepres)
+
         self.connect(self.gui.mfmagPush,
                      Qt.SIGNAL("released()"),
                      self.set_mfmagresponse)
@@ -202,6 +214,17 @@ class gr_plot_filter(QtGui.QMainWindow):
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_pzplot)
 
+        self.connect(self.gui.checkPdelay,
+					 Qt.SIGNAL("stateChanged(int)"),
+					 self.set_pdelay)
+
+        self.connect(self.gui.checkImpulse,
+					 Qt.SIGNAL("stateChanged(int)"),
+					 self.set_impres)
+
+        self.connect(self.gui.checkStep,
+					 Qt.SIGNAL("stateChanged(int)"),
+					 self.set_stepres)
         self.gridenable=False
         self.mfoverlay=False
         self.mtoverlay=False
@@ -1592,6 +1615,42 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.filterspecView.removeTab(self.gui.filterspecView.indexOf(self.gui.poleZero))
         else:
             self.gui.filterspecView.addTab(self.gui.poleZero, _fromUtf8("Pole-Zero Plot"))
+
+    def set_pdelay(self):
+        if (self.gui.checkPzplot.checkState() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.pdelayTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.pdelayTab, _fromUtf8("Phase Delay"))
+
+    def set_actpdelay(self):
+        if (self.gui.actionPhase_Delay.isChecked() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.pdelayTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.pdelayTab, _fromUtf8("Phase Delay"))
+
+    def set_impres(self):
+        if (self.gui.checkImpulse.checkState() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.impresTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.impresTab, _fromUtf8("Impulse Response"))
+
+    def set_actimpres(self):
+        if (self.gui.actionImpulse_Response.isChecked() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.impresTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.impresTab, _fromUtf8("Impulse Response"))
+
+    def set_stepres(self):
+        if (self.gui.checkStep.checkState() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.stepresTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.stepresTab, _fromUtf8("Step Response"))
+
+    def set_actstepres(self):
+        if (self.gui.actionStep_Response.isChecked() == 0 ):
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.stepresTab))
+        else:
+            self.gui.tabGroup.addTab(self.gui.stepresTab, _fromUtf8("Step Response"))
 
     def populate_bandview(self,fitems):
         for item in fitems:

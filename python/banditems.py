@@ -43,7 +43,6 @@ class filtermovlineItem(QtGui.QGraphicsObject):
             return QtCore.QPointF(self.pos().x(), newpos.y())
         return QtGui.QGraphicsItem.itemChange(self, change, value)
 
-
 #Static lines in lpf band diagram
 class lpfsLines(QtGui.QGraphicsObject):
     def __init__(self):
@@ -160,6 +159,7 @@ bnfItems=[]
 
 #lpfitems list
 lpfItems.append(filtermovlineItem(200,175,400,175,0,-60))
+#lpfItems.append(filtermovlineItem(200,145,400,145,30,-30))
 lpfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
               QtGui.QGraphicsItem.ItemSendsGeometryChanges)
 lpfItems.append(lpfsLines())
