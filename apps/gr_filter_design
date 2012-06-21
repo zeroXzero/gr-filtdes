@@ -1627,6 +1627,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         #print hz.c
         self.taps=hz.c
         self.draw_plots(self.taps,self.params)
+        self.update_fcoeff()
         #update the pzplot in other view
         zeros=self.get_zeros()
         poles=self.get_poles()
@@ -1643,6 +1644,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.set_mttaps()
         else:
             self.draw_plots(self.taps,self.params)
+        self.update_fcoeff()
         #update the pzplot in other view
         zeros=self.get_zeros()
         poles=self.get_poles()

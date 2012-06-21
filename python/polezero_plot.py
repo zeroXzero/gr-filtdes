@@ -198,7 +198,6 @@ class CanvasPicker(Qt.QObject):
             self.__selectedCurve = found
             self.__selectedPoint = point
             self.__showCursor(True)
-#print self.__selectedCurve.data().x(point)
 
 
     def __moveBy(self, dx, dy):
@@ -224,13 +223,15 @@ class CanvasPicker(Qt.QObject):
         xData = zeros(curve.dataSize(), Float)
         yData = zeros(curve.dataSize(), Float)
 
-        for i in range(curve.dataSize()):
-            if i == self.__selectedPoint:
-                xData[i] = self.__plot.invTransform(curve.xAxis(), pos.x())
-                yData[i] = self.__plot.invTransform(curve.yAxis(), pos.y())
-            else:
-                xData[i] = curve.x(i)
-                yData[i] = curve.y(i)
+        #poles made unmovable temporarily as only FIR design is active
+        if self.__selectedCurve.symbol().style() == Qwt.QwtSymbol.Ellipse:
+            for i in range(curve.dataSize()):
+                if i == self.__selectedPoint:
+                    xData[i] = self.__plot.invTransform(curve.xAxis(), pos.x())
+                    yData[i] = self.__plot.invTransform(curve.yAxis(), pos.y())
+                else:
+                    xData[i] = curve.x(i)
+                    yData[i] = curve.y(i)
         curve.setData(xData, yData)
         self.__plot.replot()
         px=[]
