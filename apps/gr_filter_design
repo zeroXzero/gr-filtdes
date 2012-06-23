@@ -2078,7 +2078,8 @@ class gr_plot_filter(QtGui.QMainWindow):
     def draw_plots(self, taps, params):
         self.params = params
         self.taps = scipy.array(taps)
-        self.get_fft(self.params["fs"], self.taps, self.nfftpts)
+        if self.params:
+            self.get_fft(self.params["fs"], self.taps, self.nfftpts)
         self.update_time_curves()
         self.update_freq_curves()
         self.update_phase_curves()
