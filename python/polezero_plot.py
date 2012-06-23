@@ -46,8 +46,9 @@ class PzPlot(Qwt.QwtPlot):
         self.__insertZero(Qt.Qt.blue, roots.real,roots.imag)
 
     def insertPoles(self, roots):
-            self.__insertPole(Qt.Qt.black, roots.real,roots.imag)
-            self.replot()
+            if len(roots):
+                self.__insertPole(Qt.Qt.black, roots.real,roots.imag)
+                self.replot()
 
     def __insertZero(self, color, px, py):
 

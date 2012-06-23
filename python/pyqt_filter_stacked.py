@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_stacked.ui'
 #
-# Created: Fri Jun 22 00:46:26 2012
+# Created: Sat Jun 23 21:56:46 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -731,7 +731,7 @@ class Ui_MainWindow(object):
         self.actionPole_Zero_Plot_2.setObjectName(_fromUtf8("actionPole_Zero_Plot_2"))
         self.actionIdeal_Band = QtGui.QAction(MainWindow)
         self.actionIdeal_Band.setCheckable(True)
-        self.actionIdeal_Band.setChecked(True)
+        self.actionIdeal_Band.setChecked(False)
         self.actionIdeal_Band.setObjectName(_fromUtf8("actionIdeal_Band"))
         self.actionGrid_2 = QtGui.QAction(MainWindow)
         self.actionGrid_2.setCheckable(True)
@@ -803,6 +803,10 @@ class Ui_MainWindow(object):
         self.actionPlot_select.setCheckable(True)
         self.actionPlot_select.setChecked(True)
         self.actionPlot_select.setObjectName(_fromUtf8("actionPlot_select"))
+        self.actionBand_Diagram = QtGui.QAction(MainWindow)
+        self.actionBand_Diagram.setCheckable(True)
+        self.actionBand_Diagram.setChecked(True)
+        self.actionBand_Diagram.setObjectName(_fromUtf8("actionBand_Diagram"))
         self.menu_File.addAction(self.action_open)
         self.menu_File.addAction(self.action_save)
         self.menu_File.addAction(self.action_exit)
@@ -815,9 +819,10 @@ class Ui_MainWindow(object):
         self.menu_Analysis.addAction(self.actionStep_Response)
         self.menu_Analysis.addAction(self.actionGrid_2)
         self.menu_Analysis.addAction(self.actionFilter_Coefficients)
-        self.menu_Analysis.addSeparator()
         self.menu_Analysis.addAction(self.actionIdeal_Band)
+        self.menu_Analysis.addSeparator()
         self.menu_Analysis.addAction(self.actionPole_Zero_Plot_2)
+        self.menu_Analysis.addAction(self.actionBand_Diagram)
         self.menu_Analysis.addSeparator()
         self.menu_Analysis.addAction(self.actionDesign_Widget)
         self.menu_Analysis.addAction(self.actionQuick_Access)
@@ -833,7 +838,7 @@ class Ui_MainWindow(object):
         self.filterTypeWidget.setCurrentIndex(0)
         self.stackedWindows.setCurrentIndex(0)
         self.tabGroup.setCurrentIndex(0)
-        self.filterspecView.setCurrentIndex(1)
+        self.filterspecView.setCurrentIndex(0)
         self.mfreqTabgroup.setCurrentIndex(0)
         self.mfilterspecView.setCurrentIndex(1)
         QtCore.QObject.connect(self.action_exit, QtCore.SIGNAL(_fromUtf8("activated()")), MainWindow.close)
@@ -925,7 +930,7 @@ class Ui_MainWindow(object):
         self.tabGroup.setTabText(self.tabGroup.indexOf(self.impresTab), QtGui.QApplication.translate("MainWindow", "Impulse Response", None, QtGui.QApplication.UnicodeUTF8))
         self.tabGroup.setTabText(self.tabGroup.indexOf(self.stepresTab), QtGui.QApplication.translate("MainWindow", "Step Response", None, QtGui.QApplication.UnicodeUTF8))
         self.tabGroup.setTabText(self.tabGroup.indexOf(self.pdelayTab), QtGui.QApplication.translate("MainWindow", "Phase Delay", None, QtGui.QApplication.UnicodeUTF8))
-        self.filterspecView.setTabText(self.filterspecView.indexOf(self.bandDiagram), QtGui.QApplication.translate("MainWindow", "Ideal Band", None, QtGui.QApplication.UnicodeUTF8))
+        self.filterspecView.setTabText(self.filterspecView.indexOf(self.bandDiagram), QtGui.QApplication.translate("MainWindow", "Band Diagram", None, QtGui.QApplication.UnicodeUTF8))
         self.filterspecView.setTabText(self.filterspecView.indexOf(self.poleZero), QtGui.QApplication.translate("MainWindow", "Pole-Zero Plot", None, QtGui.QApplication.UnicodeUTF8))
         self.responseBox.setTitle(QtGui.QApplication.translate("MainWindow", "Filter Responses", None, QtGui.QApplication.UnicodeUTF8))
         self.checkMagres.setText(QtGui.QApplication.translate("MainWindow", "Magnitude Response", None, QtGui.QApplication.UnicodeUTF8))
@@ -937,7 +942,7 @@ class Ui_MainWindow(object):
         self.checkGrid.setText(QtGui.QApplication.translate("MainWindow", "Grid", None, QtGui.QApplication.UnicodeUTF8))
         self.checkFcoeff.setText(QtGui.QApplication.translate("MainWindow", "Filter Coefficients", None, QtGui.QApplication.UnicodeUTF8))
         self.groupSpecs.setTitle(QtGui.QApplication.translate("MainWindow", "Filter Specs", None, QtGui.QApplication.UnicodeUTF8))
-        self.checkBand.setText(QtGui.QApplication.translate("MainWindow", "Ideal Band", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkBand.setText(QtGui.QApplication.translate("MainWindow", "Band Diagram", None, QtGui.QApplication.UnicodeUTF8))
         self.checkPzplot.setText(QtGui.QApplication.translate("MainWindow", "Pole-Zero Plot", None, QtGui.QApplication.UnicodeUTF8))
         self.mfmagPush.setToolTip(QtGui.QApplication.translate("MainWindow", "Magnitude Response", None, QtGui.QApplication.UnicodeUTF8))
         self.mfmagPush.setText(QtGui.QApplication.translate("MainWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
@@ -999,6 +1004,7 @@ class Ui_MainWindow(object):
         self.actionResponse_Widget.setText(QtGui.QApplication.translate("MainWindow", "Response Widget", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTabview_2.setText(QtGui.QApplication.translate("MainWindow", "Tabview", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPlot_select.setText(QtGui.QApplication.translate("MainWindow", "Plot select", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionBand_Diagram.setText(QtGui.QApplication.translate("MainWindow", "Band Diagram", None, QtGui.QApplication.UnicodeUTF8))
 
 from PyQt4 import Qwt5
 from bandgraphicsview import BandGraphicsView

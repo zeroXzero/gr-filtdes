@@ -714,7 +714,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <property name="documentMode">
             <bool>false</bool>
@@ -730,7 +730,7 @@
              </sizepolicy>
             </property>
             <attribute name="title">
-             <string>Ideal Band</string>
+             <string>Band Diagram</string>
             </attribute>
             <layout class="QHBoxLayout" name="horizontalLayout_13">
              <item>
@@ -948,7 +948,7 @@
              </rect>
             </property>
             <property name="text">
-             <string>Ideal Band</string>
+             <string>Band Diagram</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -1403,9 +1403,10 @@
     <addaction name="actionStep_Response"/>
     <addaction name="actionGrid_2"/>
     <addaction name="actionFilter_Coefficients"/>
-    <addaction name="separator"/>
     <addaction name="actionIdeal_Band"/>
+    <addaction name="separator"/>
     <addaction name="actionPole_Zero_Plot_2"/>
+    <addaction name="actionBand_Diagram"/>
     <addaction name="separator"/>
     <addaction name="actionDesign_Widget"/>
     <addaction name="actionQuick_Access"/>
@@ -1537,7 +1538,7 @@
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Ideal Band</string>
@@ -1730,6 +1731,17 @@
    </property>
    <property name="text">
     <string>Plot select</string>
+   </property>
+  </action>
+  <action name="actionBand_Diagram">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Band Diagram</string>
    </property>
   </action>
  </widget>
