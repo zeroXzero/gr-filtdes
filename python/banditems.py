@@ -34,12 +34,21 @@ class filtermovlineItem(QtGui.QGraphicsObject):
     def itemChange(self, change, value):
         if (change == QtGui.QGraphicsItem.ItemPositionChange):
             newpos=value.toPointF()
+            div=0
+            if newpos.y() < self.pos().y():
+                div=1
+            if newpos.y() > self.pos().y():
+                div=-1
+            hit=0
             rect=self.scene().sceneRect()
             if (newpos.y() >= self.lower):
                 newpos.setY(self.lower)
+                hit=1
             if (newpos.y() <= self.upper):
                 newpos.setY(self.upper)
-            self.attenChanged.emit(-newpos.y()*0.25)
+                hit=1
+            if not(hit):
+                self.attenChanged.emit(div)
             return QtCore.QPointF(self.pos().x(), newpos.y())
         return QtGui.QGraphicsItem.itemChange(self, change, value)
 
