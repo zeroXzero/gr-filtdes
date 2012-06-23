@@ -1024,6 +1024,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 ymin = 1.5 * min(min(self.taps.real),min(self.taps.imag))
             else:
                 self.rcurve.setData(scipy.arange(ntaps), self.taps)
+                self.icurve.detach()
                 ymax = 1.5 * max(self.taps)
                 ymin = 1.5 * min(self.taps)
 
@@ -1062,6 +1063,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 symin = 1.5 * min(min(stepres.real),min(stepres.imag))
             else:
                 self.steprescurve.setData(scipy.arange(ntaps), stepres)
+                self.steprescurve_i.detach()
                 symax = 1.5 * max(stepres)
                 symin = 1.5 * min(stepres)
 
@@ -1100,6 +1102,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 iymin = 1.5 * min(min(impres.real),min(impres.imag))
             else:
                 self.imprescurve.setData(scipy.arange(ntaps), impres)
+                self.imprescurve_i.detach()
                 iymax = 1.5 * max(impres)
                 iymin = 1.5 * min(impres)
 
