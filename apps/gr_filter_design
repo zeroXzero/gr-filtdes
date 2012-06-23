@@ -306,6 +306,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.idealbandhcurves= [ Qwt.QwtPlotCurve() for i in range(4) ]
         self.idealbandvcurves= [ Qwt.QwtPlotCurve() for i in range(4) ]
 
+        self.set_defaultpen()
+
         #Antialiasing
         self.rcurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
         self.icurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
@@ -317,12 +319,6 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.steprescurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
         self.steprescurve_i.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
         self.pdelaycurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
-        for c in self.idealbandhcurves:
-            c.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
-            c.setPen(Qt.QPen(Qt.Qt.red, 2, Qt.Qt.DotLine))
-        for c in self.idealbandvcurves:
-            c.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
-            c.setPen(Qt.QPen(Qt.Qt.red, 2, Qt.Qt.DotLine))
 
         self.freqgrid= Qwt.QwtPlotGrid()
         self.phasegrid= Qwt.QwtPlotGrid()
@@ -407,53 +403,6 @@ class gr_plot_filter(QtGui.QMainWindow):
                                              Qwt.QwtPicker.AlwaysOn,
                                              self.gui.pdelayPlot.canvas())
 
-        # Set up pen for colors and line width
-        blue = QtGui.qRgb(0x00, 0x00, 0xFF)
-        blueBrush = Qt.QBrush(Qt.QColor(blue))
-        red = QtGui.qRgb(0xFF, 0x00, 0x00)
-        redBrush = Qt.QBrush(Qt.QColor(red))
-        self.freqcurve.setPen(Qt.QPen(blueBrush, 1))
-#self.rcurve.setPen(Qt.QPen(blueBrush, 1))
-#self.icurve.setPen(Qt.QPen(redBrush, 1))
-        self.rcurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
-        self.rcurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
-                                      Qt.QBrush(Qt.Qt.gray),
-                                      Qt.QPen(Qt.Qt.blue),
-                                      Qt.QSize(8, 8)))
-
-        self.icurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
-        self.icurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
-                                      Qt.QBrush(Qt.Qt.gray),
-                                      Qt.QPen(Qt.Qt.red),
-                                      Qt.QSize(8, 8)))
-
-        self.imprescurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
-        self.imprescurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
-                                      Qt.QBrush(Qt.Qt.gray),
-                                      Qt.QPen(Qt.Qt.blue),
-                                      Qt.QSize(8, 8)))
-
-        self.imprescurve_i.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
-        self.imprescurve_i.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
-                                      Qt.QBrush(Qt.Qt.gray),
-                                      Qt.QPen(Qt.Qt.red),
-                                      Qt.QSize(8, 8)))
-
-        self.steprescurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
-        self.steprescurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
-                                      Qt.QBrush(Qt.Qt.gray),
-                                      Qt.QPen(Qt.Qt.blue),
-                                      Qt.QSize(8, 8)))
-
-        self.steprescurve_i.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
-        self.steprescurve_i.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
-                                      Qt.QBrush(Qt.Qt.gray),
-                                      Qt.QPen(Qt.Qt.red),
-                                      Qt.QSize(8, 8)))
-
-        self.phasecurve.setPen(Qt.QPen(blueBrush, 1))
-        self.groupcurve.setPen(Qt.QPen(blueBrush, 1))
-        self.pdelaycurve.setPen(Qt.QPen(blueBrush, 1))
 
 		#assigning items
         self.lpfitems = lpfItems
@@ -541,6 +490,59 @@ class gr_plot_filter(QtGui.QMainWindow):
                               "Blackman-harris Window" : gr.firdes.WIN_BLACKMAN_hARRIS}
         self.EQUIRIPPLE_FILT = 6 # const for equiripple filter window types
         self.show()
+
+        # Set up pen for colors and line width
+    def set_defaultpen(self):
+        blue = QtGui.qRgb(0x00, 0x00, 0xFF)
+        blueBrush = Qt.QBrush(Qt.QColor(blue))
+        red = QtGui.qRgb(0xFF, 0x00, 0x00)
+        redBrush = Qt.QBrush(Qt.QColor(red))
+        self.freqcurve.setPen(Qt.QPen(blueBrush, 1))
+        self.rcurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
+        self.rcurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
+                                      Qt.QBrush(Qt.Qt.gray),
+                                      Qt.QPen(Qt.Qt.blue),
+                                      Qt.QSize(8, 8)))
+
+        self.icurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
+        self.icurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
+                                      Qt.QBrush(Qt.Qt.gray),
+                                      Qt.QPen(Qt.Qt.red),
+                                      Qt.QSize(8, 8)))
+
+        self.imprescurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
+        self.imprescurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
+                                      Qt.QBrush(Qt.Qt.gray),
+                                      Qt.QPen(Qt.Qt.blue),
+                                      Qt.QSize(8, 8)))
+
+        self.imprescurve_i.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
+        self.imprescurve_i.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
+                                      Qt.QBrush(Qt.Qt.gray),
+                                      Qt.QPen(Qt.Qt.red),
+                                      Qt.QSize(8, 8)))
+
+        self.steprescurve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
+        self.steprescurve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
+                                      Qt.QBrush(Qt.Qt.gray),
+                                      Qt.QPen(Qt.Qt.blue),
+                                      Qt.QSize(8, 8)))
+
+        self.steprescurve_i.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
+        self.steprescurve_i.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
+                                      Qt.QBrush(Qt.Qt.gray),
+                                      Qt.QPen(Qt.Qt.red),
+                                      Qt.QSize(8, 8)))
+
+        self.phasecurve.setPen(Qt.QPen(blueBrush, 1))
+        self.groupcurve.setPen(Qt.QPen(blueBrush, 1))
+        self.pdelaycurve.setPen(Qt.QPen(blueBrush, 1))
+        for c in self.idealbandhcurves:
+            c.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
+            c.setPen(Qt.QPen(Qt.Qt.red, 2, Qt.Qt.DotLine))
+        for c in self.idealbandvcurves:
+            c.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
+            c.setPen(Qt.QPen(Qt.Qt.red, 2, Qt.Qt.DotLine))
 
     def changed_filter_type(self, ftype):
         strftype = str(ftype.toAscii())
@@ -1024,7 +1026,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 ymin = 1.5 * min(min(self.taps.real),min(self.taps.imag))
             else:
                 self.rcurve.setData(scipy.arange(ntaps), self.taps)
-                self.icurve.detach()
+                self.icurve.setData([],[]);
                 ymax = 1.5 * max(self.taps)
                 ymin = 1.5 * min(self.taps)
 
@@ -1063,7 +1065,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 symin = 1.5 * min(min(stepres.real),min(stepres.imag))
             else:
                 self.steprescurve.setData(scipy.arange(ntaps), stepres)
-                self.steprescurve_i.detach()
+                self.steprescurve_i.setData([],[])
                 symax = 1.5 * max(stepres)
                 symin = 1.5 * min(stepres)
 
@@ -1102,7 +1104,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 iymin = 1.5 * min(min(impres.real),min(impres.imag))
             else:
                 self.imprescurve.setData(scipy.arange(ntaps), impres)
-                self.imprescurve_i.detach()
+                self.imprescurve_i.setData([],[])
                 iymax = 1.5 * max(impres)
                 iymin = 1.5 * min(impres)
 
@@ -1372,6 +1374,7 @@ class gr_plot_filter(QtGui.QMainWindow):
     def set_switchview(self):
         if (self.gui.actionGridview.isChecked() == 0 ):
             self.gridview=0
+            self.set_defaultpen()
             self.set_actgrid()
             self.gui.stackedWindows.setCurrentIndex(0)
             self.freqcurve.attach(self.gui.freqPlot)
