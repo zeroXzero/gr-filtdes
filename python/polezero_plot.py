@@ -43,7 +43,14 @@ class PzPlot(Qwt.QwtPlot):
 
     def insertZeros(self, roots):
         self.removeallCurves()
-        self.__insertZero(Qt.Qt.blue, roots.real,roots.imag)
+        if len(roots):
+            self.__insertZero(Qt.Qt.blue, roots.real,roots.imag)
+            ymax = 1.5 * max(roots.imag)
+            ymin = 1.5 * min(roots.imag)
+            xmax = 1.5 * max(roots.real)
+            xmin = 1.5 * min(roots.real)
+            self.setAxisScale(Qwt.QwtPlot.xBottom, xmin, xmax)
+            self.setAxisScale(Qwt.QwtPlot.yLeft, ymin, ymax)
 
     def insertPoles(self, roots):
             if len(roots):
