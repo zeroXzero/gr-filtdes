@@ -206,6 +206,7 @@ class CanvasPicker(Qt.QObject):
         self.__showCursor(False)
         self.__selectedCurve = None
         self.__selectedPoint = -1
+        self.__selectedcPoint = -1
 
         if found and distance < 10:
             self.__selectedCurve = found
