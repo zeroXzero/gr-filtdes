@@ -1675,14 +1675,14 @@ class gr_plot_filter(QtGui.QMainWindow):
         if (self.gui.checkPhase.checkState() == 0 ):
             self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.phaseTab))
         else:
-            self.gui.tabGroup.addTab(self.gui.phaseTab, _fromUtf8("Phase"))
+            self.gui.tabGroup.addTab(self.gui.phaseTab, _fromUtf8("Phase Response"))
             self.update_freq_curves()
 
     def set_actphase(self):
         if (self.gui.actionPhase_Respone.isChecked() == 0 ):
             self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.phaseTab))
         else:
-            self.gui.tabGroup.addTab(self.gui.phaseTab, _fromUtf8("Phase"))
+            self.gui.tabGroup.addTab(self.gui.phaseTab, _fromUtf8("Phase Response"))
             self.update_freq_curves()
 
     def set_fcoeff(self):
@@ -1703,7 +1703,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         if (self.gui.checkBand.checkState() == 0 ):
             self.gui.filterspecView.removeTab(self.gui.filterspecView.indexOf(self.gui.bandDiagram))
         else:
-            self.gui.filterspecView.addTab(self.gui.bandDiagram, _fromUtf8("Ideal Band"))
+            self.gui.filterspecView.addTab(self.gui.bandDiagram, _fromUtf8("Band Diagram"))
 
     def set_actband(self):
         if (self.gui.actionBand_Diagram.isChecked() == 0 ):
