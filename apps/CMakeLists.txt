@@ -22,5 +22,6 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     PROGRAMS
 	gr_filter_design
+	Settings_32x32.png
     DESTINATION bin
 )
