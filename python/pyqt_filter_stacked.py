@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_stacked.ui'
 #
-# Created: Sun Jun 24 14:45:04 2012
+# Created: Sun Jun 24 14:56:02 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -231,7 +231,7 @@ class Ui_MainWindow(object):
         self.groupSpecs.setGeometry(QtCore.QRect(10, 280, 161, 91))
         self.groupSpecs.setObjectName(_fromUtf8("groupSpecs"))
         self.checkBand = QtGui.QCheckBox(self.groupSpecs)
-        self.checkBand.setGeometry(QtCore.QRect(10, 20, 85, 19))
+        self.checkBand.setGeometry(QtCore.QRect(10, 20, 111, 19))
         self.checkBand.setChecked(True)
         self.checkBand.setObjectName(_fromUtf8("checkBand"))
         self.checkPzplot = QtGui.QCheckBox(self.groupSpecs)
