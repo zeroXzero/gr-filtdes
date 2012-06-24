@@ -260,22 +260,65 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
 
         # Set Axis labels
+        fxtitle=Qwt.QwtText("Frequency (Hz)")
+        fxtitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
+        fytitle=Qwt.QwtText("Magnitude (dB)")
+        fytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
         self.gui.freqPlot.setAxisTitle(self.gui.freqPlot.xBottom,
-                                       "Frequency (Hz)")
+                                       fxtitle)
         self.gui.freqPlot.setAxisTitle(self.gui.freqPlot.yLeft,
-                                       "Magnitude (dB)")
+                                       fytitle)
+
+        txtitle=Qwt.QwtText("Tap number")
+        txtitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
+        tytitle=Qwt.QwtText("Amplitude")
+        tytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
         self.gui.timePlot.setAxisTitle(self.gui.timePlot.xBottom,
-                                       "Tap number")
+                                       txtitle)
         self.gui.timePlot.setAxisTitle(self.gui.timePlot.yLeft,
-                                       "Amplitude")
+                                       tytitle)
+
+        pytitle=Qwt.QwtText("Phase (Radians)")
+        pytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
         self.gui.phasePlot.setAxisTitle(self.gui.phasePlot.xBottom,
-                                        "Frequency (Hz)")
+                                        fxtitle)
         self.gui.phasePlot.setAxisTitle(self.gui.phasePlot.yLeft,
-                                        "Phase (Radians)")
+                                        pytitle)
+
+        gytitle=Qwt.QwtText("Delay (sec)")
+        gytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
         self.gui.groupPlot.setAxisTitle(self.gui.groupPlot.xBottom,
-                                        "Frequency (Hz)")
+                                        fxtitle)
         self.gui.groupPlot.setAxisTitle(self.gui.groupPlot.yLeft,
-                                        "Delay (sec)")
+                                        gytitle)
+
+        impytitle=Qwt.QwtText("Amplitude")
+        impytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
+        impxtitle=Qwt.QwtText("n (Samples)")
+        impxtitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
+        self.gui.impresPlot.setAxisTitle(self.gui.freqPlot.xBottom,
+                                       impxtitle)
+        self.gui.impresPlot.setAxisTitle(self.gui.freqPlot.yLeft,
+                                       impytitle)
+        self.gui.stepresPlot.setAxisTitle(self.gui.freqPlot.xBottom,
+                                       impxtitle)
+        self.gui.stepresPlot.setAxisTitle(self.gui.freqPlot.yLeft,
+                                       impytitle)
+        mtytitle=Qwt.QwtText("Amplitude")
+        mtytitle.setFont(Qt.QFont("Helvetica", 9, Qt.QFont.Bold))
+        mtxtitle=Qwt.QwtText("n (Samples/taps)")
+        mtxtitle.setFont(Qt.QFont("Helvetica", 9, Qt.QFont.Bold))
+        self.gui.mtimePlot.setAxisTitle(self.gui.freqPlot.xBottom,
+                                       mtxtitle)
+        self.gui.mtimePlot.setAxisTitle(self.gui.freqPlot.yLeft,
+                                       mtytitle)
+        
+        phytitle=Qwt.QwtText("Phase Delay")
+        phytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
+        self.gui.pdelayPlot.setAxisTitle(self.gui.groupPlot.xBottom,
+                                        fxtitle)
+        self.gui.pdelayPlot.setAxisTitle(self.gui.groupPlot.yLeft,
+                                        phytitle)
 
         # Set up plot curves
         self.rcurve = Qwt.QwtPlotCurve("Real")
@@ -1142,6 +1185,10 @@ class gr_plot_filter(QtGui.QMainWindow):
 
     def update_freq_curves(self):
         npts = len(self.fftdB)
+        fxtitle=Qwt.QwtText("Frequency (Hz)")
+        fxtitle.setFont(Qt.QFont("Helvetica", 9, Qt.QFont.Bold))
+        fytitle=Qwt.QwtText("Magnitude (dB)")
+        fytitle.setFont(Qt.QFont("Helvetica", 9, Qt.QFont.Bold))
         if(npts > 0):
             self.freqcurve.setData(self.freq, self.fftdB)
 
@@ -1169,6 +1216,11 @@ class gr_plot_filter(QtGui.QMainWindow):
                                                 xmin, xmax)
                 self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.yLeft,
                                                 ymin, ymax)
+            #Set Axis title
+            self.gui.mfreqPlot.setAxisTitle(self.freqcurve.yAxis(),
+						                        fytitle)
+            self.gui.mfreqPlot.setAxisTitle(self.freqcurve.xAxis(),
+						                        fxtitle)
             # Set the zoomer base to unzoom to the new axis
             self.freqZoomer.setZoomBase()
             self.mfreqZoomer.setZoomBase()
@@ -1178,6 +1230,8 @@ class gr_plot_filter(QtGui.QMainWindow):
 
 
     def update_phase_curves(self):
+        pytitle=Qwt.QwtText("Phase (Radians)")
+        pytitle.setFont(Qt.QFont("Helvetica", 9, Qt.QFont.Bold))
         npts = len(self.fftDeg)
         if(npts > 0):
             self.phasecurve.setData(self.freq, self.fftDeg)
@@ -1207,6 +1261,9 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.yLeft,
                                                 ymin, ymax)
  
+            #Set Axis title
+            self.gui.mfreqPlot.setAxisTitle(self.phasecurve.yAxis(),
+						                        pytitle)
 
             # Set the zoomer base to unzoom to the new axis
             self.phaseZoomer.setZoomBase()
@@ -1217,6 +1274,8 @@ class gr_plot_filter(QtGui.QMainWindow):
 
 
     def update_group_curves(self):
+        gytitle=Qwt.QwtText("Delay (sec)")
+        gytitle.setFont(Qt.QFont("Helvetica", 9, Qt.QFont.Bold))
         npts = len(self.groupDelay)
         if(npts > 0):
             self.groupcurve.setData(self.freq, self.groupDelay)
@@ -1246,6 +1305,9 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.yLeft,
                                                 ymin, ymax)
  
+            #Set Axis title
+            self.gui.mfreqPlot.setAxisTitle(self.groupcurve.yAxis(),
+						                        gytitle)
             # Set the zoomer base to unzoom to the new axis
             self.groupZoomer.setZoomBase()
             self.mfreqZoomer.setZoomBase()
@@ -1254,6 +1316,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.mfreqPlot.replot()
 
     def update_pdelay_curves(self):
+        phytitle=Qwt.QwtText("Phase Delay")
+        phytitle.setFont(Qt.QFont("Helvetica", 9, Qt.QFont.Bold))
         npts = len(self.phaseDelay)
         if(npts > 0):
             self.pdelaycurve.setData(self.freq, self.phaseDelay)
@@ -1282,6 +1346,9 @@ class gr_plot_filter(QtGui.QMainWindow):
                                                 xmin, xmax)
                 self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.yLeft,
                                                 ymin, ymax)
+            #Set Axis title
+            self.gui.mfreqPlot.setAxisTitle(self.pdelaycurve.yAxis(),
+						                        phytitle)
  
             # Set the zoomer base to unzoom to the new axis
             self.groupZoomer.setZoomBase()
