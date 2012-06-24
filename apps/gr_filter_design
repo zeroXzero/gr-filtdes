@@ -174,9 +174,13 @@ class gr_plot_filter(QtGui.QMainWindow):
                      Qt.SIGNAL("clicked()"),
                      self.set_mfoverlay)
 
-#self.connect(self.gui.mtoverlayPush,
-#Qt.SIGNAL("clicked()"),
-#self.set_mtoverlay)
+        self.connect(self.gui.conjPush,
+                     Qt.SIGNAL("clicked()"),
+                     self.set_conj)
+
+        self.connect(self.gui.mconjPush,
+                     Qt.SIGNAL("clicked()"),
+                     self.set_mconj)
 
         self.connect(self.gui.mttapsPush,
                      Qt.SIGNAL("clicked()"),
@@ -1406,9 +1410,13 @@ class gr_plot_filter(QtGui.QMainWindow):
         if (self.gui.actionPlot_select.isChecked() == 0 ):
             self.gui.mfgroupBox.hide()
             self.gui.mtgroupBox.hide()
+            self.gui.pzgroupBox.hide()
+            self.gui.mpzgroupBox.hide()
         else:
             self.gui.mfgroupBox.show()
             self.gui.mtgroupBox.show()
+            self.gui.pzgroupBox.show()
+            self.gui.mpzgroupBox.show()
 
     def replot_all(self):
         self.gui.timePlot.replot()
@@ -1530,8 +1538,11 @@ class gr_plot_filter(QtGui.QMainWindow):
     def set_mfoverlay(self):
         self.mfoverlay = not(self.mfoverlay)
 
-    def set_mtoverlay(self):
-        self.mtoverlay = not(self.mtoverlay)
+    def set_conj(self):
+        self.cpicker.set_conjugate()
+
+    def set_mconj(self):
+        self.cpicker2.set_conjugate()
 
     def set_mttaps(self):
         if self.mtoverlay:

@@ -94,6 +94,8 @@ class CanvasPicker(Qt.QObject):
         Qt.QObject.__init__(self, plot)
         self.__selectedCurve = None
         self.__selectedPoint = -1
+        self.__selectedcPoint = -1
+        self.changeConjugate = False 
         self.__plot = plot
 
         canvas = plot.canvas()
@@ -127,6 +129,9 @@ class CanvasPicker(Qt.QObject):
         return Qt.QObject.event(event)
 
     # event()
+
+    def set_conjugate(self):
+        self.changeConjugate = not(self.changeConjugate) 
     
     def eventFilter(self, object, event):
         
@@ -205,6 +210,10 @@ class CanvasPicker(Qt.QObject):
         if found and distance < 10:
             self.__selectedCurve = found
             self.__selectedPoint = point
+            if self.changeConjugate:
+                j=self.__searchConjugate(found.x(point),found.y(point))
+                self.__selectedcPoint = j
+                
             self.__showCursor(True)
 
 
@@ -237,7 +246,10 @@ class CanvasPicker(Qt.QObject):
                 if i == self.__selectedPoint:
                     xData[i] = self.__plot.invTransform(curve.xAxis(), pos.x())
                     yData[i] = self.__plot.invTransform(curve.yAxis(), pos.y())
-                else:
+                    if(self.__selectedcPoint != -1): 
+                        xData[self.__selectedcPoint] = xData[i]
+                        yData[self.__selectedcPoint] = -yData[i]
+                elif i != self.__selectedcPoint:
                     xData[i] = curve.x(i)
                     yData[i] = curve.y(i)
         curve.setData(xData, yData)
@@ -251,6 +263,13 @@ class CanvasPicker(Qt.QObject):
         tp=(vectorize(complex)(px[0],py[0]),vectorize(complex)(px[1],py[1]))
         self.curveChanged.emit(tp)
         self.__showCursor(True)
+
+    def __searchConjugate(self, x, y):
+        curve = self.__selectedCurve
+        for i in range(curve.dataSize()):
+            if (curve.x(i) == x and curve.y(i) == -y and y):
+                return i
+        return -1 
 
 
     def __showCursor(self, showIt):
@@ -270,6 +289,8 @@ class CanvasPicker(Qt.QObject):
         curve.setSymbol(newSymbol)
 
         curve.draw(self.__selectedPoint, self.__selectedPoint)
+        if (self.__selectedcPoint != -1):
+            curve.draw(self.__selectedcPoint, self.__selectedcPoint)
 
         curve.setSymbol(symbol)
         self.__plot.setAutoReplot(doReplot)
