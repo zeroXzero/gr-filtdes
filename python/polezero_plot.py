@@ -131,7 +131,7 @@ class CanvasPicker(Qt.QObject):
     # event()
 
     def set_conjugate(self):
-        self.changeConjugate = not(self.changeConjugate) 
+        self.changeConjugate = not(self.changeConjugate)
     
     def eventFilter(self, object, event):
         
@@ -214,7 +214,6 @@ class CanvasPicker(Qt.QObject):
             if self.changeConjugate:
                 j=self.__searchConjugate(found.x(point),found.y(point))
                 self.__selectedcPoint = j
-                
             self.__showCursor(True)
 
 
@@ -268,8 +267,9 @@ class CanvasPicker(Qt.QObject):
     def __searchConjugate(self, x, y):
         curve = self.__selectedCurve
         for i in range(curve.dataSize()):
-            if (curve.x(i) == x and curve.y(i) == -y and y):
-                return i
+            if (round(curve.x(i),8) == round(x,8) and round(curve.y(i),8) == -round(y,8)):
+                if (y !=0):
+                    return i
         return -1 
 
 
