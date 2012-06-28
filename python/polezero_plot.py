@@ -99,6 +99,7 @@ class CanvasPicker(Qt.QObject):
         self.__addedcZero = -1
         self.changeConjugate = False 
         self.enableZeroadd= False 
+        self.enablepzDelete= False 
         self.__plot = plot
 
         canvas = plot.canvas()
@@ -136,6 +137,9 @@ class CanvasPicker(Qt.QObject):
     
     def add_zero(self):
         self.enableZeroadd = not(self.enableZeroadd)
+
+    def delete_pz(self):
+        self.enablepzDelete = not(self.enablepzDelete)
 
     def eventFilter(self, object, event):
         
@@ -218,11 +222,43 @@ class CanvasPicker(Qt.QObject):
         if found and distance < 10:
             self.__selectedCurve = found
             self.__selectedPoint = point
+            #search for conjugate point if enabled 
             if self.changeConjugate:
                 j=self.__searchConjugate(found.x(point),found.y(point))
                 self.__selectedcPoint = j
+            #delete the zero if enabled
+            if self.enablepzDelete:
+#if __selectedCurve.symbol().style() == Qwt.QwtSymbol.Ellipse:
+                self.__deleteZero()
             self.__showCursor(True)
 
+    def __deleteZero(self):
+        curve = self.__selectedCurve
+        xData = zeros(curve.dataSize(), Float)
+        yData = zeros(curve.dataSize(), Float)
+
+        for i in range(curve.dataSize()):
+            xData[i] = curve.x(i)
+            yData[i] = curve.y(i)
+
+        if(self.__selectedPoint != -1):
+            xData=delete(xData, self.__selectedPoint)
+            yData=delete(yData, self.__selectedPoint)
+        #one less to accomodate previous delete
+        if(self.__selectedcPoint != -1): 
+            xData=delete(xData, self.__selectedcPoint-1)
+            yData=delete(yData, self.__selectedcPoint-1)
+        
+        curve.setData(xData, yData)
+        self.__plot.replot()
+        px=[]
+        py=[]
+        for c in self.__plot.itemList():
+            if isinstance(c, Qwt.QwtPlotCurve):
+                px.append([c.x(i) for i in range(c.dataSize())])
+                py.append([c.y(i) for i in range(c.dataSize())])
+        tp=(vectorize(complex)(px[0],py[0]),vectorize(complex)(px[1],py[1]))
+        self.curveChanged.emit(tp)
 
     def __moveBy(self, dx, dy):
         if dx == 0 and dy == 0:

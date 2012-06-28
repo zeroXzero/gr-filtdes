@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_stacked.ui'
 #
-# Created: Thu Jun 28 22:49:52 2012
+# Created: Thu Jun 28 23:48:20 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -184,6 +184,11 @@ class Ui_MainWindow(object):
         self.addzeroPush.setCheckable(True)
         self.addzeroPush.setObjectName(_fromUtf8("addzeroPush"))
         self.verticalLayout_3.addWidget(self.addzeroPush)
+        self.delPush = QtGui.QToolButton(self.pzgroupBox)
+        self.delPush.setIcon(icon)
+        self.delPush.setCheckable(True)
+        self.delPush.setObjectName(_fromUtf8("delPush"))
+        self.verticalLayout_3.addWidget(self.delPush)
         self.conjPush = QtGui.QToolButton(self.pzgroupBox)
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(_fromUtf8("Settings_32x32.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -443,6 +448,11 @@ class Ui_MainWindow(object):
         self.maddzeroPush.setCheckable(True)
         self.maddzeroPush.setObjectName(_fromUtf8("maddzeroPush"))
         self.verticalLayout_4.addWidget(self.maddzeroPush)
+        self.mdelPush = QtGui.QToolButton(self.mpzgroupBox)
+        self.mdelPush.setIcon(icon)
+        self.mdelPush.setCheckable(True)
+        self.mdelPush.setObjectName(_fromUtf8("mdelPush"))
+        self.verticalLayout_4.addWidget(self.mdelPush)
         self.mconjPush = QtGui.QToolButton(self.mpzgroupBox)
         self.mconjPush.setIcon(icon1)
         self.mconjPush.setIconSize(QtCore.QSize(16, 16))
@@ -932,6 +942,8 @@ class Ui_MainWindow(object):
         self.filterspecView.setTabText(self.filterspecView.indexOf(self.bandDiagram), QtGui.QApplication.translate("MainWindow", "Band Diagram", None, QtGui.QApplication.UnicodeUTF8))
         self.addzeroPush.setToolTip(QtGui.QApplication.translate("MainWindow", "Add zero", None, QtGui.QApplication.UnicodeUTF8))
         self.addzeroPush.setText(QtGui.QApplication.translate("MainWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.delPush.setToolTip(QtGui.QApplication.translate("MainWindow", "Delete pole/zero", None, QtGui.QApplication.UnicodeUTF8))
+        self.delPush.setText(QtGui.QApplication.translate("MainWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.conjPush.setToolTip(QtGui.QApplication.translate("MainWindow", "Conjugate", None, QtGui.QApplication.UnicodeUTF8))
         self.conjPush.setText(QtGui.QApplication.translate("MainWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.filterspecView.setTabText(self.filterspecView.indexOf(self.poleZero), QtGui.QApplication.translate("MainWindow", "Pole-Zero Plot", None, QtGui.QApplication.UnicodeUTF8))
@@ -970,6 +982,8 @@ class Ui_MainWindow(object):
         self.mfilterspecView.setTabText(self.mfilterspecView.indexOf(self.mbandDiagram), QtGui.QApplication.translate("MainWindow", "Ideal Band", None, QtGui.QApplication.UnicodeUTF8))
         self.maddzeroPush.setToolTip(QtGui.QApplication.translate("MainWindow", "Add zero", None, QtGui.QApplication.UnicodeUTF8))
         self.maddzeroPush.setText(QtGui.QApplication.translate("MainWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.mdelPush.setToolTip(QtGui.QApplication.translate("MainWindow", "Delete pole/zero", None, QtGui.QApplication.UnicodeUTF8))
+        self.mdelPush.setText(QtGui.QApplication.translate("MainWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.mconjPush.setToolTip(QtGui.QApplication.translate("MainWindow", "Conjugate", None, QtGui.QApplication.UnicodeUTF8))
         self.mconjPush.setText(QtGui.QApplication.translate("MainWindow", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.mfilterspecView.setTabText(self.mfilterspecView.indexOf(self.mpoleZero), QtGui.QApplication.translate("MainWindow", "Pole-Zero Plot", None, QtGui.QApplication.UnicodeUTF8))

@@ -190,6 +190,14 @@ class gr_plot_filter(QtGui.QMainWindow):
                      Qt.SIGNAL("clicked()"),
                      self.set_mzeroadd)
 
+        self.connect(self.gui.delPush,
+                     Qt.SIGNAL("clicked()"),
+                     self.set_delpz)
+
+        self.connect(self.gui.mdelPush,
+                     Qt.SIGNAL("clicked()"),
+                     self.set_mdelpz)
+
         self.connect(self.gui.mttapsPush,
                      Qt.SIGNAL("clicked()"),
                      self.set_mttaps)
@@ -1624,6 +1632,12 @@ class gr_plot_filter(QtGui.QMainWindow):
 
     def set_mzeroadd(self):
         self.cpicker2.add_zero()
+
+    def set_delpz(self):
+        self.cpicker.delete_pz()
+
+    def set_mdelpz(self):
+        self.cpicker2.delete_pz()
 
     def set_mttaps(self):
         if self.mtoverlay:
