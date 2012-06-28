@@ -182,6 +182,14 @@ class gr_plot_filter(QtGui.QMainWindow):
                      Qt.SIGNAL("clicked()"),
                      self.set_mconj)
 
+        self.connect(self.gui.addzeroPush,
+                     Qt.SIGNAL("clicked()"),
+                     self.set_zeroadd)
+
+        self.connect(self.gui.maddzeroPush,
+                     Qt.SIGNAL("clicked()"),
+                     self.set_mzeroadd)
+
         self.connect(self.gui.mttapsPush,
                      Qt.SIGNAL("clicked()"),
                      self.set_mttaps)
@@ -1610,6 +1618,12 @@ class gr_plot_filter(QtGui.QMainWindow):
 
     def set_mconj(self):
         self.cpicker2.set_conjugate()
+
+    def set_zeroadd(self):
+        self.cpicker.add_zero()
+
+    def set_mzeroadd(self):
+        self.cpicker2.add_zero()
 
     def set_mttaps(self):
         if self.mtoverlay:
