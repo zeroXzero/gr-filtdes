@@ -2001,7 +2001,7 @@ class gr_plot_filter(QtGui.QMainWindow):
     def set_curvetaps(self,(zr,pl)):
         hz = poly1d(zr,r=1)
         #print hz.c
-        self.taps=hz.c
+        self.taps=hz.c*self.taps[0]
         self.draw_plots(self.taps,self.params)
         self.update_fcoeff()
         #update the pzplot in other view
@@ -2013,7 +2013,7 @@ class gr_plot_filter(QtGui.QMainWindow):
     def set_mcurvetaps(self,(zr,pl)):
         hz = poly1d(zr,r=1)
         #print hz.c
-        self.taps=hz.c
+        self.taps=hz.c*self.taps[0]
         if self.gridview:
             self.update_fft(self.taps, self.params)
             self.set_mfmagresponse()
@@ -2029,7 +2029,6 @@ class gr_plot_filter(QtGui.QMainWindow):
 
     def get_zeros(self):
         hz = poly1d(self.taps,r=0)
-        #print self.taps,hz.c,hz.r
         return hz.r
     
     def get_poles(self):
