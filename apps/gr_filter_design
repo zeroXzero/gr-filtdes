@@ -2011,6 +2011,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         poles=self.get_poles()
         self.gui.mpzPlot.insertZeros(zeros)
         self.gui.mpzPlot.insertPoles(poles)
+        self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
 
     def set_mcurvetaps(self,(zr,pl)):
         hz = poly1d(zr,r=1)
@@ -2028,6 +2029,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         poles=self.get_poles()
         self.gui.pzPlot.insertZeros(zeros)
         self.gui.pzPlot.insertPoles(poles)
+        self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
 
     def set_statusbar(self,(x,y)):
         if x == None:
