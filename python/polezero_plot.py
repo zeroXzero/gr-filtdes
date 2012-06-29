@@ -94,6 +94,7 @@ class PzPlot(Qwt.QwtPlot):
 
 class CanvasPicker(Qt.QObject):
     curveChanged = QtCore.pyqtSignal(tuple)
+    mouseposChanged = QtCore.pyqtSignal(tuple)
     def __init__(self, plot):
         Qt.QObject.__init__(self, plot)
         self.__selectedCurve = None
@@ -162,6 +163,11 @@ class CanvasPicker(Qt.QObject):
                 self.__select(event.pos())
             return True
         elif event.type() == Qt.QEvent.MouseMove:
+            curve = self.__selectedCurve
+            if curve:
+                tp=(self.__plot.invTransform(curve.xAxis(), event.pos().x()),
+                    self.__plot.invTransform(curve.xAxis(), event.pos().y()))
+                self.mouseposChanged.emit(tp)
             self.__move(event.pos())
             return True
 
@@ -234,6 +240,8 @@ class CanvasPicker(Qt.QObject):
             if self.enablepzDelete:
                 self.__deleteZero()
             self.__showCursor(True)
+        else:
+            self.mouseposChanged.emit((None,None))
 
     def __deleteZero(self):
         curve = self.__selectedCurve

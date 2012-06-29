@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_stacked.ui'
 #
-# Created: Thu Jun 28 23:48:20 2012
+# Created: Fri Jun 29 18:36:56 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(1128, 691)
+        MainWindow.resize(1128, 649)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.gridLayout = QtGui.QGridLayout(self.centralwidget)
@@ -159,8 +159,8 @@ class Ui_MainWindow(object):
         self.poleZero = QtGui.QWidget()
         self.poleZero.setAutoFillBackground(False)
         self.poleZero.setObjectName(_fromUtf8("poleZero"))
-        self.horizontalLayout_18 = QtGui.QHBoxLayout(self.poleZero)
-        self.horizontalLayout_18.setObjectName(_fromUtf8("horizontalLayout_18"))
+        self.gridLayout_2 = QtGui.QGridLayout(self.poleZero)
+        self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
         self.pzPlot = PzPlot(self.poleZero)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -168,7 +168,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pzPlot.sizePolicy().hasHeightForWidth())
         self.pzPlot.setSizePolicy(sizePolicy)
         self.pzPlot.setObjectName(_fromUtf8("pzPlot"))
-        self.horizontalLayout_18.addWidget(self.pzPlot)
+        self.gridLayout_2.addWidget(self.pzPlot, 0, 0, 1, 1)
         self.pzgroupBox = QtGui.QGroupBox(self.poleZero)
         self.pzgroupBox.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.pzgroupBox.setTitle(_fromUtf8(""))
@@ -197,7 +197,10 @@ class Ui_MainWindow(object):
         self.conjPush.setCheckable(True)
         self.conjPush.setObjectName(_fromUtf8("conjPush"))
         self.verticalLayout_3.addWidget(self.conjPush)
-        self.horizontalLayout_18.addWidget(self.pzgroupBox)
+        self.gridLayout_2.addWidget(self.pzgroupBox, 0, 1, 1, 1)
+        self.pzstatusBar = QtGui.QStatusBar(self.poleZero)
+        self.pzstatusBar.setObjectName(_fromUtf8("pzstatusBar"))
+        self.gridLayout_2.addWidget(self.pzstatusBar, 1, 0, 1, 2)
         self.filterspecView.addTab(self.poleZero, _fromUtf8(""))
         self.horizontalLayout.addWidget(self.splitter)
         self.quickFrame = QtGui.QFrame(self.classic)
@@ -425,8 +428,8 @@ class Ui_MainWindow(object):
         self.mpoleZero = QtGui.QWidget()
         self.mpoleZero.setAutoFillBackground(False)
         self.mpoleZero.setObjectName(_fromUtf8("mpoleZero"))
-        self.horizontalLayout_14 = QtGui.QHBoxLayout(self.mpoleZero)
-        self.horizontalLayout_14.setObjectName(_fromUtf8("horizontalLayout_14"))
+        self.gridLayout_3 = QtGui.QGridLayout(self.mpoleZero)
+        self.gridLayout_3.setObjectName(_fromUtf8("gridLayout_3"))
         self.mpzPlot = PzPlot(self.mpoleZero)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -434,7 +437,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.mpzPlot.sizePolicy().hasHeightForWidth())
         self.mpzPlot.setSizePolicy(sizePolicy)
         self.mpzPlot.setObjectName(_fromUtf8("mpzPlot"))
-        self.horizontalLayout_14.addWidget(self.mpzPlot)
+        self.gridLayout_3.addWidget(self.mpzPlot, 0, 0, 1, 1)
         self.mpzgroupBox = QtGui.QGroupBox(self.mpoleZero)
         self.mpzgroupBox.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.mpzgroupBox.setTitle(_fromUtf8(""))
@@ -459,7 +462,10 @@ class Ui_MainWindow(object):
         self.mconjPush.setCheckable(True)
         self.mconjPush.setObjectName(_fromUtf8("mconjPush"))
         self.verticalLayout_4.addWidget(self.mconjPush)
-        self.horizontalLayout_14.addWidget(self.mpzgroupBox)
+        self.gridLayout_3.addWidget(self.mpzgroupBox, 0, 1, 1, 1)
+        self.mpzstatusBar = QtGui.QStatusBar(self.mpoleZero)
+        self.mpzstatusBar.setObjectName(_fromUtf8("mpzstatusBar"))
+        self.gridLayout_3.addWidget(self.mpzstatusBar, 1, 0, 1, 2)
         self.mfilterspecView.addTab(self.mpoleZero, _fromUtf8(""))
         self.mfcTab = QtGui.QWidget()
         self.mfcTab.setObjectName(_fromUtf8("mfcTab"))

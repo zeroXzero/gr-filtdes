@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1128</width>
-    <height>691</height>
+    <height>649</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -222,8 +222,8 @@
             <attribute name="title">
              <string>Pole-Zero Plot</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_18">
-             <item>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="0" column="0">
               <widget class="PzPlot" name="pzPlot">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -233,7 +233,7 @@
                </property>
               </widget>
              </item>
-             <item>
+             <item row="0" column="1">
               <widget class="QGroupBox" name="pzgroupBox">
                <property name="cursor">
                 <cursorShape>ArrowCursor</cursorShape>
@@ -307,6 +307,9 @@
                 </item>
                </layout>
               </widget>
+             </item>
+             <item row="1" column="0" colspan="2">
+              <widget class="QStatusBar" name="pzstatusBar"/>
              </item>
             </layout>
            </widget>
@@ -915,8 +918,8 @@
             <attribute name="title">
              <string>Pole-Zero Plot</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_14">
-             <item>
+            <layout class="QGridLayout" name="gridLayout_3">
+             <item row="0" column="0">
               <widget class="PzPlot" name="mpzPlot">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -926,7 +929,7 @@
                </property>
               </widget>
              </item>
-             <item>
+             <item row="0" column="1">
               <widget class="QGroupBox" name="mpzgroupBox">
                <property name="cursor">
                 <cursorShape>ArrowCursor</cursorShape>
@@ -1000,6 +1003,9 @@
                 </item>
                </layout>
               </widget>
+             </item>
+             <item row="1" column="0" colspan="2">
+              <widget class="QStatusBar" name="mpzstatusBar"/>
              </item>
             </layout>
            </widget>

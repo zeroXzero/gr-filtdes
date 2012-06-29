@@ -492,9 +492,11 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         self.cpicker=CanvasPicker(self.gui.pzPlot)
         self.cpicker.curveChanged.connect(self.set_curvetaps)
+        self.cpicker.mouseposChanged.connect(self.set_statusbar)
 		
         self.cpicker2=CanvasPicker(self.gui.mpzPlot)
         self.cpicker2.curveChanged.connect(self.set_mcurvetaps)
+        self.cpicker2.mouseposChanged.connect(self.set_mstatusbar)
         #Edit boxes for band-diagrams (Not required as far as now)
         """
         self.lpfpassEdit=QtGui.QLineEdit()
@@ -2026,6 +2028,18 @@ class gr_plot_filter(QtGui.QMainWindow):
         poles=self.get_poles()
         self.gui.pzPlot.insertZeros(zeros)
         self.gui.pzPlot.insertPoles(poles)
+
+    def set_statusbar(self,(x,y)):
+        if x == None:
+        	self.gui.pzstatusBar.showMessage("")
+        else:
+        	self.gui.pzstatusBar.showMessage("X: "+str(x)+"  Y: "+str(y))
+
+    def set_mstatusbar(self,(x,y)):
+        if x == None:
+        	self.gui.mpzstatusBar.showMessage("")
+        else:
+        	self.gui.mpzstatusBar.showMessage("X: "+str(x)+"  Y: "+str(y))
 
     def get_zeros(self):
         hz = poly1d(self.taps,r=0)
