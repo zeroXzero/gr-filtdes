@@ -49,6 +49,10 @@ class PzPlot(Qwt.QwtPlot):
             ymin = 1.5 * min(roots.imag)
             xmax = 1.5 * max(roots.real)
             xmin = 1.5 * min(roots.real)
+            if xmax < 0:
+                xmax=1
+            if xmin > 0:
+                xmax=-1
             self.setAxisScale(Qwt.QwtPlot.xBottom, xmin, xmax)
             self.setAxisScale(Qwt.QwtPlot.yLeft, ymin, ymax)
 
@@ -226,9 +230,8 @@ class CanvasPicker(Qt.QObject):
             if self.changeConjugate:
                 j=self.__searchConjugate(found.x(point),found.y(point))
                 self.__selectedcPoint = j
-            #delete the zero if enabled
+            #delete zero/pole if enabled
             if self.enablepzDelete:
-#if __selectedCurve.symbol().style() == Qwt.QwtSymbol.Ellipse:
                 self.__deleteZero()
             self.__showCursor(True)
 
