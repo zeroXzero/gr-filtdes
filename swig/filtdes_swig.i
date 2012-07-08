@@ -11,8 +11,10 @@
 %{
 #include "gr_remez.h"
 #include "gr_firdes.h"
+#include "gr_iirdes.h"
 %}
 
 %include "gr_remez.i"
 %include "gr_firdes.i"
+%include "gr_iirdes.i"
 

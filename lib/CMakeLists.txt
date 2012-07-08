@@ -20,7 +20,7 @@
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
 
-add_library(gnuradio-filtdes SHARED gr_remez.cc gr_firdes.cc )
+add_library(gnuradio-filtdes SHARED gr_remez.cc gr_firdes.cc gr_iirdes.cc)
 target_link_libraries(gnuradio-filtdes ${Boost_LIBRARIES} ${GRUEL_LIBRARIES} ${GNURADIO_CORE_LIBRARIES})
 set_target_properties(gnuradio-filtdes PROPERTIES DEFINE_SYMBOL "gnuradio_filtdes_EXPORTS")
 

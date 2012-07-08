@@ -23,5 +23,6 @@
 install(FILES
     filtdes_api.h
     gr_remez.h
+    gr_iirdes.h
     gr_firdes.h DESTINATION include/filtdes
 )
