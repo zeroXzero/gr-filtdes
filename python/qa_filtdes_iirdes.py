@@ -37,7 +37,7 @@ class qa_filtdes_iirdes(gr_unittest.TestCase):
         print a
         a=filtdes.iirdes.cheb1ord([0.08285714,0.15428571], [0.09714286,0.14],-10,-10,1)
         print a
-        filtdes.iirdes.cheb1ap(5,-10)
+        a=filtdes.iirdes.cheb1ap(5,-10)
 
 
 if __name__ == '__main__':

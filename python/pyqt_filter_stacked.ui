@@ -1048,9 +1048,9 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QComboBox" name="comboBox">
+        <widget class="QComboBox" name="fselectComboBox">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <item>
           <property name="text">
@@ -1059,7 +1059,7 @@
          </item>
          <item>
           <property name="text">
-           <string>IIR</string>
+           <string>IIR(scipy)</string>
           </property>
          </item>
         </widget>
@@ -1104,6 +1104,44 @@
         </widget>
        </item>
        <item>
+        <widget class="QComboBox" name="iirfilterBandComboBox">
+         <item>
+          <property name="text">
+           <string>Low Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Band Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Band Stop</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>High Pass</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="adComboBox">
+         <item>
+          <property name="text">
+           <string>Analog (rad/second)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Digital (normalized 0-1)</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
         <widget class="QComboBox" name="filterDesignTypeComboBox">
          <item>
           <property name="text">
@@ -1138,6 +1176,35 @@
          <item>
           <property name="text">
            <string>Equiripple</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="iirfilterTypeComboBox">
+         <item>
+          <property name="text">
+           <string>Elliptic</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Butterworth</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Chebyshev-1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Chebyshev-2</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Bessel</string>
           </property>
          </item>
         </widget>
@@ -1185,7 +1252,7 @@
        <item>
         <widget class="QStackedWidget" name="filterTypeWidget">
          <property name="currentIndex">
-          <number>0</number>
+          <number>6</number>
          </property>
          <widget class="QWidget" name="firlpfPage">
           <layout class="QFormLayout" name="formLayout">
@@ -1457,6 +1524,50 @@
            </item>
            <item row="2" column="1">
             <widget class="QLineEdit" name="gausNumTapsEdit"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="iirlpfPage">
+          <layout class="QFormLayout" name="formLayout_15">
+           <item row="0" column="0">
+            <widget class="QLabel" name="iirendofLpfPassBandLabel">
+             <property name="text">
+              <string>End of Pass Band</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="iirendofLpfPassBandEdit"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="iirstartofLpfStopBandLabel">
+             <property name="text">
+              <string>Start of Stop Band </string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="iirstartofLpfStopBandEdit"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="iirLpfPassBandAttenLabel">
+             <property name="text">
+              <string>Max loss in Pass Band (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="iirLpfPassBandAttenEdit"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="iirLpfStopBandRippleLabel">
+             <property name="text">
+              <string>Min atten in Stop Band (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="iirLpfStopBandRippleEdit"/>
            </item>
           </layout>
          </widget>

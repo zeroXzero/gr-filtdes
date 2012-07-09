@@ -79,7 +79,7 @@ class GR_CORE_API gr_iirdes {
    cheb1ord(std::vector <double> wp, std::vector<double> ws,
 		   	 double gpass, double gstop, bool analog);
 
-   static void 
+   static void   
    cheb1ap(unsigned int order,
 		    double rp);
 /*

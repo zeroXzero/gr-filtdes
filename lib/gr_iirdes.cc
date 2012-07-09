@@ -136,11 +136,12 @@ gr_iirdes::cheb1ord(vector <double> wp, //normalized passband
 void gr_iirdes::cheb1ap(unsigned int order,
 				    double rp)
 {
-  vector< complex<double> > zeros;
+  vector< complex<double> > zeros(1);
   vector< complex<double> > poles(2*order);
-  complex<double> gain;
+  vector< complex<double> > gain(1);
   vector< vector< complex<double> > > zpk(3);
   
+  vector < vector<double> > ord_wp(2);
 
   valarray <double> A_k(2*order), poles_r(2*order), poles_i(2*order);
   double del_1, D_1, eps, B;
@@ -166,6 +167,7 @@ void gr_iirdes::cheb1ap(unsigned int order,
   }
   zpk[0] = zeros;
   zpk[1] = poles;
+  zpk[2] = gain;
 }
 
 //Private functions

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#!/usr/bin/python
 #!/usr/bin/env python
 
 import sys, os, re, csv
@@ -73,6 +74,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.filterDesignTypeComboBox,
                      Qt.SIGNAL("currentIndexChanged(const QString&)"),
                      self.changed_filter_design_type)
+        self.connect(self.gui.fselectComboBox,
+                     Qt.SIGNAL("currentIndexChanged(const QString&)"),
+                     self.changed_fselect)
 
         self.connect(self.gui.designButton,
                      Qt.SIGNAL("released()"),
@@ -252,6 +256,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gridenable=False
         self.mfoverlay=False
         self.mtoverlay=False
+        self.iir = False 
 
         self.gui.designButton.setShortcut(QtCore.Qt.Key_Return)
 
@@ -274,6 +279,9 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         # Initialize to LPF
         self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
+        self.gui.iirfilterTypeComboBox.hide()
+        self.gui.iirfilterBandComboBox.hide()
+        self.gui.adComboBox.hide()
 
         # Set Axis labels
         fxtitle=Qwt.QwtText("Frequency (Hz)")
@@ -612,6 +620,25 @@ class gr_plot_filter(QtGui.QMainWindow):
             c.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
             c.setPen(Qt.QPen(Qt.Qt.red, 2, Qt.Qt.DotLine))
 
+    def changed_fselect(self, ftype):
+        strftype = str(ftype.toAscii())
+        if(ftype == "FIR"):
+            self.gui.iirfilterTypeComboBox.hide()
+            self.gui.iirfilterBandComboBox.hide()
+            self.gui.adComboBox.hide()
+            self.gui.filterDesignTypeComboBox.show()
+            self.gui.filterTypeComboBox.show()
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
+        elif(ftype == "IIR(scipy)"):
+            self.gui.filterDesignTypeComboBox.hide()
+            self.gui.filterTypeComboBox.hide()
+            self.gui.iirfilterTypeComboBox.show()
+            self.gui.adComboBox.show()
+            self.gui.iirfilterBandComboBox.show()
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirlpfPage)
+
+        self.design()
+
     def changed_filter_type(self, ftype):
         strftype = str(ftype.toAscii())
         if(ftype == "Low Pass"):
@@ -725,42 +752,77 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(ret):
             winstr = str(self.gui.filterDesignTypeComboBox.currentText().toAscii())
             ftype = str(self.gui.filterTypeComboBox.currentText().toAscii())
+            fsel = str(self.gui.fselectComboBox.currentText().toAscii())
+            iirftype = str(self.gui.iirfilterTypeComboBox.currentText().toAscii())
 
-            if(winstr == "Equiripple"):
-                designer = {"Low Pass" : self.design_opt_lpf,
-                            "Band Pass" : self.design_opt_bpf,
-                            "Complex Band Pass" : self.design_opt_cbpf,
-                            "Band Notch" : self.design_opt_bnf,
-                            "High Pass" :  self.design_opt_hpf}
-                taps,params,r = designer[ftype](fs, gain)
+            if (fsel == "FIR"):
+                self.iir = False 
+                if(winstr == "Equiripple"):
+                    designer = {"Low Pass" : self.design_opt_lpf,
+                                "Band Pass" : self.design_opt_bpf,
+                                "Complex Band Pass" : self.design_opt_cbpf,
+                                "Band Notch" : self.design_opt_bnf,
+                                "High Pass" :  self.design_opt_hpf}
+                    taps,params,r = designer[ftype](fs, gain)
 
-            else:
-                designer = {"Low Pass" : self.design_win_lpf,
-                            "Band Pass" : self.design_win_bpf,
-                            "Complex Band Pass" : self.design_win_cbpf,
-                            "Band Notch" : self.design_win_bnf,
-                            "High Pass" :  self.design_win_hpf,
-                            "Root Raised Cosine" :  self.design_win_rrc,
-                            "Gaussian" :  self.design_win_gaus}
-                wintype = self.filterWindows[winstr]
-                taps,params,r = designer[ftype](fs, gain, wintype)
-
-            if(r):
-                if self.gridview:
-                    self.update_fft(taps, params)
-                    self.set_mfmagresponse()
-                    self.set_mttaps()
                 else:
-                    self.draw_plots(taps,params)
+                    designer = {"Low Pass" : self.design_win_lpf,
+                                "Band Pass" : self.design_win_bpf,
+                                "Complex Band Pass" : self.design_win_cbpf,
+                                "Band Notch" : self.design_win_bnf,
+                                "High Pass" :  self.design_win_hpf,
+                                "Root Raised Cosine" :  self.design_win_rrc,
+                                "Gaussian" :  self.design_win_gaus}
+                    wintype = self.filterWindows[winstr]
+                    taps,params,r = designer[ftype](fs, gain, wintype)
+                if(r):
+                    if self.gridview:
+                        self.update_fft(taps, params)
+                        self.set_mfmagresponse()
+                        self.set_mttaps()
+                    else:
+                        self.draw_plots(taps,params)
+                zeros=self.get_zeros()
+                poles=self.get_poles()
+                self.gui.pzPlot.insertZeros(zeros)
+                self.gui.pzPlot.insertPoles(poles)
+                self.gui.mpzPlot.insertZeros(zeros)
+                self.gui.mpzPlot.insertPoles(poles)
+                self.update_fcoeff()
+                self.set_drawideal()
+            elif (fsel == "IIR(scipy)"):
+                    iirft = 	{"Elliptic" : 'ellip',
+                                 "Butterworth" : 'butter',
+                                 "Chebyshev-1" : 'cheby1',
+                                 "Chebyshev-2" : 'cheby2', 
+                                 "Bessel" : 'bessel'  }
+                    sanalog = 	{"Analog (rad/second)" : 1,
+                                 "Digital (normalized 0-1)" : 0  }
+                    ret = True
+                    self.iir = True
+                    wp,r = self.gui.iirendofLpfPassBandEdit.text().toDouble()
+                    ret = r and ret
+                    ws,r = self.gui.iirstartofLpfStopBandEdit.text().toDouble()
+                    ret = r and ret
+                    gpass,r = self.gui.iirLpfPassBandAttenEdit.text().toDouble()
+                    ret = r and ret
+                    gstop,r = self.gui.iirLpfStopBandRippleEdit.text().toDouble()
+                    ret = r and ret
+                    atype = str(self.gui.adComboBox.currentText().toAscii())
+                    if(ret):
+                        (b,a) = signal.iirdesign(wp, ws, gpass, gstop, analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                        (z,p,k) = signal.iirdesign(wp, ws, gpass, gstop, analog=sanalog[atype], ftype=iirft[iirftype], output='zpk')
+                        w,h = signal.freqz(b,a)
+                        self.fftdB = 20 * scipy.log10 (abs(h))
+                        self.freq= w/max(w) 
+                        self.update_freq_curves()
+                        self.gui.pzPlot.insertZeros(z)
+                        self.gui.pzPlot.insertPoles(p)
+                        self.gui.mpzPlot.insertZeros(z)
+                        self.gui.mpzPlot.insertPoles(p)
+
+
         
-        zeros=self.get_zeros()
-        poles=self.get_poles()
-        self.gui.pzPlot.insertZeros(zeros)
-        self.gui.pzPlot.insertPoles(poles)
-        self.gui.mpzPlot.insertZeros(zeros)
-        self.gui.mpzPlot.insertPoles(poles)
-        self.update_fcoeff()
-        self.set_drawideal()
 
 
     # Filter design functions using a window
@@ -1213,7 +1275,10 @@ class gr_plot_filter(QtGui.QMainWindow):
             # Reset the x-axis to the new time scale
             ymax = 1.5 * max(self.fftdB[0:npts/2])
             ymin = 1.1 * min(self.fftdB[0:npts/2])
-            xmax = self.freq[npts/2]
+            if self.iir:
+                xmax = self.freq[npts-1]
+            else:
+                xmax = self.freq[npts/2]
             xmin = self.freq[0]
             self.gui.freqPlot.setAxisScale(self.gui.freqPlot.xBottom,
                                            xmin, xmax)
