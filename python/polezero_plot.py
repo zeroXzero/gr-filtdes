@@ -11,7 +11,11 @@ class PzPlot(Qwt.QwtPlot):
     def __init__(self, *args):
         Qwt.QwtPlot.__init__(self, *args)
 
-        
+       
+        self.ymax=0
+        self.xmax=0
+        self.ymin=0
+        self.xmin=0
         self.setCanvasColor(Qt.Qt.darkCyan)
 
         grid = Qwt.QwtPlotGrid()
@@ -45,20 +49,34 @@ class PzPlot(Qwt.QwtPlot):
         self.removeallCurves()
         if len(roots):
             self.__insertZero(Qt.Qt.blue, roots.real,roots.imag)
-            ymax = 1.5 * max(roots.imag)
-            ymin = 1.5 * min(roots.imag)
-            xmax = 1.5 * max(roots.real)
-            xmin = 1.5 * min(roots.real)
-            if xmax < 0:
-                xmax=1
-            if xmin > 0:
-                xmax=-1
-            self.setAxisScale(Qwt.QwtPlot.xBottom, xmin, xmax)
-            self.setAxisScale(Qwt.QwtPlot.yLeft, ymin, ymax)
+            self.ymax = 1.5 * max(roots.imag)
+            self.ymin = 1.5 * min(roots.imag)
+            self.xmax = 1.5 * max(roots.real)
+            self.xmin = 1.5 * min(roots.real)
+            if self.xmax < 0:
+                self.xmax=1
+            if self.xmin > 0:
+                self.xmax=-1
+            self.setAxisScale(Qwt.QwtPlot.xBottom, self.xmin, self.xmax)
+            self.setAxisScale(Qwt.QwtPlot.yLeft, self.ymin, self.ymax)
 
     def insertPoles(self, roots):
             if len(roots):
                 self.__insertPole(Qt.Qt.black, roots.real,roots.imag)
+                ymax = 1.5 * max(roots.imag)
+                ymax = max(ymax,self.ymax)
+                ymin = 1.5 * min(roots.imag)
+                ymin = min(ymin,self.ymin)
+                xmax = 1.5 * max(roots.real)
+                xmax = max(xmax,self.xmax)
+                xmin = 1.5 * min(roots.real)
+                xmin = min(xmin,self.xmin)
+                if xmax < 0:
+                    xmax=1
+                if xmin > 0:
+                    xmax=-1
+                self.setAxisScale(Qwt.QwtPlot.xBottom, xmin, xmax)
+                self.setAxisScale(Qwt.QwtPlot.yLeft, ymin, ymax)
                 self.replot()
 
     def __insertZero(self, color, px, py):
@@ -81,7 +99,7 @@ class PzPlot(Qwt.QwtPlot):
         curve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.XCross,
                                       Qt.QBrush(Qt.Qt.gray),
                                       Qt.QPen(color),
-                                      Qt.QSize(8, 8)))
+                                      Qt.QSize(7, 7)))
         curve.setData(px, py)
 
     def removeallCurves(self):

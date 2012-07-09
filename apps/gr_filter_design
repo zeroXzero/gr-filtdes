@@ -814,15 +814,15 @@ class gr_plot_filter(QtGui.QMainWindow):
                         (z,p,k) = signal.iirdesign(wp, ws, gpass, gstop, analog=sanalog[atype], ftype=iirft[iirftype], output='zpk')
                         w,h = signal.freqz(b,a)
                         self.fftdB = 20 * scipy.log10 (abs(h))
-                        self.freq= w/max(w) 
+                        self.freq = w/max(w) 
+                        self.fftDeg = scipy.unwrap(scipy.arctan2(imag(h),real(h)))
+                        self.groupDelay = -scipy.diff(self.fftDeg)
+                        self.phaseDelay = -self.fftDeg[1:]/self.freq[1:]
                         self.update_freq_curves()
                         self.gui.pzPlot.insertZeros(z)
                         self.gui.pzPlot.insertPoles(p)
                         self.gui.mpzPlot.insertZeros(z)
                         self.gui.mpzPlot.insertPoles(p)
-
-
-        
 
 
     # Filter design functions using a window
