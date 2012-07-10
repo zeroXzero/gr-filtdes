@@ -2126,6 +2126,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.z=zr
             self.p=pl
             self.iir_plot_all(self.z,self.p,self.k)
+            self.gui.mpzPlot.insertZeros(zr)
+            self.gui.mpzPlot.insertPoles(pl)
         else: 
             hz = poly1d(zr,r=1)
             #print hz.c
@@ -2144,6 +2146,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.z=zr
             self.p=pl
             self.iir_plot_all(self.z,self.p,self.k)
+            self.gui.pzPlot.insertZeros(zr)
+            self.gui.pzPlot.insertPoles(pl)
         else: 
             hz = poly1d(zr,r=1)
             #print hz.c
