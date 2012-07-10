@@ -123,6 +123,7 @@ class CanvasPicker(Qt.QObject):
         self.changeConjugate = False 
         self.enableZeroadd= False 
         self.enablepzDelete= False 
+        self.iir = False 
         self.__plot = plot
 
         canvas = plot.canvas()
@@ -157,6 +158,9 @@ class CanvasPicker(Qt.QObject):
 
     def set_conjugate(self):
         self.changeConjugate = not(self.changeConjugate)
+    
+    def set_iir(self,val=True):
+        self.iir = val 
     
     def add_zero(self):
         self.enableZeroadd = not(self.enableZeroadd)
@@ -313,7 +317,12 @@ class CanvasPicker(Qt.QObject):
         yData = zeros(curve.dataSize(), Float)
 
         #poles made unmovable temporarily as only FIR design is active
-        if self.__selectedCurve.symbol().style() == Qwt.QwtSymbol.Ellipse:
+#if self.__selectedCurve.symbol().style() == Qwt.QwtSymbol.Ellipse:
+        move_enable=True
+        if not self.iir:
+            if self.__selectedCurve.symbol().style() == Qwt.QwtSymbol.XCross:
+                move_enable=False
+        if move_enable:
             for i in range(curve.dataSize()):
                 if i == self.__selectedPoint:
                     xData[i] = self.__plot.invTransform(curve.xAxis(), pos.x())
@@ -324,17 +333,17 @@ class CanvasPicker(Qt.QObject):
                 elif i != self.__selectedcPoint:
                     xData[i] = curve.x(i)
                     yData[i] = curve.y(i)
-        curve.setData(xData, yData)
-        self.__plot.replot()
-        px=[]
-        py=[]
-        for c in self.__plot.itemList():
-            if isinstance(c, Qwt.QwtPlotCurve):
-                px.append([c.x(i) for i in range(c.dataSize())])
-                py.append([c.y(i) for i in range(c.dataSize())])
-        tp=(vectorize(complex)(px[0],py[0]),vectorize(complex)(px[1],py[1]))
-        self.curveChanged.emit(tp)
-        self.__showCursor(True)
+            curve.setData(xData, yData)
+            self.__plot.replot()
+            px=[]
+            py=[]
+            for c in self.__plot.itemList():
+                if isinstance(c, Qwt.QwtPlotCurve):
+                    px.append([c.x(i) for i in range(c.dataSize())])
+                    py.append([c.y(i) for i in range(c.dataSize())])
+            tp=(vectorize(complex)(px[0],py[0]),vectorize(complex)(px[1],py[1]))
+            self.curveChanged.emit(tp)
+            self.__showCursor(True)
 
     def __searchConjugate(self, x, y):
         curve = self.__selectedCurve

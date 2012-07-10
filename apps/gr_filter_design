@@ -776,6 +776,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         if (fsel == "FIR"):
             if(ret):
                 self.iir = False 
+                self.cpicker.set_iir(False)
+                self.cpicker2.set_iir(False)
                 if(winstr == "Equiripple"):
                     designer = {"Low Pass" : self.design_opt_lpf,
                                 "Band Pass" : self.design_opt_bpf,
@@ -811,6 +813,8 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.set_drawideal()
         elif (fsel == "IIR(scipy)"):
             self.iir = True
+            self.cpicker.set_iir(True)
+            self.cpicker2.set_iir(True)
             iirft = 	{"Elliptic" : 'ellip',
                          "Butterworth" : 'butter',
                          "Chebyshev-1" : 'cheby1',
@@ -852,20 +856,26 @@ class gr_plot_filter(QtGui.QMainWindow):
                 params=[params[:2],params[2:4],params[4],params[5]]
             atype = str(self.gui.adComboBox.currentText().toAscii())
             if(ret):
-                (b,a) = signal.iirdesign(params[0], params[1], params[2], params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
-                (z,p,k) = signal.iirdesign(params[0], params[1], params[2], params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='zpk')
-                w,h = signal.freqz(b,a)
-                self.fftdB = 20 * scipy.log10 (abs(h))
-                self.freq = w/max(w) 
-                self.fftDeg = scipy.unwrap(scipy.arctan2(imag(h),real(h)))
-                self.groupDelay = -scipy.diff(self.fftDeg)
-                self.phaseDelay = -self.fftDeg[1:]/self.freq[1:]
-                self.update_freq_curves()
-                self.gui.pzPlot.insertZeros(z)
-                self.gui.pzPlot.insertPoles(p)
-                self.gui.mpzPlot.insertZeros(z)
-                self.gui.mpzPlot.insertPoles(p)
+                (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
+                                         params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                (self.z,self.p,self.k) = signal.iirdesign(params[0], params[1], params[2],
+                                           params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='zpk')
+                self.gui.pzPlot.insertZeros(self.z)
+                self.gui.pzPlot.insertPoles(self.p)
+                self.gui.mpzPlot.insertZeros(self.z)
+                self.gui.mpzPlot.insertPoles(self.p)
+                self.iir_plot_all(self.z,self.p,self.k)
 
+    # IIR Filter design plot updates 
+    def iir_plot_all(self,z,p,k):
+        (b,a) = signal.zpk2tf(z,p,k)
+        w,h = signal.freqz(b,a)
+        self.fftdB = 20 * scipy.log10 (abs(h))
+        self.freq = w/max(w) 
+        self.fftDeg = scipy.unwrap(scipy.arctan2(imag(h),real(h)))
+        self.groupDelay = -scipy.diff(self.fftDeg)
+        self.phaseDelay = -self.fftDeg[1:]/self.freq[1:]
+        self.update_freq_curves()
 
     # Filter design functions using a window
     def design_win_lpf(self, fs, gain, wintype):
@@ -2112,35 +2122,45 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.design()
 
     def set_curvetaps(self,(zr,pl)):
-        hz = poly1d(zr,r=1)
-        #print hz.c
-        self.taps=hz.c*self.taps[0]
-        self.draw_plots(self.taps,self.params)
-        self.update_fcoeff()
-        #update the pzplot in other view
-        zeros=self.get_zeros()
-        poles=self.get_poles()
-        self.gui.mpzPlot.insertZeros(zeros)
-        self.gui.mpzPlot.insertPoles(poles)
-        self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
+        if self.iir: 
+            self.z=zr
+            self.p=pl
+            self.iir_plot_all(self.z,self.p,self.k)
+        else: 
+            hz = poly1d(zr,r=1)
+            #print hz.c
+            self.taps=hz.c*self.taps[0]
+            self.draw_plots(self.taps,self.params)
+            self.update_fcoeff()
+            #update the pzplot in other view
+            zeros=self.get_zeros()
+            poles=self.get_poles()
+            self.gui.mpzPlot.insertZeros(zeros)
+            self.gui.mpzPlot.insertPoles(poles)
+            self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
 
     def set_mcurvetaps(self,(zr,pl)):
-        hz = poly1d(zr,r=1)
-        #print hz.c
-        self.taps=hz.c*self.taps[0]
-        if self.gridview:
-            self.update_fft(self.taps, self.params)
-            self.set_mfmagresponse()
-            self.set_mttaps()
-        else:
-            self.draw_plots(self.taps,self.params)
-        self.update_fcoeff()
-        #update the pzplot in other view
-        zeros=self.get_zeros()
-        poles=self.get_poles()
-        self.gui.pzPlot.insertZeros(zeros)
-        self.gui.pzPlot.insertPoles(poles)
-        self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
+        if self.iir: 
+            self.z=zr
+            self.p=pl
+            self.iir_plot_all(self.z,self.p,self.k)
+        else: 
+            hz = poly1d(zr,r=1)
+            #print hz.c
+            self.taps=hz.c*self.taps[0]
+            if self.gridview:
+                self.update_fft(self.taps, self.params)
+                self.set_mfmagresponse()
+                self.set_mttaps()
+            else:
+                self.draw_plots(self.taps,self.params)
+            self.update_fcoeff()
+            #update the pzplot in other view
+            zeros=self.get_zeros()
+            poles=self.get_poles()
+            self.gui.pzPlot.insertZeros(zeros)
+            self.gui.pzPlot.insertPoles(poles)
+            self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
 
     def set_statusbar(self,(x,y)):
         if x == None:
