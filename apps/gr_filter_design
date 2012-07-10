@@ -71,6 +71,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.filterTypeComboBox,
                      Qt.SIGNAL("currentIndexChanged(const QString&)"),
                      self.changed_filter_type)
+        self.connect(self.gui.iirfilterBandComboBox,
+                     Qt.SIGNAL("currentIndexChanged(const QString&)"),
+                     self.changed_iirfilter_band)
         self.connect(self.gui.filterDesignTypeComboBox,
                      Qt.SIGNAL("currentIndexChanged(const QString&)"),
                      self.changed_filter_design_type)
@@ -627,15 +630,30 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.iirfilterBandComboBox.hide()
             self.gui.adComboBox.hide()
             self.gui.filterDesignTypeComboBox.show()
+            self.gui.globalParamsBox.show()
             self.gui.filterTypeComboBox.show()
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
         elif(ftype == "IIR(scipy)"):
             self.gui.filterDesignTypeComboBox.hide()
+            self.gui.globalParamsBox.hide()
             self.gui.filterTypeComboBox.hide()
             self.gui.iirfilterTypeComboBox.show()
             self.gui.adComboBox.show()
             self.gui.iirfilterBandComboBox.show()
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirlpfPage)
+
+        self.design()
+
+    def changed_iirfilter_band(self, ftype):
+        strftype = str(ftype.toAscii())
+        if(ftype == "Low Pass"):
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirlpfPage)
+        elif(ftype == "Band Pass"):
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbpfPage)
+        elif(ftype == "Band Stop"):
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbsfPage)
+        elif(ftype == "High Pass"):
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirhpfPage)
 
         self.design()
 
@@ -749,13 +767,14 @@ class gr_plot_filter(QtGui.QMainWindow):
         gain,r = self.gui.filterGainEdit.text().toDouble()
         ret = r and ret
 
-        if(ret):
-            winstr = str(self.gui.filterDesignTypeComboBox.currentText().toAscii())
-            ftype = str(self.gui.filterTypeComboBox.currentText().toAscii())
-            fsel = str(self.gui.fselectComboBox.currentText().toAscii())
-            iirftype = str(self.gui.iirfilterTypeComboBox.currentText().toAscii())
+        winstr = str(self.gui.filterDesignTypeComboBox.currentText().toAscii())
+        ftype = str(self.gui.filterTypeComboBox.currentText().toAscii())
+        fsel = str(self.gui.fselectComboBox.currentText().toAscii())
+        iirftype = str(self.gui.iirfilterTypeComboBox.currentText().toAscii())
+        iirbtype = str(self.gui.iirfilterBandComboBox.currentText().toAscii())
 
-            if (fsel == "FIR"):
+        if (fsel == "FIR"):
+            if(ret):
                 self.iir = False 
                 if(winstr == "Equiripple"):
                     designer = {"Low Pass" : self.design_opt_lpf,
@@ -790,39 +809,62 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.gui.mpzPlot.insertPoles(poles)
                 self.update_fcoeff()
                 self.set_drawideal()
-            elif (fsel == "IIR(scipy)"):
-                    iirft = 	{"Elliptic" : 'ellip',
-                                 "Butterworth" : 'butter',
-                                 "Chebyshev-1" : 'cheby1',
-                                 "Chebyshev-2" : 'cheby2', 
-                                 "Bessel" : 'bessel'  }
-                    sanalog = 	{"Analog (rad/second)" : 1,
-                                 "Digital (normalized 0-1)" : 0  }
-                    ret = True
-                    self.iir = True
-                    wp,r = self.gui.iirendofLpfPassBandEdit.text().toDouble()
-                    ret = r and ret
-                    ws,r = self.gui.iirstartofLpfStopBandEdit.text().toDouble()
-                    ret = r and ret
-                    gpass,r = self.gui.iirLpfPassBandAttenEdit.text().toDouble()
-                    ret = r and ret
-                    gstop,r = self.gui.iirLpfStopBandRippleEdit.text().toDouble()
-                    ret = r and ret
-                    atype = str(self.gui.adComboBox.currentText().toAscii())
-                    if(ret):
-                        (b,a) = signal.iirdesign(wp, ws, gpass, gstop, analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
-                        (z,p,k) = signal.iirdesign(wp, ws, gpass, gstop, analog=sanalog[atype], ftype=iirft[iirftype], output='zpk')
-                        w,h = signal.freqz(b,a)
-                        self.fftdB = 20 * scipy.log10 (abs(h))
-                        self.freq = w/max(w) 
-                        self.fftDeg = scipy.unwrap(scipy.arctan2(imag(h),real(h)))
-                        self.groupDelay = -scipy.diff(self.fftDeg)
-                        self.phaseDelay = -self.fftDeg[1:]/self.freq[1:]
-                        self.update_freq_curves()
-                        self.gui.pzPlot.insertZeros(z)
-                        self.gui.pzPlot.insertPoles(p)
-                        self.gui.mpzPlot.insertZeros(z)
-                        self.gui.mpzPlot.insertPoles(p)
+        elif (fsel == "IIR(scipy)"):
+            self.iir = True
+            iirft = 	{"Elliptic" : 'ellip',
+                         "Butterworth" : 'butter',
+                         "Chebyshev-1" : 'cheby1',
+                         "Chebyshev-2" : 'cheby2', 
+                         "Bessel" : 'bessel'  }
+
+            sanalog = 	{"Analog (rad/second)" : 1,
+                         "Digital (normalized 0-1)" : 0  }
+
+            iirboxes = {"Low Pass" : [self.gui.iirendofLpfPassBandEdit.text().toDouble(),
+                                      self.gui.iirstartofLpfStopBandEdit.text().toDouble(),
+                                      self.gui.iirLpfPassBandAttenEdit.text().toDouble(),
+                                      self.gui.iirLpfStopBandRippleEdit.text().toDouble()],
+
+                        "High Pass" : [self.gui.iirstartofHpfPassBandEdit.text().toDouble(),
+                                       self.gui.iirendofHpfStopBandEdit.text().toDouble(),
+                                       self.gui.iirHpfPassBandAttenEdit.text().toDouble(),
+                                       self.gui.iirHpfStopBandRippleEdit.text().toDouble()],
+
+                        "Band Pass" : [self.gui.iirstartofBpfPassBandEdit.text().toDouble(),
+                                       self.gui.iirendofBpfPassBandEdit.text().toDouble(),
+                                       self.gui.iirendofBpfStopBandEdit1.text().toDouble(),
+                                       self.gui.iirstartofBpfStopBandEdit2.text().toDouble(),
+                                       self.gui.iirBpfPassBandAttenEdit.text().toDouble(),
+                                       self.gui.iirBpfStopBandRippleEdit.text().toDouble()],
+
+                        "Band Stop" : [self.gui.iirendofBsfPassBandEdit1.text().toDouble(),
+                                       self.gui.iirstartofBsfPassBandEdit2.text().toDouble(),
+                                       self.gui.iirstartofBsfStopBandEdit.text().toDouble(),
+                                       self.gui.iirendofBsfStopBandEdit.text().toDouble(),
+                                       self.gui.iirBsfPassBandAttenEdit.text().toDouble(),
+                                       self.gui.iirBsfStopBandRippleEdit.text().toDouble()]  }
+            ret = True
+            params = []
+            for i in range(len(iirboxes[iirbtype])): 
+                params.append(iirboxes[iirbtype][i][0]) 
+                ret = iirboxes[iirbtype][i][1] and ret
+            if len(iirboxes[iirbtype]) == 6:
+                params=[params[:2],params[2:4],params[4],params[5]]
+            atype = str(self.gui.adComboBox.currentText().toAscii())
+            if(ret):
+                (b,a) = signal.iirdesign(params[0], params[1], params[2], params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                (z,p,k) = signal.iirdesign(params[0], params[1], params[2], params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='zpk')
+                w,h = signal.freqz(b,a)
+                self.fftdB = 20 * scipy.log10 (abs(h))
+                self.freq = w/max(w) 
+                self.fftDeg = scipy.unwrap(scipy.arctan2(imag(h),real(h)))
+                self.groupDelay = -scipy.diff(self.fftDeg)
+                self.phaseDelay = -self.fftDeg[1:]/self.freq[1:]
+                self.update_freq_curves()
+                self.gui.pzPlot.insertZeros(z)
+                self.gui.pzPlot.insertPoles(p)
+                self.gui.mpzPlot.insertZeros(z)
+                self.gui.mpzPlot.insertPoles(p)
 
 
     # Filter design functions using a window
@@ -1273,12 +1315,16 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.freqcurve.setData(self.freq, self.fftdB)
 
             # Reset the x-axis to the new time scale
-            ymax = 1.5 * max(self.fftdB[0:npts/2])
-            ymin = 1.1 * min(self.fftdB[0:npts/2])
             if self.iir:
                 xmax = self.freq[npts-1]
+                ymax = self.fftdB.max()
+                if(ymax < 0):
+                    ymax = 0.8 * self.fftdB.max()
+                ymin = 1.1 * self.fftdB.min()
             else:
                 xmax = self.freq[npts/2]
+                ymax = 1.5 * max(self.fftdB[0:npts/2])
+                ymin = 1.1 * min(self.fftdB[0:npts/2])
             xmin = self.freq[0]
             self.gui.freqPlot.setAxisScale(self.gui.freqPlot.xBottom,
                                            xmin, xmax)
