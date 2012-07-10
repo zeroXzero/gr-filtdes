@@ -1202,11 +1202,6 @@
            <string>Chebyshev-2</string>
           </property>
          </item>
-         <item>
-          <property name="text">
-           <string>Bessel</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item>

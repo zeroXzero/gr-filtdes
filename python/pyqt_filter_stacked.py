@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_stacked.ui'
 #
-# Created: Tue Jul 10 20:29:41 2012
+# Created: Tue Jul 10 22:42:31 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -526,7 +526,6 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.filterDesignTypeComboBox)
         self.iirfilterTypeComboBox = QtGui.QComboBox(self.filterFrame)
         self.iirfilterTypeComboBox.setObjectName(_fromUtf8("iirfilterTypeComboBox"))
-        self.iirfilterTypeComboBox.addItem(_fromUtf8(""))
         self.iirfilterTypeComboBox.addItem(_fromUtf8(""))
         self.iirfilterTypeComboBox.addItem(_fromUtf8(""))
         self.iirfilterTypeComboBox.addItem(_fromUtf8(""))
@@ -1181,7 +1180,6 @@ class Ui_MainWindow(object):
         self.iirfilterTypeComboBox.setItemText(1, QtGui.QApplication.translate("MainWindow", "Butterworth", None, QtGui.QApplication.UnicodeUTF8))
         self.iirfilterTypeComboBox.setItemText(2, QtGui.QApplication.translate("MainWindow", "Chebyshev-1", None, QtGui.QApplication.UnicodeUTF8))
         self.iirfilterTypeComboBox.setItemText(3, QtGui.QApplication.translate("MainWindow", "Chebyshev-2", None, QtGui.QApplication.UnicodeUTF8))
-        self.iirfilterTypeComboBox.setItemText(4, QtGui.QApplication.translate("MainWindow", "Bessel", None, QtGui.QApplication.UnicodeUTF8))
         self.sampleRateLabel.setText(QtGui.QApplication.translate("MainWindow", "Sample Rate (sps)", None, QtGui.QApplication.UnicodeUTF8))
         self.filterGainLabel.setText(QtGui.QApplication.translate("MainWindow", "Filter Gain", None, QtGui.QApplication.UnicodeUTF8))
         self.endofLpfPassBandLabel.setText(QtGui.QApplication.translate("MainWindow", "End of Pass Band (Hz)", None, QtGui.QApplication.UnicodeUTF8))
