@@ -197,6 +197,14 @@ class gr_plot_filter(QtGui.QMainWindow):
                      Qt.SIGNAL("clicked()"),
                      self.set_mzeroadd)
 
+        self.connect(self.gui.addpolePush,
+                     Qt.SIGNAL("clicked()"),
+                     self.set_poleadd)
+
+        self.connect(self.gui.maddpolePush,
+                     Qt.SIGNAL("clicked()"),
+                     self.set_mpoleadd)
+
         self.connect(self.gui.delPush,
                      Qt.SIGNAL("clicked()"),
                      self.set_delpz)
@@ -1755,6 +1763,12 @@ class gr_plot_filter(QtGui.QMainWindow):
 
     def set_mzeroadd(self):
         self.cpicker2.add_zero()
+
+    def set_poleadd(self):
+        self.cpicker.add_pole()
+
+    def set_mpoleadd(self):
+        self.cpicker2.add_pole()
 
     def set_delpz(self):
         self.cpicker.delete_pz()

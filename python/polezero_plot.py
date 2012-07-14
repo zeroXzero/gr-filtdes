@@ -122,6 +122,7 @@ class CanvasPicker(Qt.QObject):
         self.__addedcZero = -1
         self.changeConjugate = False 
         self.enableZeroadd= False 
+        self.enablePoleadd= False 
         self.enablepzDelete= False 
         self.iir = False 
         self.__plot = plot
@@ -165,6 +166,11 @@ class CanvasPicker(Qt.QObject):
     def add_zero(self):
         self.enableZeroadd = not(self.enableZeroadd)
 
+    def add_pole(self):
+        #Adding pole support only for iir 
+        if self.iir:
+            self.enablePoleadd = not(self.enablePoleadd)
+
     def delete_pz(self):
         self.enablepzDelete = not(self.enablepzDelete)
 
@@ -179,8 +185,8 @@ class CanvasPicker(Qt.QObject):
             Qt.QApplication.postEvent(
                 self, Qt.QEvent(Qt.QEvent.User))
         elif event.type() == Qt.QEvent.MouseButtonPress:
-            if self.enableZeroadd:
-                self.__drawAddedzero(True, event.pos())
+            if self.enableZeroadd or self.enablePoleadd:
+                self.__drawAddedzero_pole(True, event.pos())
             else:
                 self.__select(event.pos())
             return True
@@ -353,13 +359,17 @@ class CanvasPicker(Qt.QObject):
                     return i
         return -1 
 
-    def __drawAddedzero(self, showIt, pos):
-        zerocurve=''
+    def __drawAddedzero_pole(self, showIt, pos):
+        editcurve=''
         for curve in self.__plot.itemList():
             if isinstance(curve, Qwt.QwtPlotCurve):
-                if curve.symbol().style() == Qwt.QwtSymbol.Ellipse:
-                    zerocurve=curve
-        if not zerocurve:
+                if self.enableZeroadd:
+                    if curve.symbol().style() == Qwt.QwtSymbol.Ellipse:
+                        editcurve=curve
+                if self.enablePoleadd:
+                    if curve.symbol().style() == Qwt.QwtSymbol.XCross:
+                        editcurve=curve
+        if not editcurve:
             return
 
         if self.changeConjugate:
@@ -367,36 +377,36 @@ class CanvasPicker(Qt.QObject):
         else:
             extrapoints=1
 
-        xData = zeros(zerocurve.dataSize()+extrapoints, Float)
-        yData = zeros(zerocurve.dataSize()+extrapoints, Float)
+        xData = zeros(editcurve.dataSize()+extrapoints, Float)
+        yData = zeros(editcurve.dataSize()+extrapoints, Float)
 
-        for i in range(zerocurve.dataSize()):
-            xData[i] = zerocurve.x(i)
-            yData[i] = zerocurve.y(i)
-        xData[i+1] = self.__plot.invTransform(zerocurve.xAxis(), pos.x())
-        yData[i+1] = self.__plot.invTransform(zerocurve.yAxis(), pos.y())
+        for i in range(editcurve.dataSize()):
+            xData[i] = editcurve.x(i)
+            yData[i] = editcurve.y(i)
+        xData[i+1] = self.__plot.invTransform(editcurve.xAxis(), pos.x())
+        yData[i+1] = self.__plot.invTransform(editcurve.yAxis(), pos.y())
 
         if self.changeConjugate:
             xData[i+2] = xData[i+1] 
             yData[i+2] = -yData[i+1]
             self.__addedcZero=i+2
 
-        zerocurve.setData(xData, yData)
+        editcurve.setData(xData, yData)
 
         self.__addedZero=i+1
-        symbol = Qwt.QwtSymbol(zerocurve.symbol())
+        symbol = Qwt.QwtSymbol(editcurve.symbol())
         newSymbol = Qwt.QwtSymbol(symbol)
         newSymbol.setPen(Qt.QPen(Qt.Qt.red))
         doReplot = self.__plot.autoReplot()
 
         self.__plot.setAutoReplot(False)
-        zerocurve.setSymbol(newSymbol)
+        editcurve.setSymbol(newSymbol)
 
-        zerocurve.draw(self.__addedZero, self.__addedZero)
+        editcurve.draw(self.__addedZero, self.__addedZero)
         if self.changeConjugate:
-            zerocurve.draw(self.__addedcZero, self.__addedcZero)
+            editcurve.draw(self.__addedcZero, self.__addedcZero)
 
-        zerocurve.setSymbol(symbol)
+        editcurve.setSymbol(symbol)
         self.__plot.setAutoReplot(doReplot)
         px=[]
         py=[]

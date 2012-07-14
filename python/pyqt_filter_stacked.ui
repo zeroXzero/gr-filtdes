@@ -266,6 +266,23 @@
                  </widget>
                 </item>
                 <item>
+                 <widget class="QToolButton" name="addpolePush">
+                  <property name="toolTip">
+                   <string>Add pole</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../apps/Settings_32x32.png</normaloff>../apps/Settings_32x32.png</iconset>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QToolButton" name="delPush">
                   <property name="toolTip">
                    <string>Delete pole/zero</string>
@@ -946,6 +963,23 @@
                <layout class="QVBoxLayout" name="verticalLayout_4">
                 <item>
                  <widget class="QToolButton" name="maddzeroPush">
+                  <property name="toolTip">
+                   <string>Add zero</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../apps/Settings_32x32.png</normaloff>../apps/Settings_32x32.png</iconset>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="maddpolePush">
                   <property name="toolTip">
                    <string>Add zero</string>
                   </property>
