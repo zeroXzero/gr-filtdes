@@ -297,6 +297,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.iirfilterBandComboBox.hide()
         self.gui.adComboBox.hide()
         self.gui.besselordBox.hide()
+        self.gui.addpolePush.setEnabled(False)
+        self.gui.maddpolePush.setEnabled(False)
 
         # Set Axis labels
         fxtitle=Qwt.QwtText("Frequency (Hz)")
@@ -645,6 +647,10 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.globalParamsBox.show()
             self.gui.filterTypeComboBox.show()
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
+            self.gui.tabGroup.addTab(self.gui.timeTab, _fromUtf8("Filter Taps"))
+            self.gui.mttapsPush.setEnabled(True)
+            self.gui.addpolePush.setEnabled(False)
+            self.gui.maddpolePush.setEnabled(False)
         elif(ftype == "IIR(scipy)"):
             self.gui.filterDesignTypeComboBox.hide()
             self.gui.globalParamsBox.hide()
@@ -653,6 +659,10 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.adComboBox.show()
             self.gui.iirfilterBandComboBox.show()
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirlpfPage)
+            self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.timeTab))
+            self.gui.mttapsPush.setEnabled(False)
+            self.gui.addpolePush.setEnabled(True)
+            self.gui.maddpolePush.setEnabled(True)
 
         self.design()
 
@@ -822,6 +832,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                         self.update_fft(taps, params)
                         self.set_mfmagresponse()
                         self.set_mttaps()
+                        self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
                     else:
                         self.draw_plots(taps,params)
                 zeros=self.get_zeros()
@@ -899,6 +910,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.gui.mpzPlot.insertPoles(self.p)
                 self.iir_plot_all(self.z,self.p,self.k)
                 self.update_fcoeff()
+                self.gui.nTapsEdit.setText("-")
 
     # IIR Filter design plot updates 
     def iir_plot_all(self,z,p,k):
@@ -911,6 +923,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.phaseDelay = -self.fftDeg[1:]/self.freq[1:]
         if self.gridview:
            self.set_mfmagresponse()
+           self.set_mtimpulse()
         else:
            self.update_freq_curves()
            self.update_phase_curves()
