@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_stacked.ui'
 #
-# Created: Sat Jul 14 18:13:13 2012
+# Created: Sat Jul 14 19:36:18 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -540,6 +540,7 @@ class Ui_MainWindow(object):
         self.iirfilterTypeComboBox.addItem(_fromUtf8(""))
         self.iirfilterTypeComboBox.addItem(_fromUtf8(""))
         self.iirfilterTypeComboBox.addItem(_fromUtf8(""))
+        self.iirfilterTypeComboBox.addItem(_fromUtf8(""))
         self.verticalLayout.addWidget(self.iirfilterTypeComboBox)
         self.globalParamsBox = QtGui.QGroupBox(self.filterFrame)
         self.globalParamsBox.setTitle(_fromUtf8(""))
@@ -562,6 +563,18 @@ class Ui_MainWindow(object):
         self.filterGainEdit.setObjectName(_fromUtf8("filterGainEdit"))
         self.formLayout_12.setWidget(1, QtGui.QFormLayout.FieldRole, self.filterGainEdit)
         self.verticalLayout.addWidget(self.globalParamsBox)
+        self.besselordBox = QtGui.QGroupBox(self.filterFrame)
+        self.besselordBox.setTitle(_fromUtf8(""))
+        self.besselordBox.setObjectName(_fromUtf8("besselordBox"))
+        self.formLayout_13 = QtGui.QFormLayout(self.besselordBox)
+        self.formLayout_13.setObjectName(_fromUtf8("formLayout_13"))
+        self.besselordLabel = QtGui.QLabel(self.besselordBox)
+        self.besselordLabel.setObjectName(_fromUtf8("besselordLabel"))
+        self.formLayout_13.setWidget(0, QtGui.QFormLayout.LabelRole, self.besselordLabel)
+        self.besselordEdit = QtGui.QLineEdit(self.besselordBox)
+        self.besselordEdit.setObjectName(_fromUtf8("besselordEdit"))
+        self.formLayout_13.setWidget(0, QtGui.QFormLayout.FieldRole, self.besselordEdit)
+        self.verticalLayout.addWidget(self.besselordBox)
         self.filterTypeWidget = QtGui.QStackedWidget(self.filterFrame)
         self.filterTypeWidget.setObjectName(_fromUtf8("filterTypeWidget"))
         self.firlpfPage = QtGui.QWidget()
@@ -1194,8 +1207,10 @@ class Ui_MainWindow(object):
         self.iirfilterTypeComboBox.setItemText(1, QtGui.QApplication.translate("MainWindow", "Butterworth", None, QtGui.QApplication.UnicodeUTF8))
         self.iirfilterTypeComboBox.setItemText(2, QtGui.QApplication.translate("MainWindow", "Chebyshev-1", None, QtGui.QApplication.UnicodeUTF8))
         self.iirfilterTypeComboBox.setItemText(3, QtGui.QApplication.translate("MainWindow", "Chebyshev-2", None, QtGui.QApplication.UnicodeUTF8))
+        self.iirfilterTypeComboBox.setItemText(4, QtGui.QApplication.translate("MainWindow", "Bessel", None, QtGui.QApplication.UnicodeUTF8))
         self.sampleRateLabel.setText(QtGui.QApplication.translate("MainWindow", "Sample Rate (sps)", None, QtGui.QApplication.UnicodeUTF8))
         self.filterGainLabel.setText(QtGui.QApplication.translate("MainWindow", "Filter Gain", None, QtGui.QApplication.UnicodeUTF8))
+        self.besselordLabel.setText(QtGui.QApplication.translate("MainWindow", "Filter Order", None, QtGui.QApplication.UnicodeUTF8))
         self.endofLpfPassBandLabel.setText(QtGui.QApplication.translate("MainWindow", "End of Pass Band (Hz)", None, QtGui.QApplication.UnicodeUTF8))
         self.startofLpfStopBandLabel.setText(QtGui.QApplication.translate("MainWindow", "Start of Stop Band (Hz)", None, QtGui.QApplication.UnicodeUTF8))
         self.lpfStopBandAttenLabel.setText(QtGui.QApplication.translate("MainWindow", "Stop Band Attenuation (dB)", None, QtGui.QApplication.UnicodeUTF8))

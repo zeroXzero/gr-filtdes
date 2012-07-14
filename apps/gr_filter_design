@@ -80,6 +80,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.fselectComboBox,
                      Qt.SIGNAL("currentIndexChanged(const QString&)"),
                      self.changed_fselect)
+        self.connect(self.gui.iirfilterTypeComboBox,
+                     Qt.SIGNAL("currentIndexChanged(const QString&)"),
+                     self.set_order)
 
         self.connect(self.gui.designButton,
                      Qt.SIGNAL("released()"),
@@ -293,6 +296,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.iirfilterTypeComboBox.hide()
         self.gui.iirfilterBandComboBox.hide()
         self.gui.adComboBox.hide()
+        self.gui.besselordBox.hide()
 
         # Set Axis labels
         fxtitle=Qwt.QwtText("Frequency (Hz)")
@@ -652,6 +656,15 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         self.design()
 
+    def set_order(self, ftype):
+        strftype = str(ftype.toAscii())
+        if(ftype == "Bessel"):
+            self.gui.besselordBox.show()
+        else:
+            self.gui.besselordBox.hide()
+
+        self.design()
+
     def changed_iirfilter_band(self, ftype):
         strftype = str(ftype.toAscii())
         if(ftype == "Low Pass"):
@@ -857,17 +870,29 @@ class gr_plot_filter(QtGui.QMainWindow):
                                        self.gui.iirBsfStopBandRippleEdit.text().toDouble()]  }
             ret = True
             params = []
+            besselparams = []
             for i in range(len(iirboxes[iirbtype])): 
                 params.append(iirboxes[iirbtype][i][0]) 
+                besselparams.append(iirboxes[iirbtype][i][0]) 
                 ret = iirboxes[iirbtype][i][1] and ret
+
             if len(iirboxes[iirbtype]) == 6:
                 params=[params[:2],params[2:4],params[4],params[5]]
+
             atype = str(self.gui.adComboBox.currentText().toAscii())
+            if(iirftype == "Bessel"):
+                order,r = self.gui.besselordEdit.text().toDouble()
+                ret = ret and r
+
             if(ret):
-                (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
-                                         params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
-                (self.z,self.p,self.k) = signal.iirdesign(params[0], params[1], params[2],
-                                           params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='zpk')
+                if(iirftype == "Bessel"):
+                    (self.b,self.a) = signal.iirfilter(order, besselparams[:-2],
+                                                       analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                    (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
+                else:
+                    (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
+                                             params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                    (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
                 self.gui.pzPlot.insertZeros(self.z)
                 self.gui.pzPlot.insertPoles(self.p)
                 self.gui.mpzPlot.insertZeros(self.z)

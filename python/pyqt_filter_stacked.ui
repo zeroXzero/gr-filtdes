@@ -1236,6 +1236,11 @@
            <string>Chebyshev-2</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Bessel</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item>
@@ -1279,6 +1284,25 @@
           </item>
           <item row="1" column="1">
            <widget class="QLineEdit" name="filterGainEdit"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="besselordBox">
+         <property name="title">
+          <string/>
+         </property>
+         <layout class="QFormLayout" name="formLayout_13">
+          <item row="0" column="0">
+           <widget class="QLabel" name="besselordLabel">
+            <property name="text">
+             <string>Filter Order</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="besselordEdit"/>
           </item>
          </layout>
         </widget>
