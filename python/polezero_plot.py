@@ -71,10 +71,10 @@ class PzPlot(Qwt.QwtPlot):
                 xmax = max(xmax,self.xmax)
                 xmin = 1.5 * min(roots.real)
                 xmin = min(xmin,self.xmin)
-                if xmax < 0:
+                if xmax == 0:
                     xmax=1
-                if xmin > 0:
-                    xmax=-1
+                if xmin == 0:
+                    xmin=-1
                 self.setAxisScale(Qwt.QwtPlot.xBottom, xmin, xmax)
                 self.setAxisScale(Qwt.QwtPlot.yLeft, ymin, ymax)
                 self.replot()
