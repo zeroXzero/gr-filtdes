@@ -1574,7 +1574,7 @@ class gr_plot_filter(QtGui.QMainWindow):
 						                        phytitle)
  
             # Set the zoomer base to unzoom to the new axis
-            self.groupZoomer.setZoomBase()
+            self.pdelayZoomer.setZoomBase()
             self.mfreqZoomer.setZoomBase()
 
             self.gui.pdelayPlot.replot()
