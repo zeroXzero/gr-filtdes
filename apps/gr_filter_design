@@ -1547,7 +1547,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 ymin = 1.1 * self.phaseDelay.min()
             else:
                 ymax = 1.3 * max(self.phaseDelay[0:npts])
-                ymin = 1.1 * min(self.phaseDelay[0:npts])
+                ymin = 0.8 * min(self.phaseDelay[0:npts])
                 xmax = self.freq[npts/2]
             xmin = self.freq[0]
             self.gui.pdelayPlot.setAxisScale(self.gui.pdelayPlot.xBottom,

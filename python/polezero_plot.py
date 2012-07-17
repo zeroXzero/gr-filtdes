@@ -53,9 +53,9 @@ class PzPlot(Qwt.QwtPlot):
             self.ymin = 1.5 * min(roots.imag)
             self.xmax = 1.5 * max(roots.real)
             self.xmin = 1.5 * min(roots.real)
-            if self.xmax < 0:
+            if self.xmax == 0:
                 self.xmax=1
-            if self.xmin > 0:
+            if self.xmin == 0:
                 self.xmax=-1
             self.setAxisScale(Qwt.QwtPlot.xBottom, self.xmin, self.xmax)
             self.setAxisScale(Qwt.QwtPlot.yLeft, self.ymin, self.ymax)
