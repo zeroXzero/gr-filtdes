@@ -298,7 +298,7 @@
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../apps/Settings_32x32.png</normaloff>../apps/Settings_32x32.png</iconset>
+                    <normaloff>icons/remove_red.svg</normaloff>icons/remove_red.svg</iconset>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -315,7 +315,7 @@
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>Settings_32x32.png</normaloff>Settings_32x32.png</iconset>
+                    <normaloff>icons/conjugate.svg</normaloff>icons/conjugate.svg</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -811,7 +811,7 @@
                    </property>
                    <property name="icon">
                     <iconset>
-                     <normaloff>Settings_32x32.png</normaloff>Settings_32x32.png</iconset>
+                     <normaloff>icons/filtr_taps.svg</normaloff>icons/filtr_taps.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1011,7 +1011,7 @@
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../apps/Settings_32x32.png</normaloff>../apps/Settings_32x32.png</iconset>
+                    <normaloff>icons/remove_red.svg</normaloff>icons/remove_red.svg</iconset>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -1028,7 +1028,7 @@
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>Settings_32x32.png</normaloff>Settings_32x32.png</iconset>
+                    <normaloff>icons/conjugate.svg</normaloff>icons/conjugate.svg</iconset>
                   </property>
                   <property name="iconSize">
                    <size>

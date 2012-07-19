@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_stacked.ui'
 #
-# Created: Thu Jul 19 23:13:45 2012
+# Created: Fri Jul 20 01:18:45 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -194,14 +194,14 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.addpolePush)
         self.delPush = QtGui.QToolButton(self.pzgroupBox)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(_fromUtf8("../apps/Settings_32x32.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(_fromUtf8("icons/remove_red.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.delPush.setIcon(icon2)
         self.delPush.setCheckable(True)
         self.delPush.setObjectName(_fromUtf8("delPush"))
         self.verticalLayout_3.addWidget(self.delPush)
         self.conjPush = QtGui.QToolButton(self.pzgroupBox)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(_fromUtf8("Settings_32x32.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(_fromUtf8("icons/conjugate.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.conjPush.setIcon(icon3)
         self.conjPush.setIconSize(QtCore.QSize(16, 16))
         self.conjPush.setCheckable(True)
@@ -396,23 +396,25 @@ class Ui_MainWindow(object):
         self.verticalLayout_5 = QtGui.QVBoxLayout(self.mtgroupBox)
         self.verticalLayout_5.setObjectName(_fromUtf8("verticalLayout_5"))
         self.mttapsPush = QtGui.QToolButton(self.mtgroupBox)
-        self.mttapsPush.setIcon(icon3)
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap(_fromUtf8("icons/filtr_taps.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.mttapsPush.setIcon(icon9)
         self.mttapsPush.setIconSize(QtCore.QSize(16, 16))
         self.mttapsPush.setCheckable(False)
         self.mttapsPush.setObjectName(_fromUtf8("mttapsPush"))
         self.verticalLayout_5.addWidget(self.mttapsPush)
         self.mtstepPush = QtGui.QToolButton(self.mtgroupBox)
-        icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(_fromUtf8("icons/step_response.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.mtstepPush.setIcon(icon9)
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap(_fromUtf8("icons/step_response.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.mtstepPush.setIcon(icon10)
         self.mtstepPush.setIconSize(QtCore.QSize(16, 16))
         self.mtstepPush.setCheckable(False)
         self.mtstepPush.setObjectName(_fromUtf8("mtstepPush"))
         self.verticalLayout_5.addWidget(self.mtstepPush)
         self.mtimpPush = QtGui.QToolButton(self.mtgroupBox)
-        icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(_fromUtf8("icons/impulse_response.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.mtimpPush.setIcon(icon10)
+        icon11 = QtGui.QIcon()
+        icon11.addPixmap(QtGui.QPixmap(_fromUtf8("icons/impulse_response.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.mtimpPush.setIcon(icon11)
         self.mtimpPush.setIconSize(QtCore.QSize(16, 16))
         self.mtimpPush.setCheckable(False)
         self.mtimpPush.setObjectName(_fromUtf8("mtimpPush"))

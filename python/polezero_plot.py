@@ -24,6 +24,7 @@ class PzPlot(Qwt.QwtPlot):
         
         self.setAxisScale(Qwt.QwtPlot.xBottom, -3, 3)
         self.setAxisScale(Qwt.QwtPlot.yLeft, -2, 2)
+        self.drawUnitcircle()
         
 
 
@@ -32,7 +33,7 @@ class PzPlot(Qwt.QwtPlot):
         self.replot()
 
 
-    def drawUnitcircle(self,color):
+    def drawUnitcircle(self):
         radius = 1.0 
         steps = 1024 
         angleStep = 2 * pi / steps
@@ -41,7 +42,7 @@ class PzPlot(Qwt.QwtPlot):
 
         curve = Qwt.QwtPlotCurve()
         curve.attach(self)
-        curve.setPen(Qt.QPen(Qt.Qt.black, 2))
+        curve.setPen(Qt.QPen(Qt.Qt.gray, 1, Qt.Qt.DotLine))
         curve.setData(x, y)
 
 
@@ -77,6 +78,7 @@ class PzPlot(Qwt.QwtPlot):
                     xmin=-1
                 self.setAxisScale(Qwt.QwtPlot.xBottom, xmin, xmax)
                 self.setAxisScale(Qwt.QwtPlot.yLeft, ymin, ymax)
+                self.drawUnitcircle()
                 self.replot()
 
     def __insertZero(self, color, px, py):
@@ -246,11 +248,12 @@ class CanvasPicker(Qt.QObject):
         
         for curve in self.__plot.itemList():
             if isinstance(curve, Qwt.QwtPlotCurve):
-                i, d = curve.closestPoint(pos)
-                if d < distance:
-                    found = curve
-                    point = i
-                    distance = d
+                if curve.symbol().style() != Qwt.QwtSymbol.NoSymbol:
+                    i, d = curve.closestPoint(pos)
+                    if d < distance:
+                        found = curve
+                        point = i
+                        distance = d
 
         self.__showCursor(False)
         self.__selectedCurve = None

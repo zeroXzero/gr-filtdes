@@ -15,7 +15,7 @@
    inkscape:version="0.48.3.1 r9886"
    width="32"
    height="32"
-   sodipodi:docname="add_pole_1.svg">
+   sodipodi:docname="conjugate1.svg">
   <metadata
      id="metadata4563">
     <rdf:RDF>
@@ -44,8 +44,8 @@
      id="namedview4559"
      showgrid="false"
      inkscape:zoom="7.375"
-     inkscape:cx="24.095338"
-     inkscape:cy="16"
+     inkscape:cx="26.214936"
+     inkscape:cy="17.290675"
      inkscape:window-x="0"
      inkscape:window-y="16"
      inkscape:window-maximized="0"
@@ -63,13 +63,26 @@ AAAAAElFTkSuQmCC
      y="0" />
   <text
      xml:space="preserve"
-     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
-     x="3.9661019"
-     y="27.050846"
-     id="text4768"
-     sodipodi:linespacing="125%"><tspan
+     style="font-size:16.96863747000000089px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
+     x="2.0439525"
+     y="22.075136"
+     id="text5391"
+     sodipodi:linespacing="125%"
+     transform="scale(1.0498965,0.95247482)"><tspan
        sodipodi:role="line"
-       id="tspan4770"
-       x="3.9661019"
-       y="27.050846">o</tspan></text>
+       id="tspan5393"
+       x="2.0439525"
+       y="22.075136">a</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:16.96863747000000089px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
+     x="12.397697"
+     y="21.557447"
+     id="text5395"
+     sodipodi:linespacing="125%"
+     transform="scale(1.0498965,0.95247482)"><tspan
+       sodipodi:role="line"
+       id="tspan5397"
+       x="12.397697"
+       y="21.557447">,b</tspan></text>
 </svg>

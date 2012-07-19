@@ -15,7 +15,7 @@
    inkscape:version="0.48.3.1 r9886"
    width="32"
    height="32"
-   sodipodi:docname="add_pole_1.svg">
+   sodipodi:docname="filtr_taps.svg">
   <metadata
      id="metadata4563">
     <rdf:RDF>
@@ -39,14 +39,14 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1364"
+     inkscape:window-width="726"
      inkscape:window-height="750"
      id="namedview4559"
      showgrid="false"
      inkscape:zoom="7.375"
-     inkscape:cx="24.095338"
-     inkscape:cy="16"
-     inkscape:window-x="0"
+     inkscape:cx="26.214936"
+     inkscape:cy="19.728814"
+     inkscape:window-x="683"
      inkscape:window-y="16"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg4557"
@@ -63,13 +63,30 @@ AAAAAElFTkSuQmCC
      y="0" />
   <text
      xml:space="preserve"
-     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
-     x="3.9661019"
-     y="27.050846"
-     id="text4768"
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     x="11.661017"
+     y="9.3559322"
+     id="text5418"
      sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
-       id="tspan4770"
-       x="3.9661019"
-       y="27.050846">o</tspan></text>
+       id="tspan5420"
+       x="11.661017"
+       y="9.3559322" /></text>
+  <path
+     style="fill:none;stroke:#0000ff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 16.779661,4.4745763 c 0,7.9548027 0,15.9096047 0,23.8644067"
+     id="path5424"
+     inkscape:connector-curvature="0" />
+  <path
+     style="fill:#0000ff;stroke:#0000ff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 16.950511,4.9411615 c 2.010393,2.4008082 4.020786,4.8016173 6.031178,7.2024245"
+     id="path5426"
+     inkscape:connector-curvature="0"
+     inkscape:transform-center-x="-2.3050847" />
+  <path
+     style="fill:none;stroke:#0000ff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.94117647"
+     d="M 16.812199,4.8055672 C 14.801806,7.2063754 12.791413,9.6071848 10.781021,12.007992"
+     id="path5426-2"
+     inkscape:connector-curvature="0"
+     inkscape:transform-center-x="2.3050847" />
 </svg>

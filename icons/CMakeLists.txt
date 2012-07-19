@@ -28,6 +28,9 @@ install(FILES
 	phase_delay.svg
 	phase_response.svg
 	step_response.svg
+	conjugate.svg
+	filtr_taps.svg
+	remove_red.svg
     DESTINATION bin/icons 
 )
 

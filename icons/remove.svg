@@ -15,7 +15,7 @@
    inkscape:version="0.48.3.1 r9886"
    width="32"
    height="32"
-   sodipodi:docname="add_pole_1.svg">
+   sodipodi:docname="remove.svg">
   <metadata
      id="metadata4563">
     <rdf:RDF>
@@ -44,8 +44,8 @@
      id="namedview4559"
      showgrid="false"
      inkscape:zoom="7.375"
-     inkscape:cx="24.095338"
-     inkscape:cy="16"
+     inkscape:cx="26.214936"
+     inkscape:cy="19.728814"
      inkscape:window-x="0"
      inkscape:window-y="16"
      inkscape:window-maximized="0"
@@ -63,13 +63,48 @@ AAAAAElFTkSuQmCC
      y="0" />
   <text
      xml:space="preserve"
-     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
-     x="3.9661019"
-     y="27.050846"
-     id="text4768"
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     x="11.661017"
+     y="9.3559322"
+     id="text5418"
      sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
-       id="tspan4770"
-       x="3.9661019"
-       y="27.050846">o</tspan></text>
+       id="tspan5420"
+       x="11.661017"
+       y="9.3559322" /></text>
+  <text
+     xml:space="preserve"
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
+     x="5.9661016"
+     y="27.118645"
+     id="text6484"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan6486"
+       x="5.9661016"
+       y="27.118645">r</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:12.59334946px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     x="12.713432"
+     y="19.886572"
+     id="text6488"
+     sodipodi:linespacing="125%"
+     transform="scale(1.1458084,0.87274627)"><tspan
+       sodipodi:role="line"
+       id="tspan6490"
+       x="12.713432"
+       y="19.886572">x</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:12.29060745px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     x="14.250282"
+     y="27.549017"
+     id="text6492"
+     sodipodi:linespacing="125%"
+     transform="scale(1.0213823,0.97906533)"><tspan
+       sodipodi:role="line"
+       id="tspan6494"
+       x="14.250282"
+       y="27.549017">0</tspan></text>
 </svg>

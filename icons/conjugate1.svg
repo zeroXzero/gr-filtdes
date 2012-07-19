@@ -15,7 +15,7 @@
    inkscape:version="0.48.3.1 r9886"
    width="32"
    height="32"
-   sodipodi:docname="add_pole_1.svg">
+   sodipodi:docname="conjugate.svg">
   <metadata
      id="metadata4563">
     <rdf:RDF>
@@ -44,8 +44,8 @@
      id="namedview4559"
      showgrid="false"
      inkscape:zoom="7.375"
-     inkscape:cx="24.095338"
-     inkscape:cy="16"
+     inkscape:cx="26.214936"
+     inkscape:cy="17.290675"
      inkscape:window-x="0"
      inkscape:window-y="16"
      inkscape:window-maximized="0"
@@ -61,15 +61,23 @@ AAAAAElFTkSuQmCC
      id="image4565"
      x="0"
      y="0" />
-  <text
-     xml:space="preserve"
-     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
-     x="3.9661019"
-     y="27.050846"
-     id="text4768"
-     sodipodi:linespacing="125%"><tspan
-       sodipodi:role="line"
-       id="tspan4770"
-       x="3.9661019"
-       y="27.050846">o</tspan></text>
+  <image
+     y="0.76271176"
+     x="1.7118663"
+     id="image5369"
+     xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGIAAABSCAYAAACv3wGjAAAABHNCSVQICAgIfAhkiAAAAl9JREFU
+eJztnEFuxSAMRKHqPdr736Ino6uoUpoQAvYwhnnbr+8hHpMQg5KSEEIIIYR4Js8eQBul3P+WDa8B
+pXMR3TP4OLXEnBlJFEqnEtUjqA1vknPQkySUTp0P64Bz6Ukqhw6pEXET2gupEfuxoBE8Vf6GBY1A
+YWu4jCBhQSN8X7y8dBY0IiakRsSs6hFIjeglroEEFWG1+nhKDkqnM6pH0DYsl3+15KB0BiN7Bb5n
+tMl2/N8j+W917AAZYVGVLQlB6djjLGrdbrhLEkrHj0/7kPt1Ti0AbTNGBDsrBmfEasmfB2ifNyq4
+WdEptIMJBxgzFmtxxAVgRM6YqvLSwcx+h+VrSv8T4nUxKB1/DB/WqH7Pmau2hLeOQ3TP4H94V+qR
+JJSOPXpYk7CIEfHbKgGMiL7qalT3lxipItbVV7hDyHGXk3VCHUIeHexV1XncOlA6dZyM8DCh5TdW
+nWccjPA0wZJRHeqzrxaDY1qK4mbMRa/paoA8J+Lw5IwojsYZUcrzYJgq2ZpzIbqf9Gu9yKuBeCQI
+ocMx2zufES0zxAKUznyW6ef3E3pGCGtORnBUx45czAjPLmSUlzU8lT1rq10vJb+FF4O3/GYF2+Hk
++SY6fkSE6Rg9fn/hLR2rppZB63b0ls7la+2Bbt2mRujMZ/LFrP9lslb0QkeCjCBBRpAgI0jYwIgY
+HeWJRsRIEIoNZkQMZAQJMoIEGUECqRH7NQ1JjdgPGUGCjCBBRpAgI0iYZMTKB5b7mGTEfsvTJwhv
+TXuaNNGIPRMuhBBCvMX8QVZK+UopfaeUUs75xzr+qvwCMB2irRXDGswAAAAASUVORK5CYII=
+"
+     height="29.661018"
+     width="32.372879" />
 </svg>
