@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,10 +17,17 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-include(GrPython)
-
-GR_PYTHON_INSTALL(
-    PROGRAMS
-	gr_filter_design
-    DESTINATION bin
+########################################################################
+install(FILES
+    add_pole.svg
+	add_zero.svg
+	group_delay.svg
+	impulse_response.svg
+	mag_response.svg
+	overlay.svg
+	phase_delay.svg
+	phase_response.svg
+	step_response.svg
+    DESTINATION bin/icons 
 )
+

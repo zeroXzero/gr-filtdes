@@ -258,7 +258,13 @@
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../apps/Settings_32x32.png</normaloff>../apps/Settings_32x32.png</iconset>
+                    <normaloff>icons/add_zero.svg</normaloff>icons/add_zero.svg</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>16</width>
+                    <height>16</height>
+                   </size>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -275,7 +281,7 @@
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../apps/Settings_32x32.png</normaloff>../apps/Settings_32x32.png</iconset>
+                    <normaloff>icons/add_pole.svg</normaloff>icons/add_pole.svg</iconset>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -647,7 +653,7 @@
                    </property>
                    <property name="icon">
                     <iconset>
-                     <normaloff>Settings_32x32.png</normaloff>Settings_32x32.png</iconset>
+                     <normaloff>icons/mag_response.svg</normaloff>icons/mag_response.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -670,7 +676,7 @@
                    </property>
                    <property name="icon">
                     <iconset>
-                     <normaloff>Settings_32x32.png</normaloff>Settings_32x32.png</iconset>
+                     <normaloff>icons/phase_response.svg</normaloff>icons/phase_response.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -693,7 +699,7 @@
                    </property>
                    <property name="icon">
                     <iconset>
-                     <normaloff>Settings_32x32.png</normaloff>Settings_32x32.png</iconset>
+                     <normaloff>icons/group_delay.svg</normaloff>icons/group_delay.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -716,7 +722,7 @@
                    </property>
                    <property name="icon">
                     <iconset>
-                     <normaloff>Settings_32x32.png</normaloff>Settings_32x32.png</iconset>
+                     <normaloff>icons/phase_delay.svg</normaloff>icons/phase_delay.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -739,7 +745,7 @@
                    </property>
                    <property name="icon">
                     <iconset>
-                     <normaloff>Settings_32x32.png</normaloff>Settings_32x32.png</iconset>
+                     <normaloff>icons/overlay.svg</normaloff>icons/overlay.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -828,7 +834,7 @@
                    </property>
                    <property name="icon">
                     <iconset>
-                     <normaloff>Settings_32x32.png</normaloff>Settings_32x32.png</iconset>
+                     <normaloff>icons/step_response.svg</normaloff>icons/step_response.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -851,7 +857,7 @@
                    </property>
                    <property name="icon">
                     <iconset>
-                     <normaloff>Settings_32x32.png</normaloff>Settings_32x32.png</iconset>
+                     <normaloff>icons/impulse_response.svg</normaloff>icons/impulse_response.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -971,7 +977,7 @@
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../apps/Settings_32x32.png</normaloff>../apps/Settings_32x32.png</iconset>
+                    <normaloff>icons/add_zero.svg</normaloff>icons/add_zero.svg</iconset>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -981,14 +987,14 @@
                 <item>
                  <widget class="QToolButton" name="maddpolePush">
                   <property name="toolTip">
-                   <string>Add zero</string>
+                   <string>Add pole</string>
                   </property>
                   <property name="text">
                    <string>...</string>
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../apps/Settings_32x32.png</normaloff>../apps/Settings_32x32.png</iconset>
+                    <normaloff>icons/add_pole.svg</normaloff>icons/add_pole.svg</iconset>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
