@@ -35,7 +35,8 @@ class PzPlot(Qwt.QwtPlot):
 
     def drawUnitcircle(self):
         radius = 1.0 
-        steps = 1024 
+        steps = 1024
+
         angleStep = 2 * pi / steps
         x=[sin(a * angleStep) * radius for a in range(0, steps)]
         y=[cos(a * angleStep) * radius for a in range(0, steps)]
@@ -54,10 +55,13 @@ class PzPlot(Qwt.QwtPlot):
             self.ymin = 1.5 * min(roots.imag)
             self.xmax = 1.5 * max(roots.real)
             self.xmin = 1.5 * min(roots.real)
+
+        #To make the plot look good
             if self.xmax == 0:
                 self.xmax=1
             if self.xmin == 0:
                 self.xmax=-1
+
             self.setAxisScale(Qwt.QwtPlot.xBottom, self.xmin, self.xmax)
             self.setAxisScale(Qwt.QwtPlot.yLeft, self.ymin, self.ymax)
 
@@ -72,10 +76,12 @@ class PzPlot(Qwt.QwtPlot):
                 xmax = max(xmax,self.xmax)
                 xmin = 1.5 * min(roots.real)
                 xmin = min(xmin,self.xmin)
+       
                 if xmax == 0:
                     xmax=1
                 if xmin == 0:
                     xmin=-1
+
                 self.setAxisScale(Qwt.QwtPlot.xBottom, xmin, xmax)
                 self.setAxisScale(Qwt.QwtPlot.yLeft, ymin, ymax)
                 self.drawUnitcircle()
@@ -325,8 +331,7 @@ class CanvasPicker(Qt.QObject):
         xData = zeros(curve.dataSize(), Float)
         yData = zeros(curve.dataSize(), Float)
 
-        #poles made unmovable temporarily as only FIR design is active
-#if self.__selectedCurve.symbol().style() == Qwt.QwtSymbol.Ellipse:
+        #poles made unmovable when FIR design is active
         move_enable=True
         if not self.iir:
             if self.__selectedCurve.symbol().style() == Qwt.QwtSymbol.XCross:

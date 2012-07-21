@@ -511,7 +511,6 @@ class gr_plot_filter(QtGui.QMainWindow):
         lightback = QtGui.qRgb(0xf8, 0xf8, 0xff)
         backbrush = Qt.QBrush(Qt.QColor(lightback))
         self.scene.setBackgroundBrush(backbrush)
-#self.gui.bandView.setGeometry(Qt.QRect(0, 0, 300, 300))
         self.gui.bandView.setScene(self.scene)
         self.gui.mbandView.setScene(self.scene)
 
@@ -1685,6 +1684,10 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.steprescurve.attach(self.gui.stepresPlot)
             self.steprescurve_i.attach(self.gui.stepresPlot)
             self.draw_plots(self.taps,self.params)
+            if self.iir:
+                self.iir_plot_all(self.z,self.p,self.k)
+            else:
+                self.draw_plots(self.taps,self.params)
         else:
             self.gridview=1
             self.set_actgrid()
