@@ -296,7 +296,6 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.iirfilterTypeComboBox.hide()
         self.gui.iirfilterBandComboBox.hide()
         self.gui.adComboBox.hide()
-        self.gui.besselordBox.hide()
         self.gui.addpolePush.setEnabled(False)
         self.gui.maddpolePush.setEnabled(False)
 
@@ -668,22 +667,35 @@ class gr_plot_filter(QtGui.QMainWindow):
     def set_order(self, ftype):
         strftype = str(ftype.toAscii())
         if(ftype == "Bessel"):
-            self.gui.besselordBox.show()
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
         else:
-            self.gui.besselordBox.hide()
+            self.changed_iirfilter_band(self.gui.iirfilterBandComboBox.currentText())
 
         self.design()
 
     def changed_iirfilter_band(self, ftype):
         strftype = str(ftype.toAscii())
+        iirftype = str(self.gui.iirfilterTypeComboBox.currentText().toAscii())
         if(ftype == "Low Pass"):
-            self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirlpfPage)
+            if(iirftype == "Bessel"):
+                self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+            else:
+                self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirlpfPage)
         elif(ftype == "Band Pass"):
-            self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbpfPage)
+            if(iirftype == "Bessel"):
+                self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+            else:
+                self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbpfPage)
         elif(ftype == "Band Stop"):
-            self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbsfPage)
+            if(iirftype == "Bessel"):
+                self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+            else:
+                self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbsfPage)
         elif(ftype == "High Pass"):
-            self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirhpfPage)
+            if(iirftype == "Bessel"):
+                self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+            else:
+                self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirhpfPage)
 
         self.design()
 
@@ -883,7 +895,6 @@ class gr_plot_filter(QtGui.QMainWindow):
             besselparams = []
             for i in range(len(iirboxes[iirbtype])): 
                 params.append(iirboxes[iirbtype][i][0]) 
-                besselparams.append(iirboxes[iirbtype][i][0]) 
                 ret = iirboxes[iirbtype][i][1] and ret
 
             if len(iirboxes[iirbtype]) == 6:
@@ -891,12 +902,23 @@ class gr_plot_filter(QtGui.QMainWindow):
 
             atype = str(self.gui.adComboBox.currentText().toAscii())
             if(iirftype == "Bessel"):
+                ret = True
                 order,r = self.gui.besselordEdit.text().toDouble()
-                ret = ret and r
+                if iirbtype == "Low Pass" or iirbtype == "High Pass":
+                    val,r = self.gui.iirbesselcritEdit1.text().toDouble()
+                    ret = ret and r
+                    besselparams.append(val)
+                else:
+                    val,r = self.gui.iirbesselcritEdit1.text().toDouble()
+                    ret = ret and r
+                    besselparams.append(val)
+                    val,r = self.gui.iirbesselcritEdit2.text().toDouble()
+                    ret = ret and r
+                    besselparams.append(val)
 
             if(ret):
                 if(iirftype == "Bessel"):
-                    (self.b,self.a) = signal.iirfilter(order, besselparams[:-2],
+                    (self.b,self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ','').lower(),
                                                        analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
                     (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
                 else:
@@ -1683,7 +1705,6 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.imprescurve_i.attach(self.gui.impresPlot)
             self.steprescurve.attach(self.gui.stepresPlot)
             self.steprescurve_i.attach(self.gui.stepresPlot)
-            self.draw_plots(self.taps,self.params)
             if self.iir:
                 self.iir_plot_all(self.z,self.p,self.k)
             else:

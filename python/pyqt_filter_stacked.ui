@@ -1302,32 +1302,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="besselordBox">
-         <property name="title">
-          <string/>
-         </property>
-         <layout class="QFormLayout" name="formLayout_13">
-          <item row="0" column="0">
-           <widget class="QLabel" name="besselordLabel">
-            <property name="text">
-             <string>Filter Order</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="besselordEdit">
-            <property name="text">
-             <string>10</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <widget class="QStackedWidget" name="filterTypeWidget">
          <property name="currentIndex">
-          <number>4</number>
+          <number>10</number>
          </property>
          <widget class="QWidget" name="firlpfPage">
           <layout class="QFormLayout" name="formLayout">
@@ -1989,6 +1966,55 @@
             <widget class="QLineEdit" name="iirBsfStopBandRippleEdit">
              <property name="text">
               <string>60</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="iirbesselPage">
+          <layout class="QFormLayout" name="formLayout_13">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="besselordLabel">
+             <property name="text">
+              <string>Filter Order</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="besselordEdit">
+             <property name="text">
+              <string>10</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="iirbesselcritLabel1">
+             <property name="text">
+              <string>Critical point-1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="iirbesselcritEdit1">
+             <property name="text">
+              <string>0.2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="iirbesselcritEdit2">
+             <property name="text">
+              <string>0.5</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="iirbesselcritLabel2">
+             <property name="text">
+              <string>Critical point-2</string>
              </property>
             </widget>
            </item>
