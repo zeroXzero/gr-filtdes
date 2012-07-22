@@ -51,16 +51,19 @@ class PzPlot(Qwt.QwtPlot):
         self.removeallCurves()
         if len(roots):
             self.__insertZero(Qt.Qt.blue, roots.real,roots.imag)
-            self.ymax = 1.5 * max(roots.imag)
-            self.ymin = 1.5 * min(roots.imag)
-            self.xmax = 1.5 * max(roots.real)
-            self.xmin = 1.5 * min(roots.real)
-
-        #To make the plot look good
-            if self.xmax == 0:
-                self.xmax=1
-            if self.xmin == 0:
-                self.xmax=-1
+            self.ymax =  max(roots.imag)
+            self.ymin =  min(roots.imag)
+            self.xmax =  max(roots.real)
+            self.xmin =  min(roots.real)
+            #To make the plot look good
+            if self.xmax <= 1.3:
+                self.xmax = 2
+            if self.xmin >= -1.3:
+                self.xmin = -2
+            if self.ymax <= 1:
+                self.ymax = 1.5
+            if self.ymin >= -1:
+                self.ymin = -1.5
 
             self.setAxisScale(Qwt.QwtPlot.xBottom, self.xmin, self.xmax)
             self.setAxisScale(Qwt.QwtPlot.yLeft, self.ymin, self.ymax)
@@ -68,19 +71,35 @@ class PzPlot(Qwt.QwtPlot):
     def insertPoles(self, roots):
             if len(roots):
                 self.__insertPole(Qt.Qt.black, roots.real,roots.imag)
-                ymax = 1.5 * max(roots.imag)
+                ymax = max(roots.imag)
                 ymax = max(ymax,self.ymax)
-                ymin = 1.5 * min(roots.imag)
+                ymin = min(roots.imag)
                 ymin = min(ymin,self.ymin)
-                xmax = 1.5 * max(roots.real)
+                xmax = max(roots.real)
                 xmax = max(xmax,self.xmax)
-                xmin = 1.5 * min(roots.real)
+                xmin = min(roots.real)
                 xmin = min(xmin,self.xmin)
        
-                if xmax == 0:
-                    xmax=1
-                if xmin == 0:
-                    xmin=-1
+                #To make the plot look good
+                if xmax <= 1.3:
+                    xmax = 2
+                else:
+                    xmax = 1.2 * xmax
+
+                if xmin >= -1.3:
+                    xmin = -2
+                else:
+                    xmin = 1.2 * xmin
+
+                if ymax <= 1:
+                    ymax = 1.5
+                else:
+                    ymax = 1.2 * ymax
+
+                if ymin >= -1:
+                    ymin = -1.5
+                else:
+                    ymin = 1.2 * ymin
 
                 self.setAxisScale(Qwt.QwtPlot.xBottom, xmin, xmax)
                 self.setAxisScale(Qwt.QwtPlot.yLeft, ymin, ymax)
