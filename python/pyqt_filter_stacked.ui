@@ -257,8 +257,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>icons/add_zero.svg</normaloff>icons/add_zero.svg</iconset>
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/add_zero.svg</normaloff>:/icons/add_zero.svg</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -280,8 +280,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>icons/add_pole.svg</normaloff>icons/add_pole.svg</iconset>
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/add_pole.svg</normaloff>:/icons/add_pole.svg</iconset>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -297,8 +297,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>icons/remove_red.svg</normaloff>icons/remove_red.svg</iconset>
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/remove_red.svg</normaloff>:/icons/remove_red.svg</iconset>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -314,8 +314,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>icons/conjugate.svg</normaloff>icons/conjugate.svg</iconset>
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/conjugate.svg</normaloff>:/icons/conjugate.svg</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -652,8 +652,8 @@
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset>
-                     <normaloff>icons/mag_response.svg</normaloff>icons/mag_response.svg</iconset>
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/mag_response.svg</normaloff>:/icons/mag_response.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -675,8 +675,8 @@
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset>
-                     <normaloff>icons/phase_response.svg</normaloff>icons/phase_response.svg</iconset>
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/phase_response.svg</normaloff>:/icons/phase_response.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -698,8 +698,8 @@
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset>
-                     <normaloff>icons/group_delay.svg</normaloff>icons/group_delay.svg</iconset>
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/group_delay.svg</normaloff>:/icons/group_delay.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -721,8 +721,8 @@
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset>
-                     <normaloff>icons/phase_delay.svg</normaloff>icons/phase_delay.svg</iconset>
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/phase_delay.svg</normaloff>:/icons/phase_delay.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -744,8 +744,8 @@
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset>
-                     <normaloff>icons/overlay.svg</normaloff>icons/overlay.svg</iconset>
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/overlay.svg</normaloff>:/icons/overlay.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -810,8 +810,8 @@
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset>
-                     <normaloff>icons/filtr_taps.svg</normaloff>icons/filtr_taps.svg</iconset>
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/filtr_taps.svg</normaloff>:/icons/filtr_taps.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -833,8 +833,8 @@
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset>
-                     <normaloff>icons/step_response.svg</normaloff>icons/step_response.svg</iconset>
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/step_response.svg</normaloff>:/icons/step_response.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -856,8 +856,8 @@
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset>
-                     <normaloff>icons/impulse_response.svg</normaloff>icons/impulse_response.svg</iconset>
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/impulse.svg</normaloff>:/icons/impulse.svg</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -976,8 +976,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>icons/add_zero.svg</normaloff>icons/add_zero.svg</iconset>
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/add_zero.svg</normaloff>:/icons/add_zero.svg</iconset>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -993,8 +993,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>icons/add_pole.svg</normaloff>icons/add_pole.svg</iconset>
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/add_pole.svg</normaloff>:/icons/add_pole.svg</iconset>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -1010,8 +1010,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>icons/remove_red.svg</normaloff>icons/remove_red.svg</iconset>
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/remove_red.svg</normaloff>:/icons/remove_red.svg</iconset>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -1027,8 +1027,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>icons/conjugate.svg</normaloff>icons/conjugate.svg</iconset>
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/conjugate.svg</normaloff>:/icons/conjugate.svg</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -2533,7 +2533,9 @@
   <tabstop>gausNumTapsEdit</tabstop>
   <tabstop>designButton</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>action_exit</sender>

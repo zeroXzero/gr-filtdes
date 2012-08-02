@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_stacked.ui'
 #
-# Created: Sun Jul 22 21:56:38 2012
+# Created: Fri Aug  3 00:14:59 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -179,7 +179,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
         self.addzeroPush = QtGui.QToolButton(self.pzgroupBox)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("icons/add_zero.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/add_zero.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.addzeroPush.setIcon(icon)
         self.addzeroPush.setIconSize(QtCore.QSize(16, 16))
         self.addzeroPush.setCheckable(True)
@@ -187,21 +187,21 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.addzeroPush)
         self.addpolePush = QtGui.QToolButton(self.pzgroupBox)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("icons/add_pole.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/add_pole.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.addpolePush.setIcon(icon1)
         self.addpolePush.setCheckable(True)
         self.addpolePush.setObjectName(_fromUtf8("addpolePush"))
         self.verticalLayout_3.addWidget(self.addpolePush)
         self.delPush = QtGui.QToolButton(self.pzgroupBox)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(_fromUtf8("icons/remove_red.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/remove_red.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.delPush.setIcon(icon2)
         self.delPush.setCheckable(True)
         self.delPush.setObjectName(_fromUtf8("delPush"))
         self.verticalLayout_3.addWidget(self.delPush)
         self.conjPush = QtGui.QToolButton(self.pzgroupBox)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(_fromUtf8("icons/conjugate.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/conjugate.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.conjPush.setIcon(icon3)
         self.conjPush.setIconSize(QtCore.QSize(16, 16))
         self.conjPush.setCheckable(True)
@@ -328,7 +328,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
         self.mfmagPush = QtGui.QToolButton(self.mfgroupBox)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(_fromUtf8("icons/mag_response.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/mag_response.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mfmagPush.setIcon(icon4)
         self.mfmagPush.setIconSize(QtCore.QSize(16, 16))
         self.mfmagPush.setCheckable(False)
@@ -336,7 +336,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.mfmagPush)
         self.mfphasePush = QtGui.QToolButton(self.mfgroupBox)
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(_fromUtf8("icons/phase_response.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/phase_response.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mfphasePush.setIcon(icon5)
         self.mfphasePush.setIconSize(QtCore.QSize(16, 16))
         self.mfphasePush.setCheckable(False)
@@ -344,7 +344,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.mfphasePush)
         self.mfgpdlyPush = QtGui.QToolButton(self.mfgroupBox)
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(_fromUtf8("icons/group_delay.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/group_delay.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mfgpdlyPush.setIcon(icon6)
         self.mfgpdlyPush.setIconSize(QtCore.QSize(16, 16))
         self.mfgpdlyPush.setCheckable(False)
@@ -352,7 +352,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.mfgpdlyPush)
         self.mfphdlyPush = QtGui.QToolButton(self.mfgroupBox)
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(_fromUtf8("icons/phase_delay.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/phase_delay.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mfphdlyPush.setIcon(icon7)
         self.mfphdlyPush.setIconSize(QtCore.QSize(16, 16))
         self.mfphdlyPush.setCheckable(False)
@@ -360,7 +360,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.mfphdlyPush)
         self.mfoverlayPush = QtGui.QToolButton(self.mfgroupBox)
         icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(_fromUtf8("icons/overlay.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon8.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/overlay.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mfoverlayPush.setIcon(icon8)
         self.mfoverlayPush.setIconSize(QtCore.QSize(16, 16))
         self.mfoverlayPush.setCheckable(True)
@@ -397,7 +397,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setObjectName(_fromUtf8("verticalLayout_5"))
         self.mttapsPush = QtGui.QToolButton(self.mtgroupBox)
         icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(_fromUtf8("icons/filtr_taps.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon9.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/filtr_taps.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mttapsPush.setIcon(icon9)
         self.mttapsPush.setIconSize(QtCore.QSize(16, 16))
         self.mttapsPush.setCheckable(False)
@@ -405,7 +405,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addWidget(self.mttapsPush)
         self.mtstepPush = QtGui.QToolButton(self.mtgroupBox)
         icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(_fromUtf8("icons/step_response.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon10.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/step_response.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mtstepPush.setIcon(icon10)
         self.mtstepPush.setIconSize(QtCore.QSize(16, 16))
         self.mtstepPush.setCheckable(False)
@@ -413,7 +413,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addWidget(self.mtstepPush)
         self.mtimpPush = QtGui.QToolButton(self.mtgroupBox)
         icon11 = QtGui.QIcon()
-        icon11.addPixmap(QtGui.QPixmap(_fromUtf8("icons/impulse_response.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon11.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/impulse.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mtimpPush.setIcon(icon11)
         self.mtimpPush.setIconSize(QtCore.QSize(16, 16))
         self.mtimpPush.setCheckable(False)
@@ -1388,3 +1388,4 @@ class Ui_MainWindow(object):
 from PyQt4 import Qwt5
 from bandgraphicsview import BandGraphicsView
 from polezero_plot import PzPlot
+import icons_rc

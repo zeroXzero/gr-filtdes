@@ -25,6 +25,12 @@ if(NOT PYTHONINTERP_FOUND)
     return()
 endif()
 
+#Put the correct icon path as per installation
+#FILE(READ ${CMAKE_CURRENT_SOURCE_DIR}/icons.qrc FILE_CONTENT)
+#STRING(REGEX REPLACE "PATH" "${CMAKE_INSTALL_PREFIX}" 
+#      MODIFIED_FILE_CONTENT "${FILE_CONTENT}")
+#FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/icons.qrc "${MODIFIED_FILE_CONTENT}")
+
 ########################################################################
 # Install python sources
 ########################################################################
@@ -39,6 +45,7 @@ GR_PYTHON_INSTALL(
 	banditems.py
 	polezero_plot.py
 	gr_filter_design.py
+	icons_rc.py
     DESTINATION ${GR_PYTHON_DIR}/filtdes
 )
 
