@@ -56,7 +56,7 @@ except AttributeError:
 
 # Gnuradio Filter design tool main window
 class gr_plot_filter(QtGui.QMainWindow):
-    def __init__(self, qapp, options, callback=None):
+    def __init__(self, qapp, options, callback):
         QtGui.QWidget.__init__(self, None)
         self.gui = Ui_MainWindow()
         self.callback = callback

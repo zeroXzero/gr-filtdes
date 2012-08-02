@@ -4,8 +4,6 @@ from math import sin, cos, pi
 import PyQt4.Qwt5 as Qwt
 from PyQt4.Qwt5.anynumpy import *
 
-
-
 class PzPlot(Qwt.QwtPlot):
 
     def __init__(self, *args):

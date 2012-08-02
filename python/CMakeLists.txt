@@ -38,6 +38,7 @@ GR_PYTHON_INSTALL(
 	bandgraphicsview.py
 	banditems.py
 	polezero_plot.py
+	gr_filter_design.py
     DESTINATION ${GR_PYTHON_DIR}/filtdes
 )
 
