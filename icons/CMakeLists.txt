@@ -18,6 +18,8 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
+#include_directories(${CMAKE_CURRENT_BINARY_DIR})
+#add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/icons.qrc COMMAND echo hello > icons.qrc)
 install(FILES
     add_pole.svg
 	add_zero.svg

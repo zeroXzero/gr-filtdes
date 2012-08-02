@@ -677,21 +677,29 @@ class gr_plot_filter(QtGui.QMainWindow):
         strftype = str(ftype.toAscii())
         iirftype = str(self.gui.iirfilterTypeComboBox.currentText().toAscii())
         if(ftype == "Low Pass"):
+            self.remove_bandview()
+            self.populate_bandview(self.lpfitems)
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirlpfPage)
         elif(ftype == "Band Pass"):
+            self.remove_bandview()
+            self.populate_bandview(self.bpfitems)
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbpfPage)
         elif(ftype == "Band Stop"):
+            self.remove_bandview()
+            self.populate_bandview(self.bnfitems)
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbsfPage)
         elif(ftype == "High Pass"):
+            self.remove_bandview()
+            self.populate_bandview(self.hpfitems)
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
             else:
