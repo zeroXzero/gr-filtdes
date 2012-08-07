@@ -1113,6 +1113,11 @@
          </item>
          <item>
           <property name="text">
+           <string>High Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>Band Pass</string>
           </property>
          </item>
@@ -1128,17 +1133,17 @@
          </item>
          <item>
           <property name="text">
-           <string>High Pass</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string>Root Raised Cosine</string>
           </property>
          </item>
          <item>
           <property name="text">
            <string>Gaussian</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Half Band</string>
           </property>
          </item>
         </widget>
@@ -1304,7 +1309,7 @@
        <item>
         <widget class="QStackedWidget" name="filterTypeWidget">
          <property name="currentIndex">
-          <number>10</number>
+          <number>11</number>
          </property>
          <widget class="QWidget" name="firlpfPage">
           <layout class="QFormLayout" name="formLayout">
@@ -2015,6 +2020,42 @@
             <widget class="QLabel" name="iirbesselcritLabel2">
              <property name="text">
               <string>Critical point-2</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="firhbPage">
+          <layout class="QFormLayout" name="formLayout_14">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="firhbordLabel">
+             <property name="text">
+              <string>Filter Order</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="firhbordEdit">
+             <property name="text">
+              <string>34</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="firhbtrEditLabel2">
+             <property name="text">
+              <string>Transition width 
+ (from fs/4)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="firhbtrEdit">
+             <property name="text">
+              <string>10000</string>
              </property>
             </widget>
            </item>

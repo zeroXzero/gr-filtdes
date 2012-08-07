@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #!/usr/bin/env python
 #
 # Copyright 2007,2008,2011 Free Software Foundation, Inc.
@@ -22,7 +23,7 @@
 
 import sys, os, re, csv
 from optparse import OptionParser
-#from gnuradio import gr, blks2, eng_notation
+from gnuradio import gr as gngr
 import filtdes as gr
 from filtdes import optfir 
 
@@ -311,9 +312,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.nfftEdit.setText(Qt.QString("%1").arg(self.nfftpts))
 
         self.firFilters = ("Low Pass", "Band Pass", "Complex Band Pass", "Band Notch",
-                           "High Pass", "Root Raised Cosine", "Gaussian")
+                           "High Pass", "Root Raised Cosine", "Gaussian", "Half Band")
         self.optFilters = ("Low Pass", "Band Pass", "Complex Band Pass",
-                           "Band Notch", "High Pass")
+                           "Band Notch", "High Pass", "Half Band")
 
         self.set_windowed()
 
@@ -747,6 +748,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.rrcPage)
         elif(ftype == "Gaussian"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.gausPage)
+        elif(ftype == "Half Band"):
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.firhbPage)
 
         self.design()
 
@@ -852,6 +855,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                         "Band Pass" : self.design_opt_bpf,
                         "Complex Band Pass" : self.design_opt_cbpf,
                         "Band Notch" : self.design_opt_bnf,
+                        "Half Band" : self.design_opt_hb,
                         "High Pass" :  self.design_opt_hpf}
             taps,params,r = designer[ftype](fs, gain)
 
@@ -861,6 +865,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                         "Complex Band Pass" : self.design_win_cbpf,
                         "Band Notch" : self.design_win_bnf,
                         "High Pass" :  self.design_win_hpf,
+                        "Half Band" : self.design_win_hb,
                         "Root Raised Cosine" :  self.design_win_rrc,
                         "Gaussian" :  self.design_win_gaus}
             wintype = self.filterWindows[winstr]
@@ -1099,6 +1104,32 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             return ([],[],r)
 
+    def design_win_hb(self, fs, gain, wintype):
+        ret = True
+        filtord,r = self.gui.firhbordEdit.text().toDouble()
+        ret = r and ret
+        trwidth,r = self.gui.firhbtrEdit.text().toDouble()
+        ret = r and ret
+        filtwin = { gr.firdes.WIN_HAMMING : 'hamming',
+                    gr.firdes.WIN_HANN : 'hanning',
+                    gr.firdes.WIN_BLACKMAN : 'blackman',
+                    gr.firdes.WIN_RECTANGULAR: 'boxcar',
+                    gr.firdes.WIN_KAISER: ('kaiser', 4.0),
+                    gr.firdes.WIN_BLACKMAN_hARRIS: 'blackmanharris'}
+        if int(filtord) & 1:
+            reply = QtGui.QMessageBox.information(self, "Filter order should be even",
+                                                  "Filter order should be even","&Ok")
+            return ([],[],False)
+
+        if(ret):
+            taps = scipy.signal.firwin(int(filtord)+1, 0.5, window = filtwin[wintype])
+            taps[abs(taps) <= 1e-6] = 0.
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "hb","ntaps": len(taps)}
+            return (taps,params,r)
+        else:
+            return ([],[],r)
+
     def design_win_rrc(self, fs, gain, wintype):
         ret = True
         sr,r = self.gui.rrcSymbolRateEdit.text().toDouble()
@@ -1258,6 +1289,33 @@ class gr_plot_filter(QtGui.QMainWindow):
                           "filttype": "bnf", "sbstart": pb1, "sbend": pb2,
                           "tb": tb, "atten": atten, "ripple": ripple,
                           "ntaps": len(taps)}
+                return (taps,params,r)
+        else:
+            return ([],[],r)
+
+    def design_opt_hb(self, fs, gain):
+        ret = True
+        filtord,r = self.gui.firhbordEdit.text().toDouble()
+        ret = r and ret
+        trwidth,r = self.gui.firhbtrEdit.text().toDouble()
+        ret = r and ret
+        if int(filtord) & 1:
+            reply = QtGui.QMessageBox.information(self, "Filter order should be even",
+                                                  "Filter order should be even","&Ok")
+            return ([],[],False)
+
+        if(ret):
+            try:
+                bands = [0,.25 - (trwidth/fs), .25 + (trwidth/fs), 0.5]
+                taps = scipy.signal.remez(int(filtord)+1, bands, [1,0], [1,1])
+                taps[abs(taps) <= 1e-6] = 0.
+            except RuntimeError, e:
+                reply = QtGui.QMessageBox.information(self, "Filter Design Error",
+                                                      e.args[0], "&Ok")
+                return ([],[],False)
+            else:
+                params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
+                          "filttype": "hb", "ntaps": len(taps)}
                 return (taps,params,r)
         else:
             return ([],[],r)
