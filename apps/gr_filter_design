@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #!/usr/bin/python
 #!/usr/bin/python
+#!/usr/bin/python
 #!/usr/bin/env python
 #
 # Copyright 2007,2008,2011 Free Software Foundation, Inc.
@@ -55,17 +56,21 @@ except ImportError:
     raise SystemExit, 1
 
 try:
-#from filtdes.banditems import filtermovlineItem, lpfsLines, hpfsLines, bpfsLines 
     from filtdes.banditems import * 
 except ImportError:
     print "Could not import from banditems. Please check whether banditems.py is in the library path"
     raise SystemExit, 1
 
 try:
-#from filtdes.banditems import filtermovlineItem, lpfsLines, hpfsLines, bpfsLines 
     from filtdes.polezero_plot import * 
 except ImportError:
     print "Could not import from polezero_plot. Please check whether polezero_plot.py is in the library path"
+    raise SystemExit, 1
+
+try:
+    from filtdes.idealbanditems import * 
+except ImportError:
+    print "Could not import from idealbanditems. Please check whether idealbanditems.py is in the library path"
     raise SystemExit, 1
 
 try:
@@ -414,8 +419,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.pdelaycurve = Qwt.QwtPlotCurve("Phase Delay")
         self.pdelaycurve.attach(self.gui.pdelayPlot)
 
-        self.idealbandhcurves= [ Qwt.QwtPlotCurve() for i in range(4) ]
-        self.idealbandvcurves= [ Qwt.QwtPlotCurve() for i in range(4) ]
+        self.idbanditems = IdealBandItems()
 
         self.set_defaultpen()
 
@@ -652,12 +656,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.phasecurve.setPen(Qt.QPen(blueBrush, 1))
         self.groupcurve.setPen(Qt.QPen(blueBrush, 1))
         self.pdelaycurve.setPen(Qt.QPen(blueBrush, 1))
-        for c in self.idealbandhcurves:
-            c.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
-            c.setPen(Qt.QPen(Qt.Qt.red, 2, Qt.Qt.DotLine))
-        for c in self.idealbandvcurves:
-            c.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
-            c.setPen(Qt.QPen(Qt.Qt.red, 2, Qt.Qt.DotLine))
+        self.idbanditems.setLinetype()
 
     def changed_fselect(self, ftype):
         strftype = str(ftype.toAscii())
@@ -882,6 +881,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 if self.callback:
                     self.callback(self.taps)
         elif (fsel == "IIR(scipy)"):
+            self.set_drawideal()
             self.taps=[]
             self.iir = True
             self.cpicker.set_iir(True)
@@ -1789,7 +1789,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.freqcurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
             self.update_freq_curves()
-            self.detach_allidealcurves(self.gui.mfreqPlot)
+            self.idbanditems.detach_allidealcurves(self.gui.mfreqPlot)
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
             self.set_actgrid()
@@ -1806,7 +1806,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.phasecurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
                 self.update_phase_curves()
-            self.detach_allidealcurves(self.gui.mfreqPlot)
+            self.idbanditems.detach_allidealcurves(self.gui.mfreqPlot)
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
             self.set_actgrid()
@@ -1822,7 +1822,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.groupcurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
                 self.update_group_curves()
-            self.detach_allidealcurves(self.gui.mfreqPlot)
+            self.idbanditems.detach_allidealcurves(self.gui.mfreqPlot)
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
             self.set_actgrid()
@@ -1838,7 +1838,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.pdelaycurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
                 self.update_pdelay_curves()
-            self.detach_allidealcurves(self.gui.mfreqPlot)
+            self.idbanditems.detach_allidealcurves(self.gui.mfreqPlot)
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
             self.set_actgrid()
@@ -2007,181 +2007,19 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.filterspecView.addTab(self.gui.bandDiagram, _fromUtf8("Band Diagram"))
 
     def set_drawideal(self):
+        fsel = str(self.gui.fselectComboBox.currentText().toAscii())
         if self.gridview and not(self.mfoverlay):
-            plot=self.gui.mfreqPlot
+            plot = self.gui.mfreqPlot
         else:
-            plot=self.gui.freqPlot
+            plot = self.gui.freqPlot
 		
-        if (self.gui.actionIdeal_Band.isChecked() == 0 ):
-            self.detach_allidealcurves(plot)
+        if (self.gui.actionIdeal_Band.isChecked() == 0 or fsel == "IIR(scipy)"):
+            self.idbanditems.detach_allidealcurves(plot)
         elif(self.params):
             ftype = str(self.gui.filterTypeComboBox.currentText().toAscii())
-            self.attach_allidealcurves(plot)
-            try:
-                if (ftype == "Low Pass"):
-                    self.detach_unwantedcurves(plot)
-                    x=[0, self.params["pbend"]]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbend"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[0].setData(x, y)
-                    
-                    x=[self.params["sbstart"], self.params["fs"]/2.0]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[1].setData(x, y)
-                
-                    x=[self.params["sbstart"]]*2
-                    y=[-self.params["atten"], 
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[1].setData(x, y)
-                    
-
-                if ftype == "High Pass":
-                    self.detach_unwantedcurves(plot)
-                    x=[self.params["pbstart"],self.params["fs"]/2.0]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbstart"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[0].setData(x, y)
-                    
-                    x=[0,self.params["sbend"]]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[1].setData(x, y)
-                
-                    x=[self.params["sbend"]]*2
-                    y=[-self.params["atten"], 
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[1].setData(x, y)
-
-                if ftype == "Band Notch":
-                    x=[self.params["sbstart"],self.params["sbend"]]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[0].setData(x, y)
-                    
-                    x=[self.params["sbstart"]]*2
-                    y=[-self.params["atten"], 
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[0].setData(x, y)
-                    
-                    x=[self.params["sbend"]]*2
-                    y=[-self.params["atten"], 
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[1].setData(x, y)
-
-                    x=[0,self.params["sbstart"]-self.params["tb"]]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[1].setData(x, y)
-                
-                    x=[self.params["sbstart"]-self.params["tb"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[2].setData(x, y)
-
-                    x=[self.params["sbend"]+self.params["tb"],self.params["fs"]/2.0]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[2].setData(x, y)
-                
-                    x=[self.params["sbend"]+self.params["tb"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[3].setData(x, y)
-
-                if ftype == "Band Pass":
-                    x=[self.params["pbstart"],self.params["pbend"]]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbstart"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbend"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[1].setData(x, y)
-
-                    x=[0,self.params["pbstart"]-self.params["tb"]]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[1].setData(x, y)
-                
-                    x=[self.params["pbstart"]-self.params["tb"]]*2
-                    y=[-self.params["atten"], 
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[2].setData(x, y)
-
-                    x=[self.params["pbend"]+self.params["tb"],self.params["fs"]/2.0]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[2].setData(x, y)
-                
-                    x=[self.params["pbend"]+self.params["tb"]]*2
-                    y=[-self.params["atten"], 
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[3].setData(x, y)
-
-                if ftype == "Complex Band Pass":
-                    x=[self.params["pbstart"],self.params["pbend"]]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbstart"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbend"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[1].setData(x, y)
-
-                    x=[0,self.params["pbstart"]-self.params["tb"]]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[1].setData(x, y)
-                
-                    x=[self.params["pbstart"]-self.params["tb"]]*2
-                    y=[-self.params["atten"], 
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[2].setData(x, y)
-
-                    x=[self.params["pbend"]+self.params["tb"],self.params["fs"]/2.0]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[2].setData(x, y)
-                
-                    x=[self.params["pbend"]+self.params["tb"]]*2
-                    y=[-self.params["atten"], 
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[3].setData(x, y)
-            except KeyError:
-                print "All parameters not set for ideal band diagram"
-                self.detach_allidealcurves(plot)
-
+            self.idbanditems.attach_allidealcurves(plot)
+            self.idbanditems.plotIdealCurves(ftype, self.params, plot)
             plot.replot()
-
-    def detach_allidealcurves(self, plot):
-        for c in self.idealbandhcurves:
-            c.detach()
-        for c in self.idealbandvcurves:
-            c.detach()
-        plot.replot()
-
-    def detach_unwantedcurves(self, plot):
-        for i in range(2,4):
-            self.idealbandvcurves[i].detach()
-            self.idealbandhcurves[i].detach()
-        plot.replot()
-
-    def attach_allidealcurves(self, plot):
-        for c in self.idealbandhcurves:
-            c.attach(plot)
-        for c in self.idealbandvcurves:
-            c.attach(plot)
-        plot.replot()
 
     def set_pzplot(self):
         if (self.gui.checkPzplot.checkState() == 0 ):

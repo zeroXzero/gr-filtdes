@@ -43,6 +43,7 @@ GR_PYTHON_INSTALL(
 	pyqt_filter_stacked.py
 	bandgraphicsview.py
 	banditems.py
+	idealbanditems.py
 	polezero_plot.py
 	gr_filter_design.py
 	icons_rc.py
