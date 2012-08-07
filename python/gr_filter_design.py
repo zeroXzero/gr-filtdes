@@ -1,7 +1,3 @@
-#!/usr/bin/python
-#!/usr/bin/python
-#!/usr/bin/python
-#!/usr/bin/python
 #!/usr/bin/env python
 #
 # Copyright 2007,2008,2011 Free Software Foundation, Inc.
@@ -294,10 +290,11 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.checkStep,
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_stepres)
-        self.gridenable=False
-        self.mfoverlay=False
-        self.mtoverlay=False
-        self.iir = False 
+		
+        self.gridenable = False
+        self.mfoverlay  = False
+        self.mtoverlay  = False
+        self.iir        = False 
 
         self.gui.designButton.setShortcut(QtCore.Qt.Key_Return)
 
@@ -308,8 +305,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.fftDeg = []
         self.groupDelay = []
         self.phaseDelay = []
-        self.gridview=0
-        self.params=[]
+        self.gridview = 0
+        self.params = []
         self.nfftpts = int(10000)
         self.gui.nfftEdit.setText(Qt.QString("%1").arg(self.nfftpts))
 
@@ -329,41 +326,41 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.maddpolePush.setEnabled(False)
 
         # Set Axis labels
-        fxtitle=Qwt.QwtText("Frequency (Hz)")
+        fxtitle = Qwt.QwtText("Frequency (Hz)")
         fxtitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
-        fytitle=Qwt.QwtText("Magnitude (dB)")
+        fytitle = Qwt.QwtText("Magnitude (dB)")
         fytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
         self.gui.freqPlot.setAxisTitle(self.gui.freqPlot.xBottom,
                                        fxtitle)
         self.gui.freqPlot.setAxisTitle(self.gui.freqPlot.yLeft,
                                        fytitle)
 
-        txtitle=Qwt.QwtText("Tap number")
+        txtitle = Qwt.QwtText("Tap number")
         txtitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
-        tytitle=Qwt.QwtText("Amplitude")
+        tytitle = Qwt.QwtText("Amplitude")
         tytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
         self.gui.timePlot.setAxisTitle(self.gui.timePlot.xBottom,
                                        txtitle)
         self.gui.timePlot.setAxisTitle(self.gui.timePlot.yLeft,
                                        tytitle)
 
-        pytitle=Qwt.QwtText("Phase (Radians)")
+        pytitle = Qwt.QwtText("Phase (Radians)")
         pytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
         self.gui.phasePlot.setAxisTitle(self.gui.phasePlot.xBottom,
                                         fxtitle)
         self.gui.phasePlot.setAxisTitle(self.gui.phasePlot.yLeft,
                                         pytitle)
 
-        gytitle=Qwt.QwtText("Delay (sec)")
+        gytitle = Qwt.QwtText("Delay (sec)")
         gytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
         self.gui.groupPlot.setAxisTitle(self.gui.groupPlot.xBottom,
                                         fxtitle)
         self.gui.groupPlot.setAxisTitle(self.gui.groupPlot.yLeft,
                                         gytitle)
 
-        impytitle=Qwt.QwtText("Amplitude")
+        impytitle = Qwt.QwtText("Amplitude")
         impytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
-        impxtitle=Qwt.QwtText("n (Samples)")
+        impxtitle = Qwt.QwtText("n (Samples)")
         impxtitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
         self.gui.impresPlot.setAxisTitle(self.gui.freqPlot.xBottom,
                                        impxtitle)
@@ -373,16 +370,16 @@ class gr_plot_filter(QtGui.QMainWindow):
                                        impxtitle)
         self.gui.stepresPlot.setAxisTitle(self.gui.freqPlot.yLeft,
                                        impytitle)
-        mtytitle=Qwt.QwtText("Amplitude")
+        mtytitle = Qwt.QwtText("Amplitude")
         mtytitle.setFont(Qt.QFont("Helvetica", 9, Qt.QFont.Bold))
-        mtxtitle=Qwt.QwtText("n (Samples/taps)")
+        mtxtitle = Qwt.QwtText("n (Samples/taps)")
         mtxtitle.setFont(Qt.QFont("Helvetica", 9, Qt.QFont.Bold))
         self.gui.mtimePlot.setAxisTitle(self.gui.freqPlot.xBottom,
                                        mtxtitle)
         self.gui.mtimePlot.setAxisTitle(self.gui.freqPlot.yLeft,
                                        mtytitle)
         
-        phytitle=Qwt.QwtText("Phase Delay")
+        phytitle = Qwt.QwtText("Phase Delay")
         phytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
         self.gui.pdelayPlot.setAxisTitle(self.gui.groupPlot.xBottom,
                                         fxtitle)
@@ -435,13 +432,14 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.steprescurve_i.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
         self.pdelaycurve.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased);
 
-        self.freqgrid= Qwt.QwtPlotGrid()
-        self.phasegrid= Qwt.QwtPlotGrid()
-        self.groupgrid= Qwt.QwtPlotGrid()
-        self.impresgrid= Qwt.QwtPlotGrid()
-        self.stepresgrid= Qwt.QwtPlotGrid()
-        self.pdelaygrid= Qwt.QwtPlotGrid()
-        self.ftapsgrid= Qwt.QwtPlotGrid()
+        #Create grid for plots
+        self.freqgrid = Qwt.QwtPlotGrid()
+        self.phasegrid = Qwt.QwtPlotGrid()
+        self.groupgrid = Qwt.QwtPlotGrid()
+        self.impresgrid = Qwt.QwtPlotGrid()
+        self.stepresgrid = Qwt.QwtPlotGrid()
+        self.pdelaygrid = Qwt.QwtPlotGrid()
+        self.ftapsgrid = Qwt.QwtPlotGrid()
         self.freqgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
         self.phasegrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
         self.groupgrid.setPen(Qt.QPen(Qt.Qt.black, 0, Qt.Qt.DotLine))
@@ -519,7 +517,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                                              self.gui.pdelayPlot.canvas())
 
 
-		#assigning items
+		#Assigning items
         self.lpfitems = lpfItems
         self.hpfitems = hpfItems
         self.bpfitems = bpfItems
@@ -532,8 +530,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.bpfitems[0].attenChanged.connect(self.set_fatten)
         self.bnfitems[0].attenChanged.connect(self.set_fatten)
 
-        #populate the scene
-        self.scene=QtGui.QGraphicsScene()
+        #Populate the Band-diagram scene
+        self.scene = QtGui.QGraphicsScene()
         self.scene.setSceneRect(0,0,250,250)
         lightback = QtGui.qRgb(0xf8, 0xf8, 0xff)
         backbrush = Qt.QBrush(Qt.QColor(lightback))
@@ -541,11 +539,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.bandView.setScene(self.scene)
         self.gui.mbandView.setScene(self.scene)
 
-        self.cpicker=CanvasPicker(self.gui.pzPlot)
+        #Install Canvas picker for pz-plot
+        self.cpicker = CanvasPicker(self.gui.pzPlot)
         self.cpicker.curveChanged.connect(self.set_curvetaps)
         self.cpicker.mouseposChanged.connect(self.set_statusbar)
 		
-        self.cpicker2=CanvasPicker(self.gui.mpzPlot)
+        self.cpicker2 = CanvasPicker(self.gui.mpzPlot)
         self.cpicker2.curveChanged.connect(self.set_mcurvetaps)
         self.cpicker2.mouseposChanged.connect(self.set_mstatusbar)
         #Edit boxes for band-diagrams (Not required as far as now)
@@ -890,11 +889,15 @@ class gr_plot_filter(QtGui.QMainWindow):
     def design_iir(self):
         iirftype = str(self.gui.iirfilterTypeComboBox.currentText().toAscii())
         iirbtype = str(self.gui.iirfilterBandComboBox.currentText().toAscii())
-        self.set_drawideal()
-        self.taps=[]
+        atype = str(self.gui.adComboBox.currentText().toAscii())
+        self.taps = []
         self.iir = True
+        ret = True
+        params = []
+        besselparams = []
         self.cpicker.set_iir(True)
         self.cpicker2.set_iir(True)
+
         iirft = 	{"Elliptic" : 'ellip',
                      "Butterworth" : 'butter',
                      "Chebyshev-1" : 'cheby1',
@@ -927,9 +930,8 @@ class gr_plot_filter(QtGui.QMainWindow):
                                    self.gui.iirendofBsfStopBandEdit.text().toDouble(),
                                    self.gui.iirBsfPassBandAttenEdit.text().toDouble(),
                                    self.gui.iirBsfStopBandRippleEdit.text().toDouble()]  }
-        ret = True
-        params = []
-        besselparams = []
+        #Remove Ideal band-diagrams if IIR
+        self.set_drawideal()
         for i in range(len(iirboxes[iirbtype])): 
             params.append(iirboxes[iirbtype][i][0]) 
             ret = iirboxes[iirbtype][i][1] and ret
@@ -937,7 +939,6 @@ class gr_plot_filter(QtGui.QMainWindow):
         if len(iirboxes[iirbtype]) == 6:
             params=[params[:2],params[2:4],params[4],params[5]]
 
-        atype = str(self.gui.adComboBox.currentText().toAscii())
         if(iirftype == "Bessel"):
             ret = True
             order,r = self.gui.besselordEdit.text().toDouble()
