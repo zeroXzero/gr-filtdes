@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #!/usr/bin/env python
 #
 # Copyright 2007,2008,2011 Free Software Foundation, Inc.
@@ -23,7 +22,6 @@
 
 import sys, os, re, csv
 from optparse import OptionParser
-from gnuradio import gr as gngr
 import filtdes as gr
 from filtdes import optfir 
 

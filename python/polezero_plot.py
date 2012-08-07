@@ -197,7 +197,11 @@ class CanvasPicker(Qt.QObject):
         if event.type() == Qt.QEvent.User:
             self.__showCursor(True)
             return True
-        return Qt.QObject.event(event)
+        try:
+            return Qt.QObject.event(event)
+        except TypeError:
+            return False
+
 
 
     def set_conjugate(self):
