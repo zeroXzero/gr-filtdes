@@ -1,7 +1,9 @@
 #!/usr/bin/python
 #!/usr/bin/python
 #!/usr/bin/python
+#!/usr/bin/python
 #!/usr/bin/env python
+#
 # Copyright 2007,2008,2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
@@ -20,6 +22,7 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
+#
 
 import sys, os, re, csv
 from optparse import OptionParser
@@ -49,21 +52,25 @@ except ImportError:
 try:
     from filtdes.pyqt_filter_stacked import Ui_MainWindow
 except ImportError:
-    print "Could not import from pyqt_filter. Please build with \"pyuic4 pyqt_filter.ui -o pyqt_filter.py\""
+    print "Could not import from pyqt_filter_stacked. Please build with \"pyuic4 pyqt_filter_stacked.ui -o pyqt_filter_stacked.py\""
     raise SystemExit, 1
 
 try:
-#from filtdes.banditems import filtermovlineItem, lpfsLines, hpfsLines, bpfsLines 
     from filtdes.banditems import * 
 except ImportError:
     print "Could not import from banditems. Please check whether banditems.py is in the library path"
     raise SystemExit, 1
 
 try:
-#from filtdes.banditems import filtermovlineItem, lpfsLines, hpfsLines, bpfsLines 
     from filtdes.polezero_plot import * 
 except ImportError:
     print "Could not import from polezero_plot. Please check whether polezero_plot.py is in the library path"
+    raise SystemExit, 1
+
+try:
+    from filtdes.idealbanditems import * 
+except ImportError:
+    print "Could not import from idealbanditems. Please check whether idealbanditems.py is in the library path"
     raise SystemExit, 1
 
 try:
@@ -74,7 +81,7 @@ except AttributeError:
 
 # Gnuradio Filter design tool main window
 class gr_plot_filter(QtGui.QMainWindow):
-    def __init__(self, qapp, options, callback):
+    def __init__(self, qapp, options, callback=None):
         QtGui.QWidget.__init__(self, None)
         self.gui = Ui_MainWindow()
         self.callback = callback
@@ -412,8 +419,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.pdelaycurve = Qwt.QwtPlotCurve("Phase Delay")
         self.pdelaycurve.attach(self.gui.pdelayPlot)
 
-        self.idealbandhcurves= [ Qwt.QwtPlotCurve() for i in range(4) ]
-        self.idealbandvcurves= [ Qwt.QwtPlotCurve() for i in range(4) ]
+        self.idbanditems = IdealBandItems()
 
         self.set_defaultpen()
 
@@ -604,7 +610,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.EQUIRIPPLE_FILT = 6 # const for equiripple filter window types
         self.show()
 
-        # Set up pen for colors and line width
+    # Set up pen for colors and line width
     def set_defaultpen(self):
         blue = QtGui.qRgb(0x00, 0x00, 0xFF)
         blueBrush = Qt.QBrush(Qt.QColor(blue))
@@ -650,12 +656,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.phasecurve.setPen(Qt.QPen(blueBrush, 1))
         self.groupcurve.setPen(Qt.QPen(blueBrush, 1))
         self.pdelaycurve.setPen(Qt.QPen(blueBrush, 1))
-        for c in self.idealbandhcurves:
-            c.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
-            c.setPen(Qt.QPen(Qt.Qt.red, 2, Qt.Qt.DotLine))
-        for c in self.idealbandvcurves:
-            c.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
-            c.setPen(Qt.QPen(Qt.Qt.red, 2, Qt.Qt.DotLine))
+        self.idbanditems.setLinetype()
 
     def changed_fselect(self, ftype):
         strftype = str(ftype.toAscii())
@@ -834,132 +835,143 @@ class gr_plot_filter(QtGui.QMainWindow):
         winstr = str(self.gui.filterDesignTypeComboBox.currentText().toAscii())
         ftype = str(self.gui.filterTypeComboBox.currentText().toAscii())
         fsel = str(self.gui.fselectComboBox.currentText().toAscii())
-        iirftype = str(self.gui.iirfilterTypeComboBox.currentText().toAscii())
-        iirbtype = str(self.gui.iirfilterBandComboBox.currentText().toAscii())
 
         if (fsel == "FIR"):
             self.b, self.a=[],[]
             if(ret):
-                self.iir = False 
-                self.cpicker.set_iir(False)
-                self.cpicker2.set_iir(False)
-                if(winstr == "Equiripple"):
-                    designer = {"Low Pass" : self.design_opt_lpf,
-                                "Band Pass" : self.design_opt_bpf,
-                                "Complex Band Pass" : self.design_opt_cbpf,
-                                "Band Notch" : self.design_opt_bnf,
-                                "High Pass" :  self.design_opt_hpf}
-                    taps,params,r = designer[ftype](fs, gain)
-
-                else:
-                    designer = {"Low Pass" : self.design_win_lpf,
-                                "Band Pass" : self.design_win_bpf,
-                                "Complex Band Pass" : self.design_win_cbpf,
-                                "Band Notch" : self.design_win_bnf,
-                                "High Pass" :  self.design_win_hpf,
-                                "Root Raised Cosine" :  self.design_win_rrc,
-                                "Gaussian" :  self.design_win_gaus}
-                    wintype = self.filterWindows[winstr]
-                    taps,params,r = designer[ftype](fs, gain, wintype)
-                if(r):
-                    if self.gridview:
-                        self.update_fft(taps, params)
-                        self.set_mfmagresponse()
-                        self.set_mttaps()
-                        self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
-                    else:
-                        self.draw_plots(taps,params)
-                zeros=self.get_zeros()
-                poles=self.get_poles()
-                self.gui.pzPlot.insertZeros(zeros)
-                self.gui.pzPlot.insertPoles(poles)
-                self.gui.mpzPlot.insertZeros(zeros)
-                self.gui.mpzPlot.insertPoles(poles)
-                self.update_fcoeff()
-                self.set_drawideal()
-                if self.callback:
-                    self.callback(self.taps)
+                self.design_fir(ftype, fs, gain, winstr)
         elif (fsel == "IIR(scipy)"):
-            self.taps=[]
-            self.iir = True
-            self.cpicker.set_iir(True)
-            self.cpicker2.set_iir(True)
-            iirft = 	{"Elliptic" : 'ellip',
-                         "Butterworth" : 'butter',
-                         "Chebyshev-1" : 'cheby1',
-                         "Chebyshev-2" : 'cheby2', 
-                         "Bessel" : 'bessel'  }
+            self.design_iir()
 
-            sanalog = 	{"Analog (rad/second)" : 1,
-                         "Digital (normalized 0-1)" : 0  }
+    # Do FIR design
+    def design_fir(self, ftype, fs, gain, winstr):
+        self.iir = False 
+        self.cpicker.set_iir(False)
+        self.cpicker2.set_iir(False)
+        if(winstr == "Equiripple"):
+            designer = {"Low Pass" : self.design_opt_lpf,
+                        "Band Pass" : self.design_opt_bpf,
+                        "Complex Band Pass" : self.design_opt_cbpf,
+                        "Band Notch" : self.design_opt_bnf,
+                        "High Pass" :  self.design_opt_hpf}
+            taps,params,r = designer[ftype](fs, gain)
 
-            iirboxes = {"Low Pass" : [self.gui.iirendofLpfPassBandEdit.text().toDouble(),
-                                      self.gui.iirstartofLpfStopBandEdit.text().toDouble(),
-                                      self.gui.iirLpfPassBandAttenEdit.text().toDouble(),
-                                      self.gui.iirLpfStopBandRippleEdit.text().toDouble()],
+        else:
+            designer = {"Low Pass" : self.design_win_lpf,
+                        "Band Pass" : self.design_win_bpf,
+                        "Complex Band Pass" : self.design_win_cbpf,
+                        "Band Notch" : self.design_win_bnf,
+                        "High Pass" :  self.design_win_hpf,
+                        "Root Raised Cosine" :  self.design_win_rrc,
+                        "Gaussian" :  self.design_win_gaus}
+            wintype = self.filterWindows[winstr]
+            taps,params,r = designer[ftype](fs, gain, wintype)
+        if(r):
+            if self.gridview:
+                self.update_fft(taps, params)
+                self.set_mfmagresponse()
+                self.set_mttaps()
+                self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
+            else:
+                self.draw_plots(taps,params)
+        zeros=self.get_zeros()
+        poles=self.get_poles()
+        self.gui.pzPlot.insertZeros(zeros)
+        self.gui.pzPlot.insertPoles(poles)
+        self.gui.mpzPlot.insertZeros(zeros)
+        self.gui.mpzPlot.insertPoles(poles)
+        self.update_fcoeff()
+        self.set_drawideal()
+        #return taps if callback is enabled
+        if self.callback:
+            self.callback(self.taps)
 
-                        "High Pass" : [self.gui.iirstartofHpfPassBandEdit.text().toDouble(),
-                                       self.gui.iirendofHpfStopBandEdit.text().toDouble(),
-                                       self.gui.iirHpfPassBandAttenEdit.text().toDouble(),
-                                       self.gui.iirHpfStopBandRippleEdit.text().toDouble()],
+    # Do IIR design
+    def design_iir(self):
+        iirftype = str(self.gui.iirfilterTypeComboBox.currentText().toAscii())
+        iirbtype = str(self.gui.iirfilterBandComboBox.currentText().toAscii())
+        self.set_drawideal()
+        self.taps=[]
+        self.iir = True
+        self.cpicker.set_iir(True)
+        self.cpicker2.set_iir(True)
+        iirft = 	{"Elliptic" : 'ellip',
+                     "Butterworth" : 'butter',
+                     "Chebyshev-1" : 'cheby1',
+                     "Chebyshev-2" : 'cheby2', 
+                     "Bessel" : 'bessel'  }
 
-                        "Band Pass" : [self.gui.iirstartofBpfPassBandEdit.text().toDouble(),
-                                       self.gui.iirendofBpfPassBandEdit.text().toDouble(),
-                                       self.gui.iirendofBpfStopBandEdit1.text().toDouble(),
-                                       self.gui.iirstartofBpfStopBandEdit2.text().toDouble(),
-                                       self.gui.iirBpfPassBandAttenEdit.text().toDouble(),
-                                       self.gui.iirBpfStopBandRippleEdit.text().toDouble()],
+        sanalog = 	{"Analog (rad/second)" : 1,
+                     "Digital (normalized 0-1)" : 0  }
 
-                        "Band Stop" : [self.gui.iirendofBsfPassBandEdit1.text().toDouble(),
-                                       self.gui.iirstartofBsfPassBandEdit2.text().toDouble(),
-                                       self.gui.iirstartofBsfStopBandEdit.text().toDouble(),
-                                       self.gui.iirendofBsfStopBandEdit.text().toDouble(),
-                                       self.gui.iirBsfPassBandAttenEdit.text().toDouble(),
-                                       self.gui.iirBsfStopBandRippleEdit.text().toDouble()]  }
+        iirboxes = {"Low Pass" : [self.gui.iirendofLpfPassBandEdit.text().toDouble(),
+                                  self.gui.iirstartofLpfStopBandEdit.text().toDouble(),
+                                  self.gui.iirLpfPassBandAttenEdit.text().toDouble(),
+                                  self.gui.iirLpfStopBandRippleEdit.text().toDouble()],
+
+                    "High Pass" : [self.gui.iirstartofHpfPassBandEdit.text().toDouble(),
+                                   self.gui.iirendofHpfStopBandEdit.text().toDouble(),
+                                   self.gui.iirHpfPassBandAttenEdit.text().toDouble(),
+                                   self.gui.iirHpfStopBandRippleEdit.text().toDouble()],
+
+                    "Band Pass" : [self.gui.iirstartofBpfPassBandEdit.text().toDouble(),
+                                   self.gui.iirendofBpfPassBandEdit.text().toDouble(),
+                                   self.gui.iirendofBpfStopBandEdit1.text().toDouble(),
+                                   self.gui.iirstartofBpfStopBandEdit2.text().toDouble(),
+                                   self.gui.iirBpfPassBandAttenEdit.text().toDouble(),
+                                   self.gui.iirBpfStopBandRippleEdit.text().toDouble()],
+
+                    "Band Stop" : [self.gui.iirendofBsfPassBandEdit1.text().toDouble(),
+                                   self.gui.iirstartofBsfPassBandEdit2.text().toDouble(),
+                                   self.gui.iirstartofBsfStopBandEdit.text().toDouble(),
+                                   self.gui.iirendofBsfStopBandEdit.text().toDouble(),
+                                   self.gui.iirBsfPassBandAttenEdit.text().toDouble(),
+                                   self.gui.iirBsfStopBandRippleEdit.text().toDouble()]  }
+        ret = True
+        params = []
+        besselparams = []
+        for i in range(len(iirboxes[iirbtype])): 
+            params.append(iirboxes[iirbtype][i][0]) 
+            ret = iirboxes[iirbtype][i][1] and ret
+
+        if len(iirboxes[iirbtype]) == 6:
+            params=[params[:2],params[2:4],params[4],params[5]]
+
+        atype = str(self.gui.adComboBox.currentText().toAscii())
+        if(iirftype == "Bessel"):
             ret = True
-            params = []
-            besselparams = []
-            for i in range(len(iirboxes[iirbtype])): 
-                params.append(iirboxes[iirbtype][i][0]) 
-                ret = iirboxes[iirbtype][i][1] and ret
+            order,r = self.gui.besselordEdit.text().toDouble()
+            if iirbtype == "Low Pass" or iirbtype == "High Pass":
+                val,r = self.gui.iirbesselcritEdit1.text().toDouble()
+                ret = ret and r
+                besselparams.append(val)
+            else:
+                val,r = self.gui.iirbesselcritEdit1.text().toDouble()
+                ret = ret and r
+                besselparams.append(val)
+                val,r = self.gui.iirbesselcritEdit2.text().toDouble()
+                ret = ret and r
+                besselparams.append(val)
 
-            if len(iirboxes[iirbtype]) == 6:
-                params=[params[:2],params[2:4],params[4],params[5]]
-
-            atype = str(self.gui.adComboBox.currentText().toAscii())
+        if(ret):
             if(iirftype == "Bessel"):
-                ret = True
-                order,r = self.gui.besselordEdit.text().toDouble()
-                if iirbtype == "Low Pass" or iirbtype == "High Pass":
-                    val,r = self.gui.iirbesselcritEdit1.text().toDouble()
-                    ret = ret and r
-                    besselparams.append(val)
-                else:
-                    val,r = self.gui.iirbesselcritEdit1.text().toDouble()
-                    ret = ret and r
-                    besselparams.append(val)
-                    val,r = self.gui.iirbesselcritEdit2.text().toDouble()
-                    ret = ret and r
-                    besselparams.append(val)
-
-            if(ret):
-                if(iirftype == "Bessel"):
-                    (self.b,self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ','').lower(),
-                                                       analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
-                    (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
-                else:
-                    (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
-                                             params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
-                    (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
-                self.gui.pzPlot.insertZeros(self.z)
-                self.gui.pzPlot.insertPoles(self.p)
-                self.gui.mpzPlot.insertZeros(self.z)
-                self.gui.mpzPlot.insertPoles(self.p)
-                self.iir_plot_all(self.z,self.p,self.k)
-                self.update_fcoeff()
-                self.gui.nTapsEdit.setText("-")
-                if self.callback:
-                    self.callback((self.b,self.a))
+                (self.b,self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ','').lower(),
+                                                   analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
+            else:
+                (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
+                                         params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
+            self.gui.pzPlot.insertZeros(self.z)
+            self.gui.pzPlot.insertPoles(self.p)
+            self.gui.mpzPlot.insertZeros(self.z)
+            self.gui.mpzPlot.insertPoles(self.p)
+            self.iir_plot_all(self.z,self.p,self.k)
+            self.update_fcoeff()
+            self.gui.nTapsEdit.setText("-")
+            #return (b,a) if callback is enabled
+            if self.callback:
+                self.callback((self.b,self.a))
 
     # IIR Filter design plot updates 
     def iir_plot_all(self,z,p,k):
@@ -1787,7 +1799,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.freqcurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
             self.update_freq_curves()
-            self.detach_allidealcurves(self.gui.mfreqPlot)
+            self.idbanditems.detach_allidealcurves(self.gui.mfreqPlot)
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
             self.set_actgrid()
@@ -1804,7 +1816,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.phasecurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
                 self.update_phase_curves()
-            self.detach_allidealcurves(self.gui.mfreqPlot)
+            self.idbanditems.detach_allidealcurves(self.gui.mfreqPlot)
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
             self.set_actgrid()
@@ -1820,7 +1832,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.groupcurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
                 self.update_group_curves()
-            self.detach_allidealcurves(self.gui.mfreqPlot)
+            self.idbanditems.detach_allidealcurves(self.gui.mfreqPlot)
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
             self.set_actgrid()
@@ -1836,7 +1848,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.pdelaycurve.attach(self.gui.mfreqPlot)
                 self.detach_firstattached(self.gui.mfreqPlot)
                 self.update_pdelay_curves()
-            self.detach_allidealcurves(self.gui.mfreqPlot)
+            self.idbanditems.detach_allidealcurves(self.gui.mfreqPlot)
         else:
             self.gui.mfreqPlot.detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
             self.set_actgrid()
@@ -2005,181 +2017,19 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.filterspecView.addTab(self.gui.bandDiagram, _fromUtf8("Band Diagram"))
 
     def set_drawideal(self):
+        fsel = str(self.gui.fselectComboBox.currentText().toAscii())
         if self.gridview and not(self.mfoverlay):
-            plot=self.gui.mfreqPlot
+            plot = self.gui.mfreqPlot
         else:
-            plot=self.gui.freqPlot
+            plot = self.gui.freqPlot
 		
-        if (self.gui.actionIdeal_Band.isChecked() == 0 ):
-            self.detach_allidealcurves(plot)
+        if (self.gui.actionIdeal_Band.isChecked() == 0 or fsel == "IIR(scipy)"):
+            self.idbanditems.detach_allidealcurves(plot)
         elif(self.params):
             ftype = str(self.gui.filterTypeComboBox.currentText().toAscii())
-            self.attach_allidealcurves(plot)
-            try:
-                if (ftype == "Low Pass"):
-                    self.detach_unwantedcurves(plot)
-                    x=[0, self.params["pbend"]]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbend"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[0].setData(x, y)
-                    
-                    x=[self.params["sbstart"], self.params["fs"]/2.0]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[1].setData(x, y)
-                
-                    x=[self.params["sbstart"]]*2
-                    y=[-self.params["atten"], 
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[1].setData(x, y)
-                    
-
-                if ftype == "High Pass":
-                    self.detach_unwantedcurves(plot)
-                    x=[self.params["pbstart"],self.params["fs"]/2.0]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbstart"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[0].setData(x, y)
-                    
-                    x=[0,self.params["sbend"]]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[1].setData(x, y)
-                
-                    x=[self.params["sbend"]]*2
-                    y=[-self.params["atten"], 
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[1].setData(x, y)
-
-                if ftype == "Band Notch":
-                    x=[self.params["sbstart"],self.params["sbend"]]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[0].setData(x, y)
-                    
-                    x=[self.params["sbstart"]]*2
-                    y=[-self.params["atten"], 
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[0].setData(x, y)
-                    
-                    x=[self.params["sbend"]]*2
-                    y=[-self.params["atten"], 
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[1].setData(x, y)
-
-                    x=[0,self.params["sbstart"]-self.params["tb"]]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[1].setData(x, y)
-                
-                    x=[self.params["sbstart"]-self.params["tb"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[2].setData(x, y)
-
-                    x=[self.params["sbend"]+self.params["tb"],self.params["fs"]/2.0]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[2].setData(x, y)
-                
-                    x=[self.params["sbend"]+self.params["tb"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-	                   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[3].setData(x, y)
-
-                if ftype == "Band Pass":
-                    x=[self.params["pbstart"],self.params["pbend"]]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbstart"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbend"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[1].setData(x, y)
-
-                    x=[0,self.params["pbstart"]-self.params["tb"]]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[1].setData(x, y)
-                
-                    x=[self.params["pbstart"]-self.params["tb"]]*2
-                    y=[-self.params["atten"], 
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[2].setData(x, y)
-
-                    x=[self.params["pbend"]+self.params["tb"],self.params["fs"]/2.0]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[2].setData(x, y)
-                
-                    x=[self.params["pbend"]+self.params["tb"]]*2
-                    y=[-self.params["atten"], 
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[3].setData(x, y)
-
-                if ftype == "Complex Band Pass":
-                    x=[self.params["pbstart"],self.params["pbend"]]
-                    y=[20.0*scipy.log10(self.params["gain"])]*2 
-                    self.idealbandhcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbstart"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[0].setData(x, y)
-                    
-                    x=[self.params["pbend"]]*2
-                    y=[20.0*scipy.log10(self.params["gain"]),
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[1].setData(x, y)
-
-                    x=[0,self.params["pbstart"]-self.params["tb"]]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[1].setData(x, y)
-                
-                    x=[self.params["pbstart"]-self.params["tb"]]*2
-                    y=[-self.params["atten"], 
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[2].setData(x, y)
-
-                    x=[self.params["pbend"]+self.params["tb"],self.params["fs"]/2.0]
-                    y=[-self.params["atten"]]*2 
-                    self.idealbandhcurves[2].setData(x, y)
-                
-                    x=[self.params["pbend"]+self.params["tb"]]*2
-                    y=[-self.params["atten"], 
-			    	   plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()] 
-                    self.idealbandvcurves[3].setData(x, y)
-            except KeyError:
-                print "All parameters not set for ideal band diagram"
-                self.detach_allidealcurves(plot)
-
+            self.idbanditems.attach_allidealcurves(plot)
+            self.idbanditems.plotIdealCurves(ftype, self.params, plot)
             plot.replot()
-
-    def detach_allidealcurves(self, plot):
-        for c in self.idealbandhcurves:
-            c.detach()
-        for c in self.idealbandvcurves:
-            c.detach()
-        plot.replot()
-
-    def detach_unwantedcurves(self, plot):
-        for i in range(2,4):
-            self.idealbandvcurves[i].detach()
-            self.idealbandhcurves[i].detach()
-        plot.replot()
-
-    def attach_allidealcurves(self, plot):
-        for c in self.idealbandhcurves:
-            c.attach(plot)
-        for c in self.idealbandvcurves:
-            c.attach(plot)
-        plot.replot()
 
     def set_pzplot(self):
         if (self.gui.checkPzplot.checkState() == 0 ):

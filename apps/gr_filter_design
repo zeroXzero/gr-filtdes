@@ -835,133 +835,143 @@ class gr_plot_filter(QtGui.QMainWindow):
         winstr = str(self.gui.filterDesignTypeComboBox.currentText().toAscii())
         ftype = str(self.gui.filterTypeComboBox.currentText().toAscii())
         fsel = str(self.gui.fselectComboBox.currentText().toAscii())
-        iirftype = str(self.gui.iirfilterTypeComboBox.currentText().toAscii())
-        iirbtype = str(self.gui.iirfilterBandComboBox.currentText().toAscii())
 
         if (fsel == "FIR"):
             self.b, self.a=[],[]
             if(ret):
-                self.iir = False 
-                self.cpicker.set_iir(False)
-                self.cpicker2.set_iir(False)
-                if(winstr == "Equiripple"):
-                    designer = {"Low Pass" : self.design_opt_lpf,
-                                "Band Pass" : self.design_opt_bpf,
-                                "Complex Band Pass" : self.design_opt_cbpf,
-                                "Band Notch" : self.design_opt_bnf,
-                                "High Pass" :  self.design_opt_hpf}
-                    taps,params,r = designer[ftype](fs, gain)
-
-                else:
-                    designer = {"Low Pass" : self.design_win_lpf,
-                                "Band Pass" : self.design_win_bpf,
-                                "Complex Band Pass" : self.design_win_cbpf,
-                                "Band Notch" : self.design_win_bnf,
-                                "High Pass" :  self.design_win_hpf,
-                                "Root Raised Cosine" :  self.design_win_rrc,
-                                "Gaussian" :  self.design_win_gaus}
-                    wintype = self.filterWindows[winstr]
-                    taps,params,r = designer[ftype](fs, gain, wintype)
-                if(r):
-                    if self.gridview:
-                        self.update_fft(taps, params)
-                        self.set_mfmagresponse()
-                        self.set_mttaps()
-                        self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
-                    else:
-                        self.draw_plots(taps,params)
-                zeros=self.get_zeros()
-                poles=self.get_poles()
-                self.gui.pzPlot.insertZeros(zeros)
-                self.gui.pzPlot.insertPoles(poles)
-                self.gui.mpzPlot.insertZeros(zeros)
-                self.gui.mpzPlot.insertPoles(poles)
-                self.update_fcoeff()
-                self.set_drawideal()
-                if self.callback:
-                    self.callback(self.taps)
+                self.design_fir(ftype, fs, gain, winstr)
         elif (fsel == "IIR(scipy)"):
-            self.set_drawideal()
-            self.taps=[]
-            self.iir = True
-            self.cpicker.set_iir(True)
-            self.cpicker2.set_iir(True)
-            iirft = 	{"Elliptic" : 'ellip',
-                         "Butterworth" : 'butter',
-                         "Chebyshev-1" : 'cheby1',
-                         "Chebyshev-2" : 'cheby2', 
-                         "Bessel" : 'bessel'  }
+            self.design_iir()
 
-            sanalog = 	{"Analog (rad/second)" : 1,
-                         "Digital (normalized 0-1)" : 0  }
+    # Do FIR design
+    def design_fir(self, ftype, fs, gain, winstr):
+        self.iir = False 
+        self.cpicker.set_iir(False)
+        self.cpicker2.set_iir(False)
+        if(winstr == "Equiripple"):
+            designer = {"Low Pass" : self.design_opt_lpf,
+                        "Band Pass" : self.design_opt_bpf,
+                        "Complex Band Pass" : self.design_opt_cbpf,
+                        "Band Notch" : self.design_opt_bnf,
+                        "High Pass" :  self.design_opt_hpf}
+            taps,params,r = designer[ftype](fs, gain)
 
-            iirboxes = {"Low Pass" : [self.gui.iirendofLpfPassBandEdit.text().toDouble(),
-                                      self.gui.iirstartofLpfStopBandEdit.text().toDouble(),
-                                      self.gui.iirLpfPassBandAttenEdit.text().toDouble(),
-                                      self.gui.iirLpfStopBandRippleEdit.text().toDouble()],
+        else:
+            designer = {"Low Pass" : self.design_win_lpf,
+                        "Band Pass" : self.design_win_bpf,
+                        "Complex Band Pass" : self.design_win_cbpf,
+                        "Band Notch" : self.design_win_bnf,
+                        "High Pass" :  self.design_win_hpf,
+                        "Root Raised Cosine" :  self.design_win_rrc,
+                        "Gaussian" :  self.design_win_gaus}
+            wintype = self.filterWindows[winstr]
+            taps,params,r = designer[ftype](fs, gain, wintype)
+        if(r):
+            if self.gridview:
+                self.update_fft(taps, params)
+                self.set_mfmagresponse()
+                self.set_mttaps()
+                self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
+            else:
+                self.draw_plots(taps,params)
+        zeros=self.get_zeros()
+        poles=self.get_poles()
+        self.gui.pzPlot.insertZeros(zeros)
+        self.gui.pzPlot.insertPoles(poles)
+        self.gui.mpzPlot.insertZeros(zeros)
+        self.gui.mpzPlot.insertPoles(poles)
+        self.update_fcoeff()
+        self.set_drawideal()
+        #return taps if callback is enabled
+        if self.callback:
+            self.callback(self.taps)
 
-                        "High Pass" : [self.gui.iirstartofHpfPassBandEdit.text().toDouble(),
-                                       self.gui.iirendofHpfStopBandEdit.text().toDouble(),
-                                       self.gui.iirHpfPassBandAttenEdit.text().toDouble(),
-                                       self.gui.iirHpfStopBandRippleEdit.text().toDouble()],
+    # Do IIR design
+    def design_iir(self):
+        iirftype = str(self.gui.iirfilterTypeComboBox.currentText().toAscii())
+        iirbtype = str(self.gui.iirfilterBandComboBox.currentText().toAscii())
+        self.set_drawideal()
+        self.taps=[]
+        self.iir = True
+        self.cpicker.set_iir(True)
+        self.cpicker2.set_iir(True)
+        iirft = 	{"Elliptic" : 'ellip',
+                     "Butterworth" : 'butter',
+                     "Chebyshev-1" : 'cheby1',
+                     "Chebyshev-2" : 'cheby2', 
+                     "Bessel" : 'bessel'  }
 
-                        "Band Pass" : [self.gui.iirstartofBpfPassBandEdit.text().toDouble(),
-                                       self.gui.iirendofBpfPassBandEdit.text().toDouble(),
-                                       self.gui.iirendofBpfStopBandEdit1.text().toDouble(),
-                                       self.gui.iirstartofBpfStopBandEdit2.text().toDouble(),
-                                       self.gui.iirBpfPassBandAttenEdit.text().toDouble(),
-                                       self.gui.iirBpfStopBandRippleEdit.text().toDouble()],
+        sanalog = 	{"Analog (rad/second)" : 1,
+                     "Digital (normalized 0-1)" : 0  }
 
-                        "Band Stop" : [self.gui.iirendofBsfPassBandEdit1.text().toDouble(),
-                                       self.gui.iirstartofBsfPassBandEdit2.text().toDouble(),
-                                       self.gui.iirstartofBsfStopBandEdit.text().toDouble(),
-                                       self.gui.iirendofBsfStopBandEdit.text().toDouble(),
-                                       self.gui.iirBsfPassBandAttenEdit.text().toDouble(),
-                                       self.gui.iirBsfStopBandRippleEdit.text().toDouble()]  }
+        iirboxes = {"Low Pass" : [self.gui.iirendofLpfPassBandEdit.text().toDouble(),
+                                  self.gui.iirstartofLpfStopBandEdit.text().toDouble(),
+                                  self.gui.iirLpfPassBandAttenEdit.text().toDouble(),
+                                  self.gui.iirLpfStopBandRippleEdit.text().toDouble()],
+
+                    "High Pass" : [self.gui.iirstartofHpfPassBandEdit.text().toDouble(),
+                                   self.gui.iirendofHpfStopBandEdit.text().toDouble(),
+                                   self.gui.iirHpfPassBandAttenEdit.text().toDouble(),
+                                   self.gui.iirHpfStopBandRippleEdit.text().toDouble()],
+
+                    "Band Pass" : [self.gui.iirstartofBpfPassBandEdit.text().toDouble(),
+                                   self.gui.iirendofBpfPassBandEdit.text().toDouble(),
+                                   self.gui.iirendofBpfStopBandEdit1.text().toDouble(),
+                                   self.gui.iirstartofBpfStopBandEdit2.text().toDouble(),
+                                   self.gui.iirBpfPassBandAttenEdit.text().toDouble(),
+                                   self.gui.iirBpfStopBandRippleEdit.text().toDouble()],
+
+                    "Band Stop" : [self.gui.iirendofBsfPassBandEdit1.text().toDouble(),
+                                   self.gui.iirstartofBsfPassBandEdit2.text().toDouble(),
+                                   self.gui.iirstartofBsfStopBandEdit.text().toDouble(),
+                                   self.gui.iirendofBsfStopBandEdit.text().toDouble(),
+                                   self.gui.iirBsfPassBandAttenEdit.text().toDouble(),
+                                   self.gui.iirBsfStopBandRippleEdit.text().toDouble()]  }
+        ret = True
+        params = []
+        besselparams = []
+        for i in range(len(iirboxes[iirbtype])): 
+            params.append(iirboxes[iirbtype][i][0]) 
+            ret = iirboxes[iirbtype][i][1] and ret
+
+        if len(iirboxes[iirbtype]) == 6:
+            params=[params[:2],params[2:4],params[4],params[5]]
+
+        atype = str(self.gui.adComboBox.currentText().toAscii())
+        if(iirftype == "Bessel"):
             ret = True
-            params = []
-            besselparams = []
-            for i in range(len(iirboxes[iirbtype])): 
-                params.append(iirboxes[iirbtype][i][0]) 
-                ret = iirboxes[iirbtype][i][1] and ret
+            order,r = self.gui.besselordEdit.text().toDouble()
+            if iirbtype == "Low Pass" or iirbtype == "High Pass":
+                val,r = self.gui.iirbesselcritEdit1.text().toDouble()
+                ret = ret and r
+                besselparams.append(val)
+            else:
+                val,r = self.gui.iirbesselcritEdit1.text().toDouble()
+                ret = ret and r
+                besselparams.append(val)
+                val,r = self.gui.iirbesselcritEdit2.text().toDouble()
+                ret = ret and r
+                besselparams.append(val)
 
-            if len(iirboxes[iirbtype]) == 6:
-                params=[params[:2],params[2:4],params[4],params[5]]
-
-            atype = str(self.gui.adComboBox.currentText().toAscii())
+        if(ret):
             if(iirftype == "Bessel"):
-                ret = True
-                order,r = self.gui.besselordEdit.text().toDouble()
-                if iirbtype == "Low Pass" or iirbtype == "High Pass":
-                    val,r = self.gui.iirbesselcritEdit1.text().toDouble()
-                    ret = ret and r
-                    besselparams.append(val)
-                else:
-                    val,r = self.gui.iirbesselcritEdit1.text().toDouble()
-                    ret = ret and r
-                    besselparams.append(val)
-                    val,r = self.gui.iirbesselcritEdit2.text().toDouble()
-                    ret = ret and r
-                    besselparams.append(val)
-
-            if(ret):
-                if(iirftype == "Bessel"):
-                    (self.b,self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ','').lower(),
-                                                       analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
-                    (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
-                else:
-                    (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
-                                             params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
-                    (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
-                self.gui.pzPlot.insertZeros(self.z)
-                self.gui.pzPlot.insertPoles(self.p)
-                self.gui.mpzPlot.insertZeros(self.z)
-                self.gui.mpzPlot.insertPoles(self.p)
-                self.iir_plot_all(self.z,self.p,self.k)
-                self.update_fcoeff()
-                self.gui.nTapsEdit.setText("-")
-                if self.callback:
-                    self.callback((self.b,self.a))
+                (self.b,self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ','').lower(),
+                                                   analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
+            else:
+                (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
+                                         params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
+            self.gui.pzPlot.insertZeros(self.z)
+            self.gui.pzPlot.insertPoles(self.p)
+            self.gui.mpzPlot.insertZeros(self.z)
+            self.gui.mpzPlot.insertPoles(self.p)
+            self.iir_plot_all(self.z,self.p,self.k)
+            self.update_fcoeff()
+            self.gui.nTapsEdit.setText("-")
+            #return (b,a) if callback is enabled
+            if self.callback:
+                self.callback((self.b,self.a))
 
     # IIR Filter design plot updates 
     def iir_plot_all(self,z,p,k):
