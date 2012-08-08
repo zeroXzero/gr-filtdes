@@ -490,6 +490,19 @@
              <bool>true</bool>
             </property>
            </widget>
+           <widget class="QCheckBox" name="checkKeepcur">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>200</y>
+              <width>141</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Buffer current plots</string>
+            </property>
+           </widget>
           </widget>
           <widget class="QGroupBox" name="groupSpecs">
            <property name="geometry">

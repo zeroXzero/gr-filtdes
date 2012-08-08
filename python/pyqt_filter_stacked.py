@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter_stacked.ui'
 #
-# Created: Tue Aug  7 19:51:36 2012
+# Created: Wed Aug  8 11:42:47 2012
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -252,6 +252,9 @@ class Ui_MainWindow(object):
         self.checkFcoeff.setGeometry(QtCore.QRect(10, 180, 131, 19))
         self.checkFcoeff.setChecked(True)
         self.checkFcoeff.setObjectName(_fromUtf8("checkFcoeff"))
+        self.checkKeepcur = QtGui.QCheckBox(self.responseBox)
+        self.checkKeepcur.setGeometry(QtCore.QRect(10, 200, 141, 19))
+        self.checkKeepcur.setObjectName(_fromUtf8("checkKeepcur"))
         self.groupSpecs = QtGui.QGroupBox(self.quickFrame)
         self.groupSpecs.setGeometry(QtCore.QRect(10, 280, 161, 91))
         self.groupSpecs.setObjectName(_fromUtf8("groupSpecs"))
@@ -1199,6 +1202,7 @@ class Ui_MainWindow(object):
         self.checkStep.setText(QtGui.QApplication.translate("MainWindow", "Step Response", None, QtGui.QApplication.UnicodeUTF8))
         self.checkGrid.setText(QtGui.QApplication.translate("MainWindow", "Grid", None, QtGui.QApplication.UnicodeUTF8))
         self.checkFcoeff.setText(QtGui.QApplication.translate("MainWindow", "Filter Coefficients", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkKeepcur.setText(QtGui.QApplication.translate("MainWindow", "Buffer current plots", None, QtGui.QApplication.UnicodeUTF8))
         self.groupSpecs.setTitle(QtGui.QApplication.translate("MainWindow", "Filter Specs", None, QtGui.QApplication.UnicodeUTF8))
         self.checkBand.setText(QtGui.QApplication.translate("MainWindow", "Band Diagram", None, QtGui.QApplication.UnicodeUTF8))
         self.checkPzplot.setText(QtGui.QApplication.translate("MainWindow", "Pole-Zero Plot", None, QtGui.QApplication.UnicodeUTF8))

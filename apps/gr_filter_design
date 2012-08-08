@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-import sys, os, re, csv
+import sys, os, re, csv, copy
 from optparse import OptionParser
 import filtdes as gr
 from filtdes import optfir 
@@ -110,9 +110,9 @@ class gr_plot_filter(QtGui.QMainWindow):
                      Qt.SIGNAL("released()"),
                      self.design)
 
-        self.connect(self.gui.tabGroup,
-                     Qt.SIGNAL("currentChanged(int)"),
-                     self.tab_changed)
+#        self.connect(self.gui.tabGroup,
+#                     Qt.SIGNAL("currentChanged(int)"),
+#                     self.tab_changed)
 
         self.connect(self.gui.nfftEdit,
                      Qt.SIGNAL("textEdited(QString)"),
@@ -249,6 +249,10 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.mtimpPush,
                      Qt.SIGNAL("clicked()"),
                      self.set_mtimpulse)
+
+        self.connect(self.gui.checkKeepcur,
+					 Qt.SIGNAL("stateChanged(int)"),
+					 self.set_bufferplots)
 
         self.connect(self.gui.checkGrid,
 					 Qt.SIGNAL("stateChanged(int)"),
@@ -1352,15 +1356,15 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.nfftpts = infft
             self.update_freq_curves()
 
-    def tab_changed(self, tab):
-        if(tab == 0):
-            self.update_freq_curves()
-        if(tab == 1):
-            self.update_time_curves()
-        if(tab == 2):
-            self.update_phase_curves()
-        if(tab == 3):
-            self.update_group_curves()
+#    def tab_changed(self, tab):
+#        if(tab == 0):
+#            self.update_freq_curves()
+#        if(tab == 1):
+#            self.update_time_curves()
+#        if(tab == 2):
+#            self.update_phase_curves()
+#        if(tab == 3):
+#            self.update_group_curves()
 
     def get_fft(self, fs, taps, Npts):
         Ts = 1.0/fs
@@ -1725,7 +1729,40 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             self.gui.filterFrame.hide()
 
-
+    #Saves and attach the plots for comparison
+    def set_bufferplots(self):
+        if (self.gui.checkKeepcur.checkState() == 0 ):
+            #Detach and delete all plots if unchecked
+            for c in self.bufferplots:
+                c.detach()
+            self.replot_all()
+            self.bufferplots = []
+        else:
+            self.bufferplots = []
+            #Iterate through tabgroup children and copy curves 
+            for i in range(self.gui.tabGroup.count()):
+                page = self.gui.tabGroup.widget(i)
+                for item in page.children():
+                    if isinstance(item, Qwt.QwtPlot):
+                        #Change colours as both plots overlay 
+                        colours = [QtCore.Qt.darkYellow,QtCore.Qt.black]
+                        for c in item.itemList():
+                            if isinstance(c, Qwt.QwtPlotCurve):
+                                dup = Qwt.QwtPlotCurve() 
+                                dpen = c.pen() 
+                                dsym = c.symbol() 
+                                dsym.setPen(Qt.QPen(colours[0])) 
+                                dsym.setSize(Qt.QSize(6, 6)) 
+                                dpen.setColor(colours[0]) 
+                                del colours[0] 
+                                dup.setPen(dpen) 
+                                dup.setSymbol(dsym) 
+                                dup.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
+                                dup.setData([c.x(i) for i in range(c.dataSize())],
+										    [c.y(i) for i in range(c.dataSize())])
+                                self.bufferplots.append(dup) 
+                                self.bufferplots[-1].attach(item) 
+									   
     def set_grid(self):
         if (self.gui.checkGrid.checkState() == 0 ):
             self.gridenable=False
