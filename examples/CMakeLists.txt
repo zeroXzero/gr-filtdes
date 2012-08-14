@@ -23,5 +23,6 @@ GR_PYTHON_INSTALL(
     PROGRAMS
     gr_filter_api.py
 	gr_filter_callback.py
+	gr_filter_restrict.py
     DESTINATION share/examples 
 )

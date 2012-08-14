@@ -81,11 +81,22 @@ except AttributeError:
 
 # Gnuradio Filter design tool main window
 class gr_plot_filter(QtGui.QMainWindow):
-    def __init__(self, qapp, options, callback=None):
+    def __init__(self, qapp, options, callback=None, restype=""):
         QtGui.QWidget.__init__(self, None)
         self.gui = Ui_MainWindow()
         self.callback = callback
         self.gui.setupUi(self)
+        
+        #Remove other filter combobox entry if 
+        #some restriction is specified
+        if restype == "iir":
+            ind = self.gui.fselectComboBox.findText("FIR")
+            if ind:
+                self.gui.fselectComboBox.removeItem(ind)
+        elif restype == "fir":
+            ind = self.gui.fselectComboBox.findText("IIR(scipy)")
+            if ind:
+                self.gui.fselectComboBox.removeItem(ind)
 
         self.connect(self.gui.action_save,
                      Qt.SIGNAL("activated()"),
@@ -2489,12 +2500,13 @@ def setup_options():
                           usage=usage, description=description)
     return parser
 
-def launch(args, callback=None):
+def launch(args, callback=None, restype=""):
     parser = setup_options()
     (options, args) = parser.parse_args ()
 
+
     app = Qt.QApplication(args)
-    gplt = gr_plot_filter(app, options, callback)
+    gplt = gr_plot_filter(app, options, callback, restype)
     app.exec_()
     if gplt.iir:
         retobj = ApiObject()
