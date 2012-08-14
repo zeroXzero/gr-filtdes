@@ -69,6 +69,11 @@ except ImportError:
     raise SystemExit, 1
 
 try:
+    from filtdes.api_object import * 
+except ImportError:
+    print "Could not import from api_object. Please check whether api_object.py is in the library path"
+    raise SystemExit, 1
+try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
     _fromUtf8 = lambda s: s
@@ -874,6 +879,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             taps,params,r = designer[ftype](fs, gain, wintype)
         if(r):
             if self.gridview:
+                self.params = params
                 self.update_fft(taps, params)
                 self.set_mfmagresponse()
                 self.set_mttaps()
@@ -890,7 +896,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.set_drawideal()
         #return taps if callback is enabled
         if self.callback:
-            self.callback(self.taps)
+            retobj = ApiObject()
+            retobj.update_all("fir", self.params, self.taps, 1)
+            self.callback(retobj)
 
     # Do IIR design
     def design_iir(self):
@@ -913,6 +921,12 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         sanalog = 	{"Analog (rad/second)" : 1,
                      "Digital (normalized 0-1)" : 0  }
+
+        iirabbr = {
+                    "Low Pass" : "lpf",
+                    "High Pass" : "hpf",
+                    "Band Pass" : "bpf",
+                    "Band Stop" : "bnf"  }
 
         iirboxes = {"Low Pass" : [self.gui.iirendofLpfPassBandEdit.text().toDouble(),
                                   self.gui.iirstartofLpfStopBandEdit.text().toDouble(),
@@ -966,10 +980,16 @@ class gr_plot_filter(QtGui.QMainWindow):
                 (self.b,self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ','').lower(),
                                                    analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
                 (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
+                iirparams = { "filttype": iirft[iirftype], "filtord": order, 
+                              "critfreq": besselparams}
             else:
                 (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
                                          params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
                 (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
+                #Create params
+                iirparams = { "filttype": iirft[iirftype], "bandtype": iirabbr[iirbtype], 
+                              "pbedge": params[0], "sbedge": params[1],"gpass": params[2],
+                              "gstop": params[3]}
             self.gui.pzPlot.insertZeros(self.z)
             self.gui.pzPlot.insertPoles(self.p)
             self.gui.mpzPlot.insertZeros(self.z)
@@ -977,9 +997,12 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.iir_plot_all(self.z,self.p,self.k)
             self.update_fcoeff()
             self.gui.nTapsEdit.setText("-")
-            #return (b,a) if callback is enabled
+            self.params = iirparams
+            #return api_object if callback is enabled
             if self.callback:
-                self.callback((self.b,self.a))
+                retobj = ApiObject()
+                retobj.update_all("iir", self.params, (self.b, self.a), 1)
+                self.callback(retobj)
 
     # IIR Filter design plot updates 
     def iir_plot_all(self,z,p,k):
@@ -2216,7 +2239,9 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.mpzPlot.insertPoles(pl)
             self.update_fcoeff()
             if self.callback:
-                self.callback((self.b,self.a))
+                retobj = ApiObject()
+                retobj.update_all("iir", self.params, (self.b, self.a), 1)
+                self.callback(retobj)
         else: 
             hz = poly1d(zr,r=1)
             #print hz.c
@@ -2230,7 +2255,9 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.mpzPlot.insertPoles(poles)
             self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
             if self.callback:
-                self.callback(self.taps)
+                retobj = ApiObject()
+                retobj.update_all("fir", self.params, self.taps, 1)
+                self.callback(retobj)
 
     def set_mcurvetaps(self,(zr,pl)):
         if self.iir: 
@@ -2241,7 +2268,9 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.pzPlot.insertPoles(pl)
             self.update_fcoeff()
             if self.callback:
-                self.callback((self.b,self.a))
+                retobj = ApiObject()
+                retobj.update_all("iir", self.params, (self.b, self.a), 1)
+                self.callback(retobj)
         else: 
             hz = poly1d(zr,r=1)
             #print hz.c
@@ -2260,7 +2289,9 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.pzPlot.insertPoles(poles)
             self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
             if self.callback:
-                self.callback(self.taps)
+                retobj = ApiObject()
+                retobj.update_all("fir", self.params, self.taps, 1)
+                self.callback(retobj)
 
     def set_statusbar(self,(x,y)):
         if x == None:
@@ -2466,9 +2497,13 @@ def launch(args, callback=None):
     gplt = gr_plot_filter(app, options, callback)
     app.exec_()
     if gplt.iir:
-        return gplt.a,gplt.b
+        retobj = ApiObject()
+        retobj.update_all("iir", gplt.params, (gplt.b, gplt.a), 1)
+        return retobj 
     else:
-        return gplt.taps
+        retobj = ApiObject()
+        retobj.update_all("fir", gplt.params, gplt.taps, 1)
+        return retobj 
 
 def main(args):
     parser = setup_options()

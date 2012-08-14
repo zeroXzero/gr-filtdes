@@ -1,14 +1,15 @@
-import filtdes.gr_filter_design
+import filtdes.filter_design
 import sys
 
 '''
 Callback example
 Function called when "design" button is pressed
 or pole-zero plot is changed
-print filter taps for FIR filter design
-print  b,a for IIR filter design
 '''
-def print_taps(retval):
-    print retval
+def print_params(filtobj):
+    print "Filter Count:", filtobj.filtercount
+    print "Filter type:", filtobj.restype
+    print "Filter params", filtobj.params[0]
+    print "Filter Coefficients", filtobj.taps[0]
 
-filtdes.gr_filter_design.launch(sys.argv, print_taps)
+filtdes.filter_design.launch(sys.argv, print_params)

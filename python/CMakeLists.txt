@@ -45,7 +45,8 @@ GR_PYTHON_INSTALL(
 	banditems.py
 	idealbanditems.py
 	polezero_plot.py
-	gr_filter_design.py
+	filter_design.py
+	api_object.py
 	icons_rc.py
     DESTINATION ${GR_PYTHON_DIR}/filtdes
 )
