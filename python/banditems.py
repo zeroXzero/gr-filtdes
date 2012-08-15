@@ -75,13 +75,6 @@ class filtermovlineItem(QtGui.QGraphicsObject):
 class lpfsLines(QtGui.QGraphicsObject):
     def __init__(self):
         QtGui.QGraphicsObject.__init__(self)
-#        self.poly = QtGui.QPolygonF()
-#        self.poly << QtCore.QPointF(3,5)
-#        self.poly << QtCore.QPointF(7,5)
-#        self.poly << QtCore.QPointF(5,3)
-#        self.arrowtop=QtGui.QGraphicsPolygonItem()
-#        self.arrowtop.setPolygon(self.poly)
-#        self.arrowtop.setPen(QtGui.QPen(QtCore.Qt.lightGray))
 
     def paint(self, painter, option, widget):
         painter.setPen(QtGui.QPen(QtCore.Qt.darkGray, 2, QtCore.Qt.SolidLine))

@@ -91,11 +91,11 @@ class gr_plot_filter(QtGui.QMainWindow):
         #some restriction is specified
         if restype == "iir":
             ind = self.gui.fselectComboBox.findText("FIR")
-            if ind:
+            if ind != -1:
                 self.gui.fselectComboBox.removeItem(ind)
         elif restype == "fir":
             ind = self.gui.fselectComboBox.findText("IIR(scipy)")
-            if ind:
+            if ind != -1:
                 self.gui.fselectComboBox.removeItem(ind)
 
         self.connect(self.gui.action_save,

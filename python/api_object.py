@@ -62,3 +62,17 @@ class ApiObject():
             self.params[filtno - 1] = params
             self.restype[filtno - 1] = filttype 
 
+    def get_filtercount(self):
+        return self.filtercount
+    
+    def get_restype(self, filtno=1):
+        if (filtno <= self.filtercount):
+            return self.restype[filtno - 1]
+    
+    def get_params(self, filtno=1):
+        if (filtno <= self.filtercount):
+            return self.params[filtno - 1]
+    
+    def get_taps(self, filtno=1):
+        if (filtno <= self.filtercount):
+            return self.taps[filtno - 1]
