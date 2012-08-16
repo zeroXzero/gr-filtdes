@@ -47,6 +47,7 @@ GR_PYTHON_INSTALL(
 	polezero_plot.py
 	filter_design.py
 	api_object.py
+	fir_design.py
 	icons_rc.py
     DESTINATION ${GR_PYTHON_DIR}/filtdes
 )
