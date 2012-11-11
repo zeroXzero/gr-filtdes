@@ -2369,9 +2369,19 @@ class gr_plot_filter(QtGui.QMainWindow):
             return
 
         csvhandle = csv.writer(handle, delimiter=",")
+        #indicate fir/iir for easy reading 
+        if self.iir:
+            csvhandle.writerow(["restype","iir"])
+        else:
+            csvhandle.writerow(["restype","fir"])
+
         for k in self.params.keys():
             csvhandle.writerow([k, self.params[k]])
-        csvhandle.writerow(["taps",] + self.taps.tolist())
+        if self.iir:
+            csvhandle.writerow(["b",] + self.b.tolist())
+            csvhandle.writerow(["a",] + self.a.tolist())
+        else:
+            csvhandle.writerow(["taps",] + self.taps.tolist())
         handle.close()
 
     def action_open_dialog(self):
