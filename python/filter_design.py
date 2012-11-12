@@ -708,7 +708,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.addpolePush.setEnabled(True)
             self.gui.maddpolePush.setEnabled(True)
 
-        self.design()
+#self.design()
 
     def set_order(self, ftype):
         strftype = str(ftype.toAscii())
@@ -717,7 +717,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             self.changed_iirfilter_band(self.gui.iirfilterBandComboBox.currentText())
 
-        self.design()
+#self.design()
 
     def changed_iirfilter_band(self, ftype):
         strftype = str(ftype.toAscii())
@@ -743,7 +743,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirhpfPage)
 
-        self.design()
+#self.design()
 
     def changed_filter_type(self, ftype):
         strftype = str(ftype.toAscii())
@@ -774,7 +774,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         elif(ftype == "Half Band"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firhbPage)
 
-        self.design()
+#self.design()
 
     def changed_filter_design_type(self, design):
         if(design == "Equiripple"):
@@ -782,7 +782,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             self.set_windowed()
 
-        self.design()
+#self.design()
 
     def set_equiripple(self):
         # Stop sending the signal for this function
@@ -938,6 +938,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         sanalog = 	{"Analog (rad/second)" : 1,
                      "Digital (normalized 0-1)" : 0  }
 
+        paramtype = { 1 : "analog",
+                      0 : "digital" }
         iirabbr = {
                     "Low Pass" : "lpf",
                     "High Pass" : "hpf",
@@ -996,14 +998,14 @@ class gr_plot_filter(QtGui.QMainWindow):
                 (self.b,self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ','').lower(),
                                                    analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
                 (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
-                iirparams = { "filttype": iirft[iirftype], "filtord": order, 
+                iirparams = { "filttype": iirft[iirftype],"bandtype": iirabbr[iirbtype], "filtord": order, "paramtype":paramtype[sanalog[atype]],
                               "critfreq": besselparams}
             else:
                 (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
                                          params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
                 (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
                 #Create params
-                iirparams = { "filttype": iirft[iirftype], "bandtype": iirabbr[iirbtype], 
+                iirparams = { "filttype": iirft[iirftype], "bandtype": iirabbr[iirbtype],"paramtype":paramtype[sanalog[atype]], 
                               "pbedge": params[0], "sbedge": params[1],"gpass": params[2],
                               "gstop": params[3]}
             self.gui.pzPlot.insertZeros(self.z)
@@ -1896,7 +1898,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         if ftype == "Complex Band Pass":
             boxatten,r = self.gui.bpfStopBandAttenEdit.text().toDouble()
             self.gui.bpfStopBandAttenEdit.setText(Qt.QString(str(atten+boxatten)))
-        self.design()
+#self.design()
 
     def set_curvetaps(self,(zr,pl)):
         if self.iir: 
@@ -2026,6 +2028,12 @@ class gr_plot_filter(QtGui.QMainWindow):
             return
 
         csvhandle = csv.writer(handle, delimiter=",")
+        #indicate fir/iir for easy reading 
+        if self.iir:
+            csvhandle.writerow(["restype","iir"])
+        else:
+            csvhandle.writerow(["restype","fir"])
+
         for k in self.params.keys():
             csvhandle.writerow([k, self.params[k]])
         if self.iir:
@@ -2049,10 +2057,25 @@ class gr_plot_filter(QtGui.QMainWindow):
             return
 
         csvhandle = csv.reader(handle, delimiter=",")
+        b_a={}
         taps = []
         params = {}
         for row in csvhandle:
-            if(row[0] != "taps"):
+            if (row[0] == "restype"):
+                restype = row[1]
+            elif(row[0] == "taps"):
+                testcpx = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
+                if(len(testcpx) > 0): # it's a complex
+                    taps = [complex(r) for r in row[1:]]
+                else:
+                    taps = [float(r) for r in row[1:]]
+            elif(row[0] == "b" or row[0] == "a"):
+                testcpx = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
+                if(len(testcpx) > 0): # it's a complex
+                    b_a[row[0]] = [complex(r) for r in row[1:]]
+                else:
+                    b_a[row[0]]= [float(r) for r in row[1:]]
+            else:
                 testcpx = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
                 if(len(testcpx) > 0): # it's a complex
                     params[row[0]] = complex(row[1])
@@ -2061,81 +2084,157 @@ class gr_plot_filter(QtGui.QMainWindow):
                         params[row[0]] = float(row[1])
                     except ValueError:
                         params[row[0]] = row[1]
-            else:
-                testcpx = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
-                if(len(testcpx) > 0): # it's a complex
-                    taps = [complex(r) for r in row[1:]]
-                else:
-                    taps = [float(r) for r in row[1:]]
         handle.close()
-        self.draw_plots(taps, params)
+        if restype == "fir":
+            self.iir = False 
+            self.gui.fselectComboBox.setCurrentIndex(0)
+            self.draw_plots(taps, params)
+            zeros=self.get_zeros()
+            poles=self.get_poles()
+            self.gui.pzPlot.insertZeros(zeros)
+            self.gui.pzPlot.insertPoles(poles)
+            self.gui.mpzPlot.insertZeros(zeros)
+            self.gui.mpzPlot.insertPoles(poles)
 
-        self.gui.sampleRateEdit.setText(Qt.QString("%1").arg(params["fs"]))
-        self.gui.filterGainEdit.setText(Qt.QString("%1").arg(params["gain"]))
+            self.gui.sampleRateEdit.setText(Qt.QString("%1").arg(params["fs"]))
+            self.gui.filterGainEdit.setText(Qt.QString("%1").arg(params["gain"]))
 
-        # Set up GUI parameters for each filter type
-        if(params["filttype"] == "lpf"):
-            self.gui.filterTypeComboBox.setCurrentIndex(0)
-            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+            # Set up GUI parameters for each filter type
+            if(params["filttype"] == "lpf"):
+                self.gui.filterTypeComboBox.setCurrentIndex(0)
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
 
-            self.gui.endofLpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
-            self.gui.startofLpfStopBandEdit.setText(Qt.QString("%1").arg(params["sbstart"]))
-            self.gui.lpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
-            if(params["wintype"] == self.EQUIRIPPLE_FILT):
-                self.gui.lpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
-        elif(params["filttype"] == "bpf"):
-            self.gui.filterTypeComboBox.setCurrentIndex(1)
-            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.endofLpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
+                self.gui.startofLpfStopBandEdit.setText(Qt.QString("%1").arg(params["sbstart"]))
+                self.gui.lpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
+                if(params["wintype"] == self.EQUIRIPPLE_FILT):
+                    self.gui.lpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
+            elif(params["filttype"] == "bpf"):
+                self.gui.filterTypeComboBox.setCurrentIndex(1)
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
 
-            self.gui.startofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
-            self.gui.endofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
-            self.gui.bpfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
-            self.gui.bpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
-            if(params["wintype"] == self.EQUIRIPPLE_FILT):
-                self.gui.bpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
-        elif(params["filttype"] == "cbpf"):
-            self.gui.filterTypeComboBox.setCurrentIndex(2)
-            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.startofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
+                self.gui.endofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
+                self.gui.bpfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
+                self.gui.bpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
+                if(params["wintype"] == self.EQUIRIPPLE_FILT):
+                    self.gui.bpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
+            elif(params["filttype"] == "cbpf"):
+                self.gui.filterTypeComboBox.setCurrentIndex(2)
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
 
-            self.gui.startofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
-            self.gui.endofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
-            self.gui.bpfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
-            self.gui.bpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
-            if(params["wintype"] == self.EQUIRIPPLE_FILT):
-                self.gui.bpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
-        elif(params["filttype"] == "bnf"):
-            self.gui.filterTypeComboBox.setCurrentIndex(3)
-            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.startofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
+                self.gui.endofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
+                self.gui.bpfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
+                self.gui.bpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
+                if(params["wintype"] == self.EQUIRIPPLE_FILT):
+                    self.gui.bpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
+            elif(params["filttype"] == "bnf"):
+                self.gui.filterTypeComboBox.setCurrentIndex(3)
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
 
-            self.gui.startofBnfStopBandEdit.setText(Qt.QString("%1").arg(params["sbstart"]))
-            self.gui.endofBnfStopBandEdit.setText(Qt.QString("%1").arg(params["sbend"]))
-            self.gui.bnfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
-            self.gui.bnfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
-            if(params["wintype"] == self.EQUIRIPPLE_FILT):
-                self.gui.bnfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
-        elif(params["filttype"] == "hpf"):
-            self.gui.filterTypeComboBox.setCurrentIndex(4)
-            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.startofBnfStopBandEdit.setText(Qt.QString("%1").arg(params["sbstart"]))
+                self.gui.endofBnfStopBandEdit.setText(Qt.QString("%1").arg(params["sbend"]))
+                self.gui.bnfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
+                self.gui.bnfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
+                if(params["wintype"] == self.EQUIRIPPLE_FILT):
+                    self.gui.bnfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
+            elif(params["filttype"] == "hpf"):
+                self.gui.filterTypeComboBox.setCurrentIndex(4)
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
 
-            self.gui.endofHpfStopBandEdit.setText(Qt.QString("%1").arg(params["sbend"]))
-            self.gui.startofHpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
-            self.gui.hpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
-            if(params["wintype"] == self.EQUIRIPPLE_FILT):
-                self.gui.hpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
-        elif(params["filttype"] == "rrc"):
-            self.gui.filterTypeComboBox.setCurrentIndex(5)
-            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.endofHpfStopBandEdit.setText(Qt.QString("%1").arg(params["sbend"]))
+                self.gui.startofHpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
+                self.gui.hpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
+                if(params["wintype"] == self.EQUIRIPPLE_FILT):
+                    self.gui.hpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
+            elif(params["filttype"] == "rrc"):
+                self.gui.filterTypeComboBox.setCurrentIndex(5)
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
 
-            self.gui.rrcSymbolRateEdit.setText(Qt.QString("%1").arg(params["srate"]))
-            self.gui.rrcAlphaEdit.setText(Qt.QString("%1").arg(params["alpha"]))
-            self.gui.rrcNumTapsEdit.setText(Qt.QString("%1").arg(params["ntaps"]))
-        elif(params["filttype"] == "gaus"):
-            self.gui.filterTypeComboBox.setCurrentIndex(6)
-            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.rrcSymbolRateEdit.setText(Qt.QString("%1").arg(params["srate"]))
+                self.gui.rrcAlphaEdit.setText(Qt.QString("%1").arg(params["alpha"]))
+                self.gui.rrcNumTapsEdit.setText(Qt.QString("%1").arg(params["ntaps"]))
+            elif(params["filttype"] == "gaus"):
+                self.gui.filterTypeComboBox.setCurrentIndex(6)
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
 
-            self.gui.gausSymbolRateEdit.setText(Qt.QString("%1").arg(params["srate"]))
-            self.gui.gausBTEdit.setText(Qt.QString("%1").arg(params["bt"]))
-            self.gui.gausNumTapsEdit.setText(Qt.QString("%1").arg(params["ntaps"]))
+                self.gui.gausSymbolRateEdit.setText(Qt.QString("%1").arg(params["srate"]))
+                self.gui.gausBTEdit.setText(Qt.QString("%1").arg(params["bt"]))
+                self.gui.gausNumTapsEdit.setText(Qt.QString("%1").arg(params["ntaps"]))
+        else:
+            self.iir = True
+            self.b, self.a = b_a["b"],b_a["a"]
+            (self.z,self.p,self.k) = signal.tf2zpk(self.b, self.a)
+            self.gui.pzPlot.insertZeros(self.z)
+            self.gui.pzPlot.insertPoles(self.p)
+            self.gui.mpzPlot.insertZeros(self.z)
+            self.gui.mpzPlot.insertPoles(self.p)
+            self.iir_plot_all(self.z,self.p,self.k)
+            self.update_fcoeff()
+            self.gui.nTapsEdit.setText("-")
+            self.params = params 
+            
+            #Set GUI for IIR type
+            iirft = 	{  "ellip"  : 0,
+                           "butter" : 1,
+                           "cheby1" : 2,
+                           "cheby2" : 3,
+                           "bessel" : 4 }
+
+            paramtype = { "analog"  : 1,
+                          "digital" : 0 }
+            bandpos = {
+                         "lpf" : 0, 
+                         "bpf" : 1,
+                         "bnf" : 2, 
+                         "hpf" : 3}
+
+            iirboxes = {"lpf" : [self.gui.iirendofLpfPassBandEdit,
+                                      self.gui.iirstartofLpfStopBandEdit,
+                                      self.gui.iirLpfPassBandAttenEdit,
+                                      self.gui.iirLpfStopBandRippleEdit],
+
+                        "hpf" : [self.gui.iirstartofHpfPassBandEdit,
+                                       self.gui.iirendofHpfStopBandEdit,
+                                       self.gui.iirHpfPassBandAttenEdit,
+                                       self.gui.iirHpfStopBandRippleEdit],
+
+                        "bpf" : [self.gui.iirstartofBpfPassBandEdit,
+                                       self.gui.iirendofBpfPassBandEdit,
+                                       self.gui.iirendofBpfStopBandEdit1,
+                                       self.gui.iirstartofBpfStopBandEdit2,
+                                       self.gui.iirBpfPassBandAttenEdit,
+                                       self.gui.iirBpfStopBandRippleEdit],
+
+                        "bnf" : [self.gui.iirendofBsfPassBandEdit1,
+                                       self.gui.iirstartofBsfPassBandEdit2,
+                                       self.gui.iirstartofBsfStopBandEdit,
+                                       self.gui.iirendofBsfStopBandEdit,
+                                       self.gui.iirBsfPassBandAttenEdit,
+                                       self.gui.iirBsfStopBandRippleEdit] }
+
+            self.gui.fselectComboBox.setCurrentIndex(1)
+            self.gui.iirfilterTypeComboBox.setCurrentIndex(iirft[params["filttype"]])
+            self.gui.iirfilterBandComboBox.setCurrentIndex(bandpos[params["bandtype"]])
+            if params["filttype"] == "bessel":
+                critfreq = map(float, params["critfreq"][1:-1].split(','))
+                self.gui.besselordEdit.setText(Qt.QString("%1").arg(params["filtord"]))
+                self.gui.iirbesselcritEdit1.setText(Qt.QString("%1").arg(critfreq[0]))
+                self.gui.iirbesselcritEdit2.setText(Qt.QString("%1").arg(critfreq[1]))
+            else:
+                self.gui.adComboBox.setCurrentIndex(paramtype[params["paramtype"]])
+                if len(iirboxes[params["bandtype"]]) == 4:
+                    sdata = [params["pbedge"], params["sbedge"], params["gpass"], params["gstop"]]
+                else:
+                    pbedge = map(float, params["pbedge"][1:-1].split(','))
+                    sbedge = map(float, params["sbedge"][1:-1].split(','))
+                    sdata = [pbedge[0], pbedge[1], sbedge[0], 
+                             sbedge[1], params["gpass"], params["gstop"]]
+
+                cboxes = iirboxes[params["bandtype"]]
+                for i in range(len(cboxes)):
+                    cboxes[i].setText(Qt.QString("%1").arg(sdata[i]))
 
     def draw_plots(self, taps, params):
         self.params = params
