@@ -21,6 +21,7 @@
 #
 
 import sys, os, re, csv, copy
+import warnings
 from optparse import OptionParser
 import filtdes as gr
 from filtdes import optfir 
@@ -861,7 +862,13 @@ class gr_plot_filter(QtGui.QMainWindow):
             if(ret):
                 self.design_fir(ftype, fs, gain, winstr)
         elif (fsel == "IIR(scipy)"):
-            self.design_iir()
+            with warnings.catch_warnings(record=True) as w:
+                # Cause all warnings to always be triggered.
+                warnings.simplefilter("always")
+                self.design_iir()
+                if len(w):
+                    reply = QtGui.QMessageBox.information(self, "BadCoefficients",
+                                                         str(w[-1].message),"&Ok")
 
     # Do FIR design
     def design_fir(self, ftype, fs, gain, winstr):
@@ -991,14 +998,22 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         if(ret):
             if(iirftype == "Bessel"):
-                (self.b,self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ','').lower(),
+                try:
+                    (self.b,self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ','').lower(),
                                                    analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                except StandardError, e:
+                    reply = QtGui.QMessageBox.information(self, "IIR desing error",
+                                                          e.args[0], "&Ok")
                 (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
                 iirparams = { "filttype": iirft[iirftype],"bandtype": iirabbr[iirbtype], "filtord": order, "paramtype":paramtype[sanalog[atype]],
                               "critfreq": besselparams}
             else:
-                (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
-                                         params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                try:
+                    (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
+                                             params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
+                except StandardError, e:
+                    reply = QtGui.QMessageBox.information(self, "IIR desing error",
+                                                          e.args[0], "&Ok")
                 (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
                 #Create params
                 iirparams = { "filttype": iirft[iirftype], "bandtype": iirabbr[iirbtype],"paramtype":paramtype[sanalog[atype]], 
@@ -2594,7 +2609,6 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.update_imp_curves()
 
         self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
-
 
 def setup_options():
     usage="%prog: [options] (input_filename)"
