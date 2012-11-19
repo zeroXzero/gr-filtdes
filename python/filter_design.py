@@ -2010,7 +2010,7 @@ class gr_plot_filter(QtGui.QMainWindow):
     def update_fcoeff(self):
         fcoeff=""
         if self.iir:
-            fcoeff="b = "+str(self.b)+"\na = "+str(self.a)
+            fcoeff="b = "+str(self.b.tolist())+"\na = "+str(self.a.tolist())
         else:
             for t in self.taps:
 		        fcoeff=fcoeff+str(t)+"\n"
